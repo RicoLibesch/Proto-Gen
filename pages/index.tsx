@@ -11,7 +11,7 @@ export default function Home() {
   };
 
   return (
-    <div className="items-center justify-center m-5">
+    <div className="items-center justify-center m-8">
       <h1 className="text-primary">Protokolle</h1>
       <hr></hr>
       <div className="flex flex-wrap m-2 justify-center">
