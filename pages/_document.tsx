@@ -15,7 +15,7 @@ export default function Document() {
             <div className="shadwo-md w-full fixed top-0 left-0">
                <div className="md:flex bg_wihte items-center justify-between bg-white py-4 md:px-10 px-7" >
                    <div className="font-bold text-2x1 cursor-pointer flex items-center font-[Poppins] text-gray-800">
-                       <img src="../public/fsmniLogo.png" alt="Logo" className="w-12 h-12 mr-2"/>
+                       <img src="/fsmniLogo.png" alt="Logo" className="w-25 h-12 mr-2"/>
                    </div>
                <ul className="md:flex md:items-center md:pb-0 pb-12 absolute md:static bg-withe md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 transition-all duration-500 ease-in">
 
