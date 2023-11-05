@@ -1,0 +1,7 @@
+{
+  "id": 1,
+  "protocol_type": "Fachschaftssitzung",
+  "start_timestamp": 0,
+  "end_timestamp": 0,
+  "topics": ["Anwesenheit", "Aufgaben", "..."]
+}

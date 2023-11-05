@@ -7,6 +7,28 @@ export interface ProtocolContainerProps {
   protocol: Protocol;
 }
 
+export function formatProtocolDate(protocol: Protocol): String {
+  let start = new Date(protocol.start_timestamp * 1000);
+  let end = new Date(protocol.end_timestamp * 1000);
+  const optionsDate: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  };
+  const optionsTime: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  return (
+    start.toLocaleDateString("de-DE", optionsDate) +
+    " - " +
+    start.toLocaleTimeString("de-DE", optionsTime) + 
+    " bis " +
+    end.toLocaleTimeString("de-DE", optionsTime)
+  );
+}
+
 const ProtocolContainer = ({
   className,
   protocol,
@@ -19,8 +41,8 @@ const ProtocolContainer = ({
             FS
           </div>
           <div className="col-span-1">
-            <h2 className="text-primary">{protocol.type}</h2>
-            <h4 className="text-secondary">09.08.2023 - 14:04 bis 15:55</h4>
+            <h2 className="text-primary">{protocol.protocol_type}</h2>
+            <h4 className="text-secondary">{formatProtocolDate(protocol)}</h4>
           </div>
         </div>
         <div className="row-span-1 flex">
