@@ -11,7 +11,7 @@ export default function Document() {
       <Head />
       <body>
         <div className="flex items-center justify-start p-3">
-          <a href="#">
+          <a href=".">
             <Image src="/fsmniLogo.png" alt="Logo" width={250} height={50} />
           </a>
           <div className="ml-auto">
