@@ -1,7 +1,8 @@
 export default interface Protocol {
-  type: "Fachschaftssitzung" | "Fachschaftsratsitzung";
   id: number;
-  start: number; // unix timestamp
-  end: number; // unix timestamp
+  protocol_type: "Fachschaftssitzung" | "Fachschaftsratsitzung";
+  start_timestamp: number; 
+  end_timestamp: number;
   topics: Array<string>;
+  content: string
 }
