@@ -4,6 +4,7 @@ import Markdown from "react-markdown";
 import { formatProtocolDate } from "@/components/ProtocolContainer";
 import { useRouter } from "next/router";
 import Error from "../_error";
+import "@uiw/react-markdown-preview/markdown.css";
 
 const ProtocolView = () => {
   const router = useRouter();
@@ -12,7 +13,7 @@ const ProtocolView = () => {
 
   let [protocol, setProtocol] = useState<Protocol>({
     id: 0,
-    protocol_type: "Fachschaftsratsitzung",
+    protocol_type: "Fachschaftssitzung",
     content: "",
     start_timestamp: 0,
     end_timestamp: 0,
@@ -57,7 +58,9 @@ const ProtocolView = () => {
         </h4>
       </div>
       <hr />
-      <Markdown>{protocol.content}</Markdown>
+      <div data-color-mode="light">
+        <Markdown className="wmde-markdown">{protocol.content}</Markdown>
+      </div>
     </div>
   );
 };
