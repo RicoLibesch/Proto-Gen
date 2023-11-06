@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@uiw/react-md-editor": "^3.25.2",
     "next": "14.0.0",
+    "next-remove-imports": "^1.0.12",
     "react": "^18",
     "react-dom": "^18"
   },
