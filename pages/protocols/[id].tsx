@@ -58,10 +58,11 @@ const ProtocolView = () => {
         </h4>
       </div>
       <hr />
-      <div data-color-mode="light">
+      <div data-color-mode="light" className="pt-5">
         <Markdown className="wmde-markdown">{protocol.content}</Markdown>
       </div>
     </div>
   );
 };
+
 export default ProtocolView;
