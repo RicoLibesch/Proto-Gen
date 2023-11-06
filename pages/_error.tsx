@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-function Error({ statusCode }) {
+function Error({ statusCode }: any) {
     let errorMessage = 'An error occurred';
 
     if (statusCode === 404) {
@@ -17,7 +17,7 @@ function Error({ statusCode }) {
     );
 }
 
-Error.getInitialProps = ({ res, err }) => {
+Error.getInitialProps = ({ res, err }: any) => {
     const statusCode = res ? res.statusCode : err ? err.statusCode : 404
     return { statusCode }
 }
