@@ -1,8 +1,8 @@
 {
   "id": 1,
   "protocol_type": "Fachschaftssitzung",
-  "start_timestamp": "2023-11-05 18:01",
-  "end_timestamp": "19:04",
+  "start_timestamp": 0,
+  "end_timestamp": 0,
   "topics": [
     "Genehmigung des Protokolls der letzten Sitzung",
     "Termine",
