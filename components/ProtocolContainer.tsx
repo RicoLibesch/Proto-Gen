@@ -3,7 +3,7 @@
 import { HTMLAttributes } from "react";
 import Protocol from "./Protocol";
 
-export interface ProtocolContainerProps {
+export interface ProtocolContainerProps extends HTMLAttributes<HTMLDivElement> {
   protocol: Protocol;
 }
 
@@ -23,18 +23,15 @@ export function formatProtocolDate(protocol: Protocol): String {
   return (
     start.toLocaleDateString("de-DE", optionsDate) +
     " - " +
-    start.toLocaleTimeString("de-DE", optionsTime) + 
+    start.toLocaleTimeString("de-DE", optionsTime) +
     " bis " +
     end.toLocaleTimeString("de-DE", optionsTime)
   );
 }
 
-const ProtocolContainer = ({
-  className,
-  protocol,
-}: ProtocolContainerProps & HTMLAttributes<HTMLDivElement>) => {
+const ProtocolContainer = ({ protocol, ...props }: ProtocolContainerProps) => {
   return (
-    <div className={className}>
+    <div {...props}>
       <div className="grid grid-rows-2 items-center rounded-xl border-2 border-outline justify-center p-2 shadow hover:shadow-lg hover:cursor-pointer">
         <div className="row-span-1 grid grid-flow-col items-center justify-start gap-3">
           <div className="col-span-1 rounded-full bg-mni w-10 h-10 flex items-center justify-center text-white">

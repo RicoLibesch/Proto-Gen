@@ -4,6 +4,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Protocol, { ProtocolTypes } from "@/components/Protocol";
+import AttendanceList, { Attendance } from "@/components/Attendance";
 
 // NOTE: have to do this for next-js support
 const MDEditor = dynamic(
@@ -16,6 +17,15 @@ const ProtocolCreate = () => {
   const [start, _] = useState(Date.now());
   const [template, setTemplate] = useState("");
   const [protocolType, setProtocolType] = useState("Fachschaftssitzung");
+
+  const [attendanceList, setAttendanceList] = useState<Attendance>({
+    Vollmitglieder: ["Hendrik Wagner"],
+    Vertreter: ["Fabian Ruckdäschel"],
+    Mitglieder: ["Roman Schnackenberg"],
+    Gäste: [],
+    Entschuldigt: ["Egemen Demir"],
+    Unentschuldigt: ["Richard Keitsch"],
+  });
 
   useEffect(() => {
     (async () => {
@@ -44,7 +54,7 @@ const ProtocolCreate = () => {
       id: 0,
       start_timestamp: start / 1000.0,
       end_timestamp: end / 1000.0,
-      topics: topics?.flatMap((x) => x) ?? [],
+      topics: topics ?? [],
       content: content,
       protocol_type: protocolType as ProtocolTypes,
     };
@@ -63,7 +73,7 @@ const ProtocolCreate = () => {
   return (
     <div>
       <hr />
-      <div className="container mx-auto items-center px-2 ">
+      <div className="container mx-auto items-center px-2">
         <select
           className="block py-5 px-0 w-full text-3xl text-primary bg-transparent border-b-2 border-outline"
           defaultValue="Fachschaftssitzung"
@@ -74,9 +84,18 @@ const ProtocolCreate = () => {
             Konstituierende Sitzung
           </option>
         </select>
-        <div data-color-mode="light" className="py-5">
+        <div
+          data-color-mode="light"
+          className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
+        >
+          <AttendanceList
+            className="p-5 max-lg:w-full w-1/4"
+            list={attendanceList}
+            update={setAttendanceList}
+          />
           <MDEditor
-            height={"65vh"}
+            className="max-lg:w-full w-3/4"
+            height={"100%"}
             value={content}
             onChange={(x) => setContent(x ?? "")}
           />
