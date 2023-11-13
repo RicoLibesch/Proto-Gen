@@ -39,7 +39,7 @@ build_backend_db:
     DOCKER_TLS_CERTDIR: ""
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t protogen_backend_db:latest -f backend/database/Dockerfile .
+    - docker build -t protogen_backend_db:latest -f database/Dockerfile .
   only:
     - feature/CI 
 
