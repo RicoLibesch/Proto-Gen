@@ -9,10 +9,12 @@ build_backend:
   stage: build
   tags:
     - alpine
+  image: docker:latest
   script:
-    - apk add --update docker openrc
-    - mkdir -p /run/openrc 
-    - touch /run/openrc/softlevel
+    #- apk add --update docker openrc
+    #- mkdir -p /run/openrc 
+    #- touch /run/openrc/softlevel
     - service docker status
+    - echo `docker --version`
   only:
     - feature/CI
