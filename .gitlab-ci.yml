@@ -12,7 +12,6 @@ build_backend:
   script:
 # installiere in einerm docker alpine docker :D
     - apk add --update docker openrc
-    - service docker start
 # Warte bis docker läuft
     - while [ ! -S /var/run/docker.sock ]; do echo 'Waiting for Docker to start'; sleep 1; done
     - echo "$GITLAB_USER_LOGIN - Test"
