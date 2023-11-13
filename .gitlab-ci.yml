@@ -1,0 +1,16 @@
+## Stages / In Welher Reihenfolge welche Jobs abgearbeitet werden sollen
+
+stages:
+  - build
+# - test
+# - deploy
+
+build_frontend:
+  stage: build
+  tags: alpine
+  
+  script:
+    - echo "$GITLAB_USER_LOGIN - Test"
+
+  only:
+    - feature/CI
