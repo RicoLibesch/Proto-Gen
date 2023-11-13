@@ -15,9 +15,6 @@ variables:
   DOCKER_IMAGE_2: "protogen_backend_db"
   DOCKER_IMAGE_3: protogen_frontend_nextjs
 
-before_script:
-#  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-  - docker login git-registry.thm.de
 
 build_backend_node:
   stage: build
@@ -29,6 +26,7 @@ build_backend_node:
       command: ["dockerd-entrypoint.sh"] 
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker build -t $DOCKER_IMAGE_1:latest -f backend/Dockerfile .
     - docker push $DOCKER_IMAGE_1
   only:
