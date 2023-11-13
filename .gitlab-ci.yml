@@ -23,4 +23,4 @@ build_backend:
     - echo "$GITLAB_USER_LOGIN - Build"
     - docker build -t protogen_backend:latest -f backend/Dockerfile .
   only:
-    - feature/CI
+    - feature/CI 
