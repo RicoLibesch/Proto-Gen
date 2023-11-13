@@ -12,6 +12,7 @@ build_backend:
   script:
 # installiere in einerm docker alpine docker :D
     - apk add --update docker openrc
+    - service docker start
 # Warte bis docker läuft
     - echo "$GITLAB_USER_LOGIN - Test"
     - docker build -t protogen_backend:latest -f backend/Dockerfile .
