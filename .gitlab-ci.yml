@@ -11,7 +11,8 @@ build_backend:
   stage: build
   tags:
     - kaniko
-    
+  script:
+    - echo "test"
 #  services:
  #   - name: docker:dind
   #    entrypoint: ["env", "-u", "DOCKER_HOST"]
