@@ -41,9 +41,12 @@ build_backend_db:
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
   script:
-    - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile ./database
-    - docker push $DOCKER_IMAGE_2
+#    - echo "$GITLAB_USER_LOGIN - Build"
+#    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile ./database
+#    - docker push $DOCKER_IMAGE_2
+     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+     - docker build -t $CI_REGISTRY/$DOCKER_IMAGE_2:latest ./database
+     - docker push $CI_REGISTRY/$DOCKER_IMAGE_2:latest
   only:
     - feature/CI 
 
