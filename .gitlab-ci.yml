@@ -26,7 +26,7 @@ build_backend:
     - echo "$GITLAB_USER_LOGIN - Build"
     - docker --version
     - echo `service docker status`
-    #- docker build -t protogen_backend:latest -f backend/Dockerfile .
+    - docker build -t protogen_backend:latest -f backend/Dockerfile .
     #- echo `docker --version` 
   only:
     - feature/CI
