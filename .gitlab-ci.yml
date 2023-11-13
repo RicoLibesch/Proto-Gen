@@ -14,7 +14,7 @@ build_backend:
     - apk add --update docker openrc
     - mkdir -p /run/openrc 
     - touch /run/openrc/softlevel
-    - service docker status
+    - service docker start
     - echo "Done"
   only:
     - feature/CI
