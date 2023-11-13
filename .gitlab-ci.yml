@@ -7,7 +7,7 @@ stages:
 # - test
 # - deploy
 
-build_backend:
+build_backend_node:
   stage: build
   tags:
     - protogen-runner
@@ -21,6 +21,42 @@ build_backend:
     DOCKER_TLS_CERTDIR: ""
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t protogen_backend:latest -f backend/Dockerfile .
+    - docker build -t protogen_backend_node:latest -f backend/Dockerfile .
+  only:
+    - feature/CI 
+
+build_backend_db:
+  stage: build
+  tags:
+    - protogen-runner
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"] 
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "$GITLAB_USER_LOGIN - Build"
+    - docker build -t protogen_backend_db:latest -f backend/database/Dockerfile .
+  only:
+    - feature/CI 
+
+build_frontend_nextjs:
+  stage: build
+  tags:
+    - protogen-runner
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"] 
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - echo "$GITLAB_USER_LOGIN - Build"
+    - docker build -t protogen_backend_pg:latest -f Dockerfile .
   only:
     - feature/CI 
