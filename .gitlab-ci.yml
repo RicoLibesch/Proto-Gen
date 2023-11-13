@@ -7,9 +7,9 @@ stages:
 
 build_backend:
   stage: build
-  #tags:
-  #  - alpine
   image: docker:latest
+  tags:
+    - alpine
   script:
     #- apk add --update docker openrc
     #- mkdir -p /run/openrc 
