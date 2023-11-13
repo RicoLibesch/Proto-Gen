@@ -46,7 +46,7 @@ build_backend_db:
 #    - docker push $DOCKER_IMAGE_2
      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
      - docker build -t $CI_REGISTRY/$DOCKER_IMAGE_2:latest ./database
-     - docker push $CI_REGISTRY/$DOCKER_IMAGE_2:latest
+     - docker push $GITLAB_USER_LOGIN/$CI_REGISTRY/$DOCKER_IMAGE_2:latest
   only:
     - feature/CI 
 
