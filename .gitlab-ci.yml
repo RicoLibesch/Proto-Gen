@@ -1,13 +1,5 @@
 ## Stages / In Welher Reihenfolge welche Jobs abgearbeitet werden sollen
-services:
-    - name: docker:dind
-      entrypoint: ["env", "-u", "DOCKER_HOST"]
-      command: ["dockerd-entrypoint.sh"]
-variables:
-  DOCKER_HOST: tcp://localhost:2375/
-  DOCKER_DRIVER: overlay2
-# See https://github.com/docker-library/docker/pull/166
-  DOCKER_TLS_CERTDIR: ""
+
 
   
 stages:
@@ -19,6 +11,18 @@ build_backend:
   stage: build
   tags:
     - protogen-runner
+    
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+      alias: thedockerhost
+
+  variables:
+    DOCKER_HOST: tcp://thedockerhost:2375/
+    DOCKER_DRIVER: overlay2
+# See https://github.com/docker-library/docker/pull/166
+    DOCKER_TLS_CERTDIR: ""
   script:
     #- apk add --update docker openrc
     #- mkdir -p /run/openrc 
