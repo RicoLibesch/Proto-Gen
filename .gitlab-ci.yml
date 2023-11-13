@@ -7,9 +7,10 @@ stages:
 
 build_frontend:
   stage: build
-#  tags:
-#    - alpine
+  tags:
+    - alpine
   script:
     - echo "$GITLAB_USER_LOGIN - Test"
+    - docker build -t protogen_backend:latest -f backend/Dockerfile .
   only:
     - feature/CI
