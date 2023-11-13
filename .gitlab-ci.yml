@@ -7,11 +7,9 @@ stages:
 
 build_frontend:
   stage: build
-  tags: alpine
-  
+  tags:
+    - alpine
   script:
     - echo "$GITLAB_USER_LOGIN - Test"
-
   only:
     - feature/CI
-    
