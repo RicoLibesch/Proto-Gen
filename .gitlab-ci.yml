@@ -42,7 +42,7 @@ build_backend_db:
       command: ["dockerd-entrypoint.sh"] 
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile .
+    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile ./database
     - docker push $DOCKER_IMAGE_2
   only:
     - feature/CI 
