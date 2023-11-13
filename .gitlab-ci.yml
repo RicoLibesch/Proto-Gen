@@ -10,26 +10,26 @@ stages:
 build_backend:
   stage: build
   tags:
-    - protogen-runner
+    - kaniko
     
-  services:
-    - name: docker:dind
-      entrypoint: ["env", "-u", "DOCKER_HOST"]
-      command: ["dockerd-entrypoint.sh"]
-
-  variables:
-    DOCKER_HOST: tcp://localhost:2375/
-    DOCKER_DRIVER: overlay2
+#  services:
+ #   - name: docker:dind
+  #    entrypoint: ["env", "-u", "DOCKER_HOST"]
+   #   command: ["dockerd-entrypoint.sh"]
+#
+ # variables:
+  #  DOCKER_HOST: tcp://localhost:2375/
+   # DOCKER_DRIVER: overlay2
 # See https://github.com/docker-library/docker/pull/166
-    DOCKER_TLS_CERTDIR: ""
-  script:
-    #- apk add --update docker openrc
-    #- mkdir -p /run/openrc 
+#    DOCKER_TLS_CERTDIR: ""
+#  script:
+ #   #- apk add --update docker openrc
+  #  #- mkdir -p /run/openrc 
     #- touch /run/openrc/softlevel
-    - echo "$GITLAB_USER_LOGIN - Build"
-    - docker --version
+   # - echo "$GITLAB_USER_LOGIN - Build"
+    #- docker --version
     #- echo `systemctl docker start`
-    - docker build -t protogen_backend:latest -f backend/Dockerfile .
+   # - docker build -t protogen_backend:latest -f backend/Dockerfile .
     #- echo `docker --version` 
   only:
     - feature/CI
