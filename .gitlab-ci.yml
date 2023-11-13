@@ -16,7 +16,8 @@ variables:
   DOCKER_IMAGE_3: protogen_frontend_nextjs
 
 before_script:
-  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+#  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  - docker login git-registry.thm.de
 
 build_backend_node:
   stage: build
