@@ -7,14 +7,13 @@ stages:
 
 build_backend:
   stage: build
-  image: docker:latest
   tags:
-    - alpine
+    - protogen-runner
   script:
     #- apk add --update docker openrc
     #- mkdir -p /run/openrc 
     #- touch /run/openrc/softlevel
-    - service docker status
-    - echo `docker --version`
+    - docker --version
+    #- echo `docker --version`
   only:
     - feature/CI
