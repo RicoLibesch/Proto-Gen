@@ -41,7 +41,7 @@ build_backend_db:
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
   variables:
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
   script:
 #    - echo "$GITLAB_USER_LOGIN - Build"
 #    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile ./database
