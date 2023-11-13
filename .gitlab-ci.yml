@@ -40,13 +40,15 @@ build_backend_db:
     - name: docker:dind
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
 #    - echo "$GITLAB_USER_LOGIN - Build"
 #    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile ./database
 #    - docker push $DOCKER_IMAGE_2
      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-     - docker build -t $CI_REGISTRY/$DOCKER_IMAGE_2:latest ./database
-     - docker push $GITLAB_USER_LOGIN/$CI_REGISTRY/$DOCKER_IMAGE_2:latest
+     - docker build -t $IMAGE_TAG ./database
+     - docker push $IMAGE_TAG
   only:
     - feature/CI 
 
