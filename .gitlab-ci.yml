@@ -7,6 +7,17 @@ stages:
 # - test
 # - deploy
 
+variables:
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_IMAGE_1: "protogen_backend_node"
+  DOCKER_IMAGE_2: "protogen_backend_db"
+  DOCKER_IMAGE_3: protogen_frontend_nextjs
+
+before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+
 build_backend_node:
   stage: build
   tags:
@@ -15,13 +26,10 @@ build_backend_node:
     - name: docker:dind
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t protogen_backend_node:latest -f backend/Dockerfile .
+    - docker build -t $DOCKER_IMAGE_1:latest -f backend/Dockerfile .
+    - docker push $DOCKER_IMAGE_1
   only:
     - feature/CI 
 
@@ -33,13 +41,10 @@ build_backend_db:
     - name: docker:dind
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t protogen_backend_db:latest -f database/Dockerfile .
+    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile .
+    - docker push $DOCKER_IMAGE_2
   only:
     - feature/CI 
 
@@ -51,12 +56,9 @@ build_frontend_nextjs:
     - name: docker:dind
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
   script:
     - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t protogen_backend_pg:latest -f Dockerfile .
+    - docker build -t $DOCKER_IMAGE_3:latest -f Dockerfile .
+    - docker push $DOCKER_IMAGE_3
   only:
     - feature/CI 
