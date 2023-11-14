@@ -1,7 +1,5 @@
-## Stages / In Welher Reihenfolge welche Jobs abgearbeitet werden sollen
 
-
-  
+# Stages der pipeline (Build zum bauen der Anwendung)
 stages:
   - build
 # - test
