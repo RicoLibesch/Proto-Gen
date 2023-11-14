@@ -13,7 +13,7 @@ variables:
   DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE_1: "protogen_backend_node"
   DOCKER_IMAGE_2: "protogen_backend_db"
-  DOCKER_IMAGE_3: protogen_frontend_nextjs
+  DOCKER_IMAGE_3: "protogen_frontend_nextjs"
 
 
 build_backend_node:
@@ -24,11 +24,12 @@ build_backend_node:
     - name: docker:dind
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_1:$CI_COMMIT_REF_SLUG
   script:
-    - echo "$GITLAB_USER_LOGIN - Build"
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker build -t $DOCKER_IMAGE_1:latest -f backend/Dockerfile .
-    - docker push $DOCKER_IMAGE_1
+    - docker build -t $IMAGE_TAG -f backend/Dockerfile .
+    - docker push $IMAGE_TAG
   only:
     - feature/CI 
 
@@ -43,9 +44,6 @@ build_backend_db:
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
   script:
-#    - echo "$GITLAB_USER_LOGIN - Build"
-#    - docker build -t $DOCKER_IMAGE_2:latest -f database/Dockerfile ./database
-#    - docker push $DOCKER_IMAGE_2
      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
      - docker build -t $IMAGE_TAG ./database
      - docker push $IMAGE_TAG
@@ -60,9 +58,11 @@ build_frontend_nextjs:
     - name: docker:dind
       entrypoint: ["env", "-u", "DOCKER_HOST"]
       command: ["dockerd-entrypoint.sh"] 
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_3:$CI_COMMIT_REF_SLUG
   script:
-    - echo "$GITLAB_USER_LOGIN - Build"
-    - docker build -t $DOCKER_IMAGE_3:latest -f Dockerfile .
-    - docker push $DOCKER_IMAGE_3
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker build -t $IMAGE_TAG -f Dockerfile .
+    - docker push $IMAGE_TAG
   only:
     - feature/CI 
