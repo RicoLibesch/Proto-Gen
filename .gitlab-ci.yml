@@ -23,8 +23,12 @@ build_images:
       command: ["dockerd-entrypoint.sh"]
   variables:
     IMAGE_TAG_BACKEND_NODE: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_1:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_BACKEND_DB: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
+    IMAGE_TAG_FRONTEND_NEXTJS: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_3:$CI_COMMIT_REF_SLUG
   script:
     - docker build -t $IMAGE_TAG_BACKEND_NODE -f backend/Dockerfile .
+    - docker build -t $IMAGE_TAG_BACKEND_DB ./database
+    - docker build -t $IMAGE_TAG_FRONTEND_NEXTJS -f Dockerfile .
   only:
     - feature/CI
 
