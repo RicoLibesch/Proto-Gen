@@ -37,7 +37,7 @@ test_node_backend:
   tags:
     - npm
   script:
-    - npm install
+    - npm install backend/package.json 
     - npm test
   only:
     - feature/CI
