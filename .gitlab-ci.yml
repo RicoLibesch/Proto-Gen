@@ -35,7 +35,7 @@ build_images:
 test_node_backend:
   stage: test
   tags:
-    - node
+    - npm
   script:
     - npm install
     - npm test
