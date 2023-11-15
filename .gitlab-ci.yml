@@ -2,7 +2,7 @@
 # Stages der pipeline (Build zum bauen der Anwendung)
 stages:
   - build
-# - test
+  - test
 # - deploy
 
 variables:
@@ -31,6 +31,16 @@ build_images:
     - docker build -t $IMAGE_TAG_FRONTEND_NEXTJS -f Dockerfile .
   only:
     - feature/CI
+
+test_node_backend:
+  stage: test
+  tags:
+    - node
+  script:
+    - npm install
+    - npm test
+
+
 # build_backend_node:
 #  stage: build
 #  tags:
