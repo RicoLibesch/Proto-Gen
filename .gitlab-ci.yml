@@ -31,8 +31,6 @@ build_images:
     - docker build -t $IMAGE_TAG_FRONTEND_NEXTJS -f Dockerfile .
   only:
     - feature/CI
-
-
 # build_backend_node:
 #  stage: build
 #  tags:
