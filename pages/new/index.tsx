@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Protocol, { ProtocolTypes } from "@/components/Protocol";
 import AttendanceList, { Attendance } from "@/components/Attendance";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/router";
 
 // NOTE: have to do this for next-js support
 const MDEditor = dynamic(
@@ -13,6 +15,7 @@ const MDEditor = dynamic(
 );
 
 const ProtocolCreate = () => {
+  const router = useRouter();
   const [content, setContent] = useState("");
   const [start, _] = useState(Date.now());
   const [template, setTemplate] = useState("");
@@ -49,7 +52,9 @@ const ProtocolCreate = () => {
 
     const end = Date.now();
     const regexp = /# .*/g;
-    const topics = content.match(regexp);
+    const topics = content
+      .match(regexp)
+      ?.map((x) => x.split(" ").slice(3).join(" "));
     const protocol: Protocol = {
       id: 0,
       start_timestamp: start / 1000.0,
@@ -57,17 +62,25 @@ const ProtocolCreate = () => {
       topics: topics ?? [],
       content: content,
       protocol_type: protocolType as ProtocolTypes,
+      attendanceList: attendanceList,
     };
 
-    window.alert("TODO: Post to api endpoint");
-    //TODO: post to api endpoint
-    // const url = "http://localhost:3000/api/new";
-    // const response = await fetch(url, {
-    //   method: "POST",
-    //   body: JSON.stringify(protocol),
-    // });
-    // //TODO: check result
-    // const result = await response.json();
+    try {
+      const url = "http://localhost:8080/api/protocols";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(protocol),
+      });
+      if (response.status == 201) {
+        //TODO redirect to page
+        router.push("/");
+      }
+    } catch {
+      //TODO: check result
+    }
   }
 
   return (

@@ -1,11 +1,5 @@
 version: "3"
 services:
-  frontend:
-    container_name: protogen_frontend
-    build: 
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
   backend: 
     container_name: protogen_backend
     build: 

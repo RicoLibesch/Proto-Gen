@@ -18,6 +18,14 @@ const ProtocolView = () => {
     start_timestamp: 0,
     end_timestamp: 0,
     topics: [],
+    attendanceList: {
+      Vollmitglieder: [],
+      Entschuldigt: [],
+      Gäste: [],
+      Mitglieder: [],
+      Unentschuldigt: [],
+      Vertreter: [],
+    },
   });
 
   useEffect(() => {
@@ -27,7 +35,7 @@ const ProtocolView = () => {
       (async () => {
         try {
           let response = await fetch(
-            `http://localhost:3000/protocols/${id}.json`
+            `http://localhost:8080/api/protocols/${id}`
           );
           let json = await response.json();
           let protocol = json as Protocol;

@@ -97,8 +97,8 @@ DROP TABLE IF EXISTS "protocols";
 CREATE TABLE "protocols" (
   "id" int4 NOT NULL DEFAULT nextval('protocols_id_seq'::regclass),
   "protocol_type" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "start_timestamp" varchar(20) COLLATE "pg_catalog"."default" NOT NULL,
-  "end_timestamp" varchar(20) COLLATE "pg_catalog"."default",
+  "start_timestamp" INT COLLATE "pg_catalog"."default" NOT NULL,
+  "end_timestamp" INT COLLATE "pg_catalog"."default",
   "content" varchar COLLATE "pg_catalog"."default"
 )
 ;
