@@ -59,7 +59,7 @@ const ProtocolView = () => {
       </div>
       <hr />
       <div data-color-mode="light" className="pt-5">
-        <Markdown className="wmde-markdown">{protocol.content}</Markdown>
+        <Markdown skipHtml className="wmde-markdown">{protocol.content}</Markdown>
       </div>
     </div>
   );
