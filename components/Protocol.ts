@@ -1,3 +1,5 @@
+import { Attendance } from "./Attendance";
+
 export type ProtocolTypes = "Fachschaftssitzung" | "Konstituierende Sitzung";
 
 export default interface Protocol {
@@ -7,4 +9,5 @@ export default interface Protocol {
   end_timestamp: number;
   topics: Array<string>;
   content: string;
+  attendanceList: Attendance
 }

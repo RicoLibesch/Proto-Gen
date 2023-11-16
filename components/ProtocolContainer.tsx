@@ -43,7 +43,7 @@ const ProtocolContainer = ({ protocol, ...props }: ProtocolContainerProps) => {
           </div>
         </div>
         <div className="row-span-1 flex">
-          {protocol.topics.map((topic) => {
+          {protocol.topics.reverse().slice(0, 3).map((topic) => {
             return (
               <div
                 key={topic}

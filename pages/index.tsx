@@ -11,13 +11,18 @@ export default function Home() {
   }, []);
 
   async function loadProtocols() {
-    let response = await fetch("http://localhost:3000/protocols.json");
-    let json = await response.json();
+    let response = await fetch("http://localhost:8080/api/protocols");
+    try {
+      let json = await response.json();
 
-    let protocols = json.protocols as Protocol[];
-    // sort the protocols after time
-    protocols.sort((a, b) => b.end_timestamp - a.start_timestamp);
-    setProtocols(protocols);
+      let protocols = json as Protocol[];
+      // sort the protocols after time
+      protocols.sort((a, b) => b.end_timestamp - a.start_timestamp);
+      setProtocols(protocols);
+    } catch (e) {
+      console.log(e);
+      setProtocols([]);
+    }
   }
 
   return (

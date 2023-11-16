@@ -3,13 +3,13 @@ const {AttendanceList} = require("./attendanceListModel");
 class Protocol {
     public id: number;
     public protocol_type: string;
-    public start_timestamp: string;
-    public end_timestamp: string;
+    public start_timestamp: number;
+    public end_timestamp: number;
     public content: string;
     public topics: string[];
     public attendanceList: typeof AttendanceList;
 
-    constructor(protocol_type: string, start_timestamp: string, end_timestamp: string, content: string, topics: string[], attendanceList: typeof AttendanceList) {
+    constructor(protocol_type: string, start_timestamp: number, end_timestamp: number, content: string, topics: string[], attendanceList: typeof AttendanceList) {
         this.protocol_type = protocol_type;
         this.start_timestamp = start_timestamp;
         this.end_timestamp = end_timestamp;
