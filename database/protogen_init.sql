@@ -43,22 +43,6 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
--- Table structure for protocol_templates
--- ----------------------------
-DROP TABLE IF EXISTS "protocol_templates";
-CREATE TABLE "protocol_templates" (
-  "protocol_id" int4 NOT NULL DEFAULT nextval('protocol_templates_protocol_id_seq'::regclass),
-  "template" varchar COLLATE "pg_catalog"."default"
-)
-;
-
--- ----------------------------
--- Records of protocol_templates
--- ----------------------------
-BEGIN;
-COMMIT;
-
--- ----------------------------
 -- Table structure for protocol_topics
 -- ----------------------------
 DROP TABLE IF EXISTS "protocol_topics";
@@ -80,7 +64,8 @@ COMMIT;
 DROP TABLE IF EXISTS "protocol_types";
 CREATE TABLE "protocol_types" (
   "id" int4 NOT NULL DEFAULT nextval('protocol_types_id_seq'::regclass),
-  "title" varchar COLLATE "pg_catalog"."default" NOT NULL
+  "title" varchar COLLATE "pg_catalog"."default" NOT NULL,
+  "template" varchar COLLATE "pg_catalog"."default"
 )
 ;
 
@@ -120,11 +105,6 @@ ALTER TABLE "protocol_attendances" ADD CONSTRAINT "protocol_attendances_pkey" PR
 ALTER TABLE "protocol_roles" ADD CONSTRAINT "protocol_roles_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
--- Primary Key structure for table protocol_templates
--- ----------------------------
-ALTER TABLE "protocol_templates" ADD CONSTRAINT "protocol_templates_pkey" PRIMARY KEY ("protocol_id");
-
--- ----------------------------
 -- Primary Key structure for table protocol_topics
 -- ----------------------------
 ALTER TABLE "protocol_topics" ADD CONSTRAINT "protocol_topics_pkey" PRIMARY KEY ("protocol_id", "topic_name");
@@ -143,11 +123,6 @@ ALTER TABLE "protocols" ADD CONSTRAINT "protocols_pkey" PRIMARY KEY ("id");
 -- Foreign Keys structure for table protocol_attendances
 -- ----------------------------
 ALTER TABLE "protocol_attendances" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY ("protocol_id") REFERENCES "protocols" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- ----------------------------
--- Foreign Keys structure for table protocol_templates
--- ----------------------------
-ALTER TABLE "protocol_templates" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY ("protocol_id") REFERENCES "protocols" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- ----------------------------
 -- Foreign Keys structure for table protocol_topics
