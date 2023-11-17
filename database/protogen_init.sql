@@ -96,9 +96,9 @@ COMMIT;
 DROP TABLE IF EXISTS "protocols";
 CREATE TABLE "protocols" (
   "id" int4 NOT NULL DEFAULT nextval('protocols_id_seq'::regclass),
-  "protocol_type" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
-  "start_timestamp" INT COLLATE "pg_catalog"."default" NOT NULL,
-  "end_timestamp" INT COLLATE "pg_catalog"."default",
+  "protocol_type_id" int4 NOT NULL,
+  "start_timestamp" int4 NOT NULL,
+  "end_timestamp" int4,
   "content" varchar COLLATE "pg_catalog"."default"
 )
 ;
@@ -153,3 +153,8 @@ ALTER TABLE "protocol_templates" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY ("p
 -- Foreign Keys structure for table protocol_topics
 -- ----------------------------
 ALTER TABLE "protocol_topics" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY ("protocol_id") REFERENCES "protocols" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- ----------------------------
+-- Foreign Keys structure for table protocols
+-- ----------------------------
+ALTER TABLE "protocols" ADD CONSTRAINT "fk_protocol_type_id" FOREIGN KEY ("protocol_type_id") REFERENCES "protocol_types" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
