@@ -48,7 +48,7 @@ COMMIT;
 DROP TABLE IF EXISTS "protocol_templates";
 CREATE TABLE "protocol_templates" (
   "protocol_id" int4 NOT NULL DEFAULT nextval('protocol_templates_protocol_id_seq'::regclass),
-  "template" varchar COLLATE "pg_catalog"."default" NOT NULL
+  "template" varchar COLLATE "pg_catalog"."default"
 )
 ;
 
