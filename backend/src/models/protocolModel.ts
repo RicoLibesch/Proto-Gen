@@ -9,13 +9,14 @@ class Protocol {
     public topics: string[];
     public attendanceList: typeof AttendanceList;
 
-    constructor(protocol_type: string, start_timestamp: number, end_timestamp: number, content: string, topics: string[], attendanceList: typeof AttendanceList) {
+    constructor(protocol_type: string, start_timestamp: number, end_timestamp: number, content: string, topics: string[], attendanceList: typeof AttendanceList, id: number = 0) {
         this.protocol_type = protocol_type;
         this.start_timestamp = start_timestamp;
         this.end_timestamp = end_timestamp;
         this.content = content;
         this.topics = topics;
         this.attendanceList = attendanceList;
+        this.id = id;
     }
 
     isValidPayload(): boolean {

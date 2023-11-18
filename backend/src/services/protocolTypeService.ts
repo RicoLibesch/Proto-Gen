@@ -61,7 +61,7 @@ const updateProtocolType = async (protocolTypeId: number, protocolType: typeof P
     }
 };
 
-/*const selectProtocolTypeId = async (title: string): Promise<number> => {
+const selectProtocolTypeId = async (title: string): Promise<number> => {
     try {
         const result = await connection.query('SELECT id FROM protocol_types WHERE title = $1', [title]);
 
@@ -75,6 +75,21 @@ const updateProtocolType = async (protocolTypeId: number, protocolType: typeof P
         console.log(err);
         throw new Error("Error retrieving type ID");
     }
-};*/
+};
 
-module.exports = {insertProtocolType, selectProtocolTypeById, selectProtocolTypes, updateProtocolType};
+const selectProtocolTypeTitle = async (id: number): Promise<string> => {
+    try {
+        const result = await connection.query('SELECT title FROM protocol_types WHERE id = $1', [id]);
+
+        if (result.rows.length > 0) {
+            return result.rows[0].title;
+        } else {
+            throw new Error(`Type with ID '${id}' not found`);
+        }
+    } catch (err) {
+        console.log(err);
+        throw new Error("Error retrieving type Name");
+    }
+};
+
+module.exports = {insertProtocolType, selectProtocolTypeById, selectProtocolTypes, updateProtocolType, selectProtocolTypeId, selectProtocolTypeTitle};
