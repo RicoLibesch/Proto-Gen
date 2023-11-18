@@ -73,6 +73,68 @@ CREATE TABLE "protocol_types" (
 -- Records of protocol_types
 -- ----------------------------
 BEGIN;
+INSERT INTO "protocol_types" ("id", "title", "template") VALUES (2, 'Konstituierende Sitzung', 'Eröffnung durch 
+
+Protokoll geschrieben von 
+
+# Top 0 Genehmigung des Protokolls der letzten Sitzung
+
+# Top 1 Termine
+
+# Top 2 Gäste
+
+# Top 3 Post und E-Mails
+- Post
+
+- E-Mails
+
+# Top 4 Mitteilungen
+
+# Top 5 Rückblick
+
+# Top 6 Gremien und Ausschüsse
+
+# Top 7 Aufgaben
+- Offen
+
+- Erledigt
+
+# Top 8 Finanzen
+
+# Top 9 Sonstige Themen
+
+');
+INSERT INTO "protocol_types" ("id", "title", "template") VALUES (1, 'Fachschaftssitzung', 'Eröffnung durch 
+
+Protokoll geschrieben von 
+
+# Top 0 Genehmigung des Protokolls der letzten Sitzung
+
+# Top 1 Termine
+
+# Top 2 Gäste
+
+# Top 3 Post und E-Mails
+- Post
+
+- E-Mails
+
+# Top 4 Mitteilungen
+
+# Top 5 Rückblick
+
+# Top 6 Gremien und Ausschüsse
+
+# Top 7 Aufgaben
+- Offen
+
+- Erledigt
+
+# Top 8 Finanzen
+
+# Top 9 Sonstige Themen
+
+');
 COMMIT;
 
 -- ----------------------------
