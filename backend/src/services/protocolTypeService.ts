@@ -54,7 +54,6 @@ const updateProtocolType = async (protocolTypeId: number, protocolType: typeof P
         if(result.rowCount === 0) {
             throw new Error("No rows updated.");
         }
-        console.log(result);
     } catch (err) {
         console.log(err);
         throw new Error("Error inserting protocol type");

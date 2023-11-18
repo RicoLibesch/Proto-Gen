@@ -75,7 +75,7 @@ const insertProtocol = async (protocol: typeof Protocol): Promise<void> => {
         await insertProtocolAttendance(protocolId, protocol.attendanceList);
 
     } catch (err) {
-        throw new Error(`Inserting Error`);
+        throw new Error("Inserting Error");
     }
 };
 
