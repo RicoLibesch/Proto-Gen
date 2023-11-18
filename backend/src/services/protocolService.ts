@@ -26,17 +26,17 @@ const selectProtocolById = async (protocolId: number): Promise<typeof Protocol> 
 
 const selectProtocols = async (): Promise<typeof Protocol[]> => {
     try {
+        const protocols: typeof Protocol[] = [];
         const protocolsData = await connection.query('SELECT * FROM protocols');
         if(protocolsData.rows.length > 0) {
-            const protocols: typeof Protocol[] = [];
             for(const row of protocolsData.rows) {
                 const protocol: typeof Protocol = row;
                 protocol.attendanceList = await selectProtocolAttendance(protocol.id);
                 protocol.topics = await selectProtocolTopics(protocol.id);
                 protocols.push(protocol);
             }
-            return protocols;
-        }        
+        }
+        return protocols;        
     } catch(err) {
         console.log(err);
     }
