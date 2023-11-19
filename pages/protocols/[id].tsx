@@ -43,14 +43,14 @@ const ProtocolView = () => {
 
   const checkButtons = async (id: number) => {
     try {
-      let response = await fetch(`${process.env.BACKEND}/protocols/${id - 1}`);
+      let response = await fetch(`${process.env.BACKEND}/api/protocols/${id - 1}`);
       let _ = await response.json();
       setPrevButton(response.status == 200);
     } catch (error) {
       setPrevButton(false);
     }
     try {
-      let response = await fetch(`${process.env.BACKEND}/protocols/${id + 1}`);
+      let response = await fetch(`${process.env.BACKEND}/api/protocols/${id + 1}`);
       let _ = await response.json();
       setNextButton(response.status == 200);
     } catch (error) {
