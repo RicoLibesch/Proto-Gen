@@ -31,7 +31,7 @@ const ProtocolView = () => {
   const [prev, setPrevButton] = useState<boolean>(false);
   const [next, setNextButton] = useState<boolean>(false);
   const [id, setId] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const redirectNextPage = () => {
     if (loading) return;
@@ -91,8 +91,6 @@ const ProtocolView = () => {
       })();
     } catch {
       setError("cannot parse id");
-    } finally {
-      setLoading(false);
     }
   }, [router]);
 
