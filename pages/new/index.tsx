@@ -115,7 +115,7 @@ const ProtocolCreate = () => {
         </div>
         <div className="flex">
           <button
-            className="ml-auto bg-mni rounded-full px-6 py-2 text-seperation"
+            className="ml-auto font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation"
             onClick={uploadProtocol}
           >
             Fertigstellen
