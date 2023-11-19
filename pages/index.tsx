@@ -11,7 +11,7 @@ export default function Home() {
   }, []);
 
   async function loadProtocols() {
-    let response = await fetch("http://localhost:8080/api/protocols");
+    let response = await fetch(`${process.env.BACKEND}/api/protocols`);
     try {
       let json = await response.json();
 

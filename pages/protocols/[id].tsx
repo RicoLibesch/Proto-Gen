@@ -43,18 +43,14 @@ const ProtocolView = () => {
 
   const checkButtons = async (id: number) => {
     try {
-      let response = await fetch(
-        `http://localhost:3000/protocols/${id - 1}.json`
-      );
+      let response = await fetch(`${process.env.BACKEND}/protocols/${id - 1}`);
       let _ = await response.json();
       setPrevButton(response.status == 200);
     } catch (error) {
       setPrevButton(false);
     }
     try {
-      let response = await fetch(
-        `http://localhost:3000/protocols/${id + 1}.json`
-      );
+      let response = await fetch(`${process.env.BACKEND}/protocols/${id + 1}`);
       let _ = await response.json();
       setNextButton(response.status == 200);
     } catch (error) {
@@ -71,20 +67,25 @@ const ProtocolView = () => {
       setId(id);
 
       (async () => {
-        await checkButtons(id);
         try {
+          await checkButtons(id);
           let response = await fetch(
-            `http://localhost:8080/api/protocols/${id}`
+            `${process.env.BACKEND}/api/protocols/${id}`
           );
           let json = await response.json();
           let protocol = json as Protocol;
-          setProtocol(protocol);
+          if (response.status == 200) setProtocol(protocol);
+          else
+            setError(
+              "error occurred while fetching the protocol. Please try another protocol"
+            );
         } catch (error) {
           setError(
             "error occurred while fetching the protocol. Please try another protocol"
           );
+        } finally {
+          setLoading(false);
         }
-        setLoading(false);
       })();
     } catch {
       setError("cannot parse id");
@@ -109,7 +110,9 @@ const ProtocolView = () => {
       </div>
       <hr />
       <div data-color-mode="light" className="pt-5">
-        <Markdown skipHtml className="wmde-markdown">{protocol.content}</Markdown>
+        <Markdown skipHtml className="wmde-markdown">
+          {protocol.content}
+        </Markdown>
       </div>
       <div className="fixed font-medium bottom-10 right-1 w-full flex justify-end mb-4 pr-20">
         {/* <button

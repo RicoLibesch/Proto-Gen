@@ -33,11 +33,12 @@ const ProtocolCreate = () => {
   useEffect(() => {
     (async () => {
       try {
-        const url = "http://localhost:3000/protocol_template.json";
+        const url = `${process.env.BACKEND}/api/protocol-types`;
         const response = await fetch(url);
-        const template = await response.json();
-        setContent(template.template);
-        setTemplate(template.template);
+        const templatesJson = (await response.json()) as any[];
+        const template = templatesJson[0].template as string;
+        setTemplate(template);
+        setContent(template);
       } catch {
         /* NOTHING TODO*/
       }
@@ -57,8 +58,8 @@ const ProtocolCreate = () => {
       ?.map((x) => x.split(" ").slice(3).join(" "));
     const protocol: Protocol = {
       id: 0,
-      start_timestamp: start / 1000.0,
-      end_timestamp: end / 1000.0,
+      start_timestamp: Math.floor(start / 1000.0),
+      end_timestamp: Math.floor(end / 1000.0),
       topics: topics ?? [],
       content: content,
       protocol_type: protocolType as ProtocolTypes,
@@ -66,7 +67,7 @@ const ProtocolCreate = () => {
     };
 
     try {
-      const url = "http://localhost:8080/api/protocols";
+      const url = `${process.env.BACKEND}/api/protocols`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
