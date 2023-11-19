@@ -29,6 +29,7 @@ const createProtocol = async (req, res) => {
     }
 
     try {
+        console.log(protocol);
         insertProtocol(protocol);
     } catch(err) {
         console.log(err);
