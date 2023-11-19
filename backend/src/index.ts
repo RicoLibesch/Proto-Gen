@@ -8,5 +8,6 @@ const port = process.env.PORT;
 
 app.use(express.json());
 app.use("/api/protocols", require("./routes/protocolRoutes"));
+app.use("/api/protocol-types", require("./routes/protocolTypeRoutes"));
 
 app.listen(port, () => console.log(`Listening on Port ${port}`));
