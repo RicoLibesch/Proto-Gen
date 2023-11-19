@@ -7,6 +7,11 @@ export interface ProtocolContainerProps extends HTMLAttributes<HTMLDivElement> {
   protocol: Protocol;
 }
 
+/**
+ * formats the date
+ * @param protocol 
+ * @returns the formatted start & end time for the given protocol 
+ */
 export function formatProtocolDate(protocol: Protocol): String {
   let start = new Date(protocol.start_timestamp * 1000);
   let end = new Date(protocol.end_timestamp * 1000);

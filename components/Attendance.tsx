@@ -37,23 +37,25 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
    * @returns
    */
   function renderMember(
-    members: string[],
+    category: Category,
     index: number,
     onRemove: () => void
   ) {
     return (
       <div
-        key={members[index] + index}
+        key={list[category][index] + index}
         className="rounded-full border border-neutral flex items-center overflow-hidden m-1"
-        onDragStart={(e) => handleOnDrag(e, members, index)}
+        onDragStart={(e) => onDrag(e, category, index)}
         draggable
       >
         <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
-        <span className="text-neutral p-1.5 truncate">{members[index]}</span>
+        <span className="text-neutral p-1.5 truncate">
+          {list[category][index]}
+        </span>
         <Clear
           className="mr-2 hover:cursor-pointer fill-neutral"
           onClick={() => {
-            members.splice(index, 1);
+            list[category].splice(index, 1);
             onRemove();
             refresh();
           }}
@@ -67,7 +69,7 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
       <div
         className="p-1"
         key={category}
-        onDrop={(e) => handleOnDrop(e, category)}
+        onDrop={(e) => onDrop(e, category)}
         onDragOver={(e) => e.preventDefault()}
       >
         <div className="text-base font-medium">{category}</div>
@@ -78,7 +80,7 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
             </div>
           ) : (
             members.map((_, index) =>
-              renderMember(members, index, () => update(list))
+              renderMember(category, index, () => update(list))
             )
           )}
         </div>
@@ -91,9 +93,25 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
       <div className="p-1">
         <div className="text-base font-medium">Ausstehend</div>
         <div className="flex flex-wrap">
-          {pending.map((_, index) =>
-            renderMember(pending, index, () => setPending(pending))
-          )}
+          {pending.map((name, index) => (
+            <div
+              key={name + index}
+              className="rounded-full border border-neutral flex items-center overflow-hidden m-1"
+              onDragStart={(e) => onDragPending(e, name, index)}
+              draggable
+            >
+              <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
+              <span className="text-neutral p-1.5 truncate">{name}</span>
+              <Clear
+                className="mr-2 hover:cursor-pointer fill-neutral"
+                onClick={() => {
+                  pending.splice(index, 1);
+                  setPending(pending);
+                  refresh();
+                }}
+              />
+            </div>
+          ))}
           <div className="rounded-full border border-neutral flex flex-wrap items-center m-1">
             {adding ? (
               <div className="flex flex-nowrap">
@@ -134,14 +152,29 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
     );
   }
 
-  function handleOnDrag(e: React.DragEvent, array: string[], index: number) {
+  function onDragPending(e: React.DragEvent, name: string, index: number) {
     e.dataTransfer.clearData();
-    e.dataTransfer.setData("name", array[index]);
-    array.splice(index, 1);
+    e.dataTransfer.setData("name", name);
+    e.dataTransfer.setData("index", index.toString());
   }
 
-  function handleOnDrop(e: React.DragEvent, category: Category) {
+  function onDrag(e: React.DragEvent, category: Category, index: number) {
+    e.dataTransfer.clearData();
+    e.dataTransfer.setData("category", category);
+    e.dataTransfer.setData("index", index.toString());
+    e.dataTransfer.setData("name", list[category][index]);
+  }
+
+  function onDrop(e: React.DragEvent, category: Category) {
     const name = e.dataTransfer.getData("name");
+    const index = +e.dataTransfer.getData("index");
+    const fromCategory = e.dataTransfer.getData("category") as Category;
+    if (fromCategory) {
+      list[fromCategory].splice(index, 1);
+    } else {
+      // from pending moved
+      pending.splice(index, 1);
+    }
     list[category].push(name);
     update(list);
     refresh();
