@@ -34,10 +34,12 @@ const ProtocolView = () => {
   const [loading, setLoading] = useState(false);
 
   const redirectNextPage = () => {
+    if (loading) return;
     router.push(`/protocols/${id + 1}`);
   };
 
   const redirectPreviousPage = () => {
+    if (loading) return;
     router.push(`/protocols/${id - 1}`);
   };
 
