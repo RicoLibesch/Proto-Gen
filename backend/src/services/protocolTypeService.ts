@@ -1,9 +1,9 @@
-const connection = require('../config/postgresConfig');
-const { ProtocolType } = require('../models/protocolTypeModel');
+import { pool } from '../config/postgresConfig';
+import { ProtocolType } from '../models/protocolTypeModel';
 
-const insertProtocolType = async (protocolType: typeof ProtocolType): Promise<void> => {
+export const insertProtocolType = async (protocolType: ProtocolType): Promise<void> => {
     try {
-        await connection.query(
+        await pool.query(
             'INSERT INTO protocol_types(title, template) VALUES ($1, $2)', 
             [protocolType.title, protocolType.template]);
     } catch (err) {
@@ -12,13 +12,13 @@ const insertProtocolType = async (protocolType: typeof ProtocolType): Promise<vo
     }
 };
 
-const selectProtocolTypeById = async (protocolTypeId: number): Promise<typeof ProtocolType> => {
+export const selectProtocolTypeById = async (protocolTypeId: number): Promise<ProtocolType> => {
     console.log(`Select Protocol Type ID ${protocolTypeId}`);
     try {
-        const result = await connection.query('SELECT * FROM protocol_types WHERE id = $1', [protocolTypeId]);
+        const result = await pool.query('SELECT * FROM protocol_types WHERE id = $1', [protocolTypeId]);
 
         if (result.rows.length > 0) {
-            const protocolType: typeof ProtocolType = result.rows[0];
+            const protocolType: ProtocolType = result.rows[0];
             return protocolType;
         } else {
             throw new Error(`Protocol Type with ID '${protocolTypeId}' not found`);
@@ -29,13 +29,13 @@ const selectProtocolTypeById = async (protocolTypeId: number): Promise<typeof Pr
     }
 }
 
-const selectProtocolTypes = async (): Promise<typeof ProtocolType[]> => {
+export const selectProtocolTypes = async (): Promise<ProtocolType[]> => {
     try {
-        const protocolTypes: typeof ProtocolType[] = [];
-        const protocolTypesData = await connection.query('SELECT * FROM protocol_types');
+        const protocolTypes: ProtocolType[] = [];
+        const protocolTypesData = await pool.query('SELECT * FROM protocol_types');
         if(protocolTypesData.rows.length > 0) {   
             for(const row of protocolTypesData.rows) {
-                const protocolType: typeof ProtocolType = row;                
+                const protocolType: ProtocolType = row;                
                 protocolTypes.push(protocolType);
             }
         }
@@ -45,10 +45,10 @@ const selectProtocolTypes = async (): Promise<typeof ProtocolType[]> => {
     }
 };
 
-const updateProtocolType = async (protocolTypeId: number, protocolType: typeof ProtocolType): Promise<void> => {
+export const updateProtocolType = async (protocolTypeId: number, protocolType: ProtocolType): Promise<void> => {
     try {
         console.log("Update Protocol Type ID: ", protocolTypeId);
-        const result = await connection.query(
+        const result = await pool.query(
             'UPDATE protocol_types SET title = $1, template = $2 WHERE id = $3',
             [protocolType.title, protocolType.template, protocolTypeId]);
         if(result.rowCount === 0) {
@@ -60,9 +60,9 @@ const updateProtocolType = async (protocolTypeId: number, protocolType: typeof P
     }
 };
 
-const selectProtocolTypeId = async (title: string): Promise<number> => {
+export const selectProtocolTypeId = async (title: string): Promise<number> => {
     try {
-        const result = await connection.query('SELECT id FROM protocol_types WHERE title = $1', [title]);
+        const result = await pool.query('SELECT id FROM protocol_types WHERE title = $1', [title]);
 
         if (result.rows.length > 0) {
             return result.rows[0].id;
@@ -76,9 +76,9 @@ const selectProtocolTypeId = async (title: string): Promise<number> => {
     }
 };
 
-const selectProtocolTypeTitle = async (id: number): Promise<string> => {
+export const selectProtocolTypeTitle = async (id: number): Promise<string> => {
     try {
-        const result = await connection.query('SELECT title FROM protocol_types WHERE id = $1', [id]);
+        const result = await pool.query('SELECT title FROM protocol_types WHERE id = $1', [id]);
 
         if (result.rows.length > 0) {
             return result.rows[0].title;
@@ -90,5 +90,3 @@ const selectProtocolTypeTitle = async (id: number): Promise<string> => {
         throw new Error("Error retrieving type Name");
     }
 };
-
-module.exports = {insertProtocolType, selectProtocolTypeById, selectProtocolTypes, updateProtocolType, selectProtocolTypeId, selectProtocolTypeTitle};

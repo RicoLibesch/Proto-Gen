@@ -1,21 +1,21 @@
-const connection = require('../config/postgresConfig');
-const { Protocol } = require('../models/protocolModel');
-const { AttendanceList } = require('../models/attendanceListModel');
-const {insertProtocolAttendance, selectProtocolAttendance} = require('./protocolAttendanceService');
-const {insertProtocolTopics, selectProtocolTopics} = require('./protocolTopicService');
-const {selectProtocolTypeId, selectProtocolTypeTitle} = require('./protocolTypeService');
+import { pool } from '../config/postgresConfig';
+import { Protocol } from '../models/protocolModel';
+import { AttendanceList } from '../models/attendanceListModel';
+import {insertProtocolAttendance, selectProtocolAttendance} from './protocolAttendanceService';
+import {insertProtocolTopics, selectProtocolTopics} from './protocolTopicService';
+import {selectProtocolTypeId, selectProtocolTypeTitle} from './protocolTypeService';
 
-const selectProtocolById = async (protocolId: number): Promise<typeof Protocol> => {
+export const selectProtocolById = async (protocolId: number): Promise<Protocol> => {
     console.log("Select Protocol ID ", protocolId);
     try {
-        const result = await connection.query('SELECT * FROM protocols WHERE id = $1', [protocolId]);
+        const result = await pool.query('SELECT * FROM protocols WHERE id = $1', [protocolId]);
 
         if (result.rows.length > 0) {
-            const attendanceList: typeof AttendanceList = await selectProtocolAttendance(result.rows[0].id);
+            const attendanceList: AttendanceList = await selectProtocolAttendance(result.rows[0].id);
             const topics: string[] = await selectProtocolTopics(result.rows[0].id);
             const type: string = await selectProtocolTypeTitle(result.rows[0].protocol_type_id);
 
-            const protocol: typeof Protocol = new Protocol(
+            const protocol: Protocol = new Protocol(
                 type,
                 result.rows[0].start_timestamp,
                 result.rows[0].end_timestamp,
@@ -36,17 +36,17 @@ const selectProtocolById = async (protocolId: number): Promise<typeof Protocol> 
     }
 }
 
-const selectProtocols = async (): Promise<typeof Protocol[]> => {
+export const selectProtocols = async (): Promise<Protocol[]> => {
     try {
-        const protocols: typeof Protocol[] = [];
-        const protocolsData = await connection.query('SELECT * FROM protocols');
+        const protocols: Protocol[] = [];
+        const protocolsData = await pool.query('SELECT * FROM protocols');
         if(protocolsData.rows.length > 0) {
             for(const row of protocolsData.rows) {
-                const attendanceList: typeof AttendanceList = await selectProtocolAttendance(row.id);
+                const attendanceList: AttendanceList = await selectProtocolAttendance(row.id);
                 const topics: string[] = await selectProtocolTopics(row.id);
                 const type: string = await selectProtocolTypeTitle(row.protocol_type_id);
 
-                const protocol: typeof Protocol = new Protocol(
+                const protocol: Protocol = new Protocol(
                     type,
                     row.start_timestamp,
                     row.end_timestamp,
@@ -64,9 +64,8 @@ const selectProtocols = async (): Promise<typeof Protocol[]> => {
     }
 };
 
-const insertProtocol = async (protocol: typeof Protocol): Promise<void> => {
+export const insertProtocol = async (protocol: Protocol): Promise<void> => {
     console.log("Inserting new Procotol")
-    console.log(protocol);
     try {
         const protocolTypeId = await selectProtocolTypeId(protocol.protocol_type);
 
@@ -79,9 +78,9 @@ const insertProtocol = async (protocol: typeof Protocol): Promise<void> => {
     }
 };
 
-const insertProtocolData = async (protocol: typeof Protocol, protocolTypeId: number): Promise<number> => {
+const insertProtocolData = async (protocol: Protocol, protocolTypeId: number): Promise<number> => {
     try {
-        const result = await connection.query(
+        const result = await pool.query(
             'INSERT INTO protocols(protocol_type_id, start_timestamp, end_timestamp, content) VALUES ($1, $2, $3, $4) RETURNING id', 
             [protocolTypeId, protocol.start_timestamp, protocol.end_timestamp, protocol.content]);
 
@@ -92,5 +91,3 @@ const insertProtocolData = async (protocol: typeof Protocol, protocolTypeId: num
         throw new Error("Error inserting protocol data");
     }
 };
-
-module.exports = {insertProtocol, selectProtocolById, selectProtocols};

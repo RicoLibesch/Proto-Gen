@@ -1,4 +1,4 @@
-class ProtocolType {
+export class ProtocolType {
     public id: number;
     public title: string;
     public template: string;
@@ -8,5 +8,3 @@ class ProtocolType {
         this.template = template;
     }
 }
-
-module.exports = {ProtocolType};
