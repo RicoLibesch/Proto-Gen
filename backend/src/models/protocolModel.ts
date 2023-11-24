@@ -1,15 +1,15 @@
-const {AttendanceList} = require("./attendanceListModel");
+import { AttendanceList } from './attendanceListModel';
 
-class Protocol {
+export class Protocol {
     public id: number;
     public protocol_type: string;
     public start_timestamp: number;
     public end_timestamp: number;
     public content: string;
     public topics: string[];
-    public attendanceList: typeof AttendanceList;
+    public attendanceList: AttendanceList;
 
-    constructor(protocol_type: string, start_timestamp: number, end_timestamp: number, content: string, topics: string[], attendanceList: typeof AttendanceList, id: number = 0) {
+    constructor(protocol_type: string, start_timestamp: number, end_timestamp: number, content: string, topics: string[], attendanceList: AttendanceList, id: number = 0) {
         this.protocol_type = protocol_type;
         this.start_timestamp = start_timestamp;
         this.end_timestamp = end_timestamp;
@@ -30,5 +30,3 @@ class Protocol {
           );
     }
 }
-
-module.exports = {Protocol};

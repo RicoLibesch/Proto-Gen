@@ -1,4 +1,4 @@
-class AttendanceList {
+export class AttendanceList {
     public roles: { 
         [role: string]: string[] 
     };
@@ -7,5 +7,3 @@ class AttendanceList {
         this.roles = roles;
     }
 }
-
-module.exports = {AttendanceList};
