@@ -6,6 +6,23 @@ export default function Document() {
     { name: "Protokolle", link: "/" },
     { name: "Neu", link: "/new" },
   ];
+
+  let footerLinks = [
+    {
+      name: "Fachschaft MNI",
+      link: "/",
+    },
+    {
+      name: "Datenschutz",
+      link: "/datenschutz",
+    },
+    {
+      name: "Impressum",
+      link: "/impressum",
+    },
+  ];
+
+
   return (
     <Html lang="en">
       <Head />
@@ -28,7 +45,24 @@ export default function Document() {
         </div>
         <Main />
         <NextScript />
-        {/* <h1>FOOTER</h1> */}
+        <div className="m-5">
+          <hr />
+          <div className="flex flex-nowrap items-center justify-between">
+            <div>
+              {footerLinks.map((value, index) => (
+                <span key={index + value.link}>
+                  <a href={value.link}>{value.name}</a>
+                  {index !== footerLinks.length - 1 ? (
+                    <span className="border-l border-primary mx-1" />
+                  ) : (
+                    <span></span>
+                  )}
+                </span>
+              ))}
+            </div>
+            <div>ICONS</div>
+          </div>
+        </div>
       </body>
     </Html>
   );
