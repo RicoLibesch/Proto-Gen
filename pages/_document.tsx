@@ -1,4 +1,6 @@
+"use client";
 import { Html, Head, Main, NextScript } from "next/document";
+import { Facebook, Instagram, Twitter, GitHub } from "@mui/icons-material";
 import Image from "next/image";
 
 export default function Document() {
@@ -21,7 +23,6 @@ export default function Document() {
       link: "/impressum",
     },
   ];
-
 
   return (
     <Html lang="en">
@@ -47,20 +48,25 @@ export default function Document() {
         <NextScript />
         <div className="m-5">
           <hr />
-          <div className="flex flex-nowrap items-center justify-between">
+          <div className="flex flex-nowrap items-center justify-between text-secondary p-5">
             <div>
               {footerLinks.map((value, index) => (
                 <span key={index + value.link}>
-                  <a href={value.link}>{value.name}</a>
+                  <a className="transition-all hover:text-primary" href={value.link}>{value.name}</a>
                   {index !== footerLinks.length - 1 ? (
-                    <span className="border-l border-primary mx-1" />
+                    <span className="border-l border-secondary mx-2 " />
                   ) : (
                     <span></span>
                   )}
                 </span>
               ))}
             </div>
-            <div>ICONS</div>
+            <div>
+              <Facebook className="cursor-pointer text-secondary hover:text-primary mx-2 " />
+              <Instagram className="cursor-pointer text-secondary  hover:text-primary mx-2" />
+              <Twitter className="cursor-pointer text-secondary  hover:text-primary mx-2" />
+              <GitHub className="cursor-pointer text-secondary hover:text-primary mx-2" />
+            </div>
           </div>
         </div>
       </body>
