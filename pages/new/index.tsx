@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import Protocol, { ProtocolTypes } from "@/components/Protocol";
 import AttendanceList, { Attendance } from "@/components/Attendance";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 
 // NOTE: have to do this for next-js support

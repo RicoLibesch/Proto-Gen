@@ -2,7 +2,8 @@
 const nextConfig = {
   output: "standalone",
   env: {
-    BACKEND: "http://5.249.164.172:8080"
+    // BACKEND: "http://5.249.164.172:8080"
+    BACKEND: "http://localhost:8080"
   }
 };
 
