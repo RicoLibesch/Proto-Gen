@@ -32,7 +32,7 @@ const ProtocolCreate = () => {
   useEffect(() => {
     (async () => {
       try {
-        const url = `${process.env.BACKEND}/api/protocol-types`;
+        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocol-types`;
         const response = await fetch(url);
         const templatesJson = (await response.json()) as any[];
         const template = templatesJson[0].template as string;
@@ -66,7 +66,7 @@ const ProtocolCreate = () => {
     };
 
     try {
-      const url = `${process.env.BACKEND}/api/protocols`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols`;
       const response = await fetch(url, {
         method: "POST",
         headers: {

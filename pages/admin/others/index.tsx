@@ -13,7 +13,7 @@ const Others = () => {
   useEffect(() => {
     const loadEmails = async () => {
       try {
-        const url = `${process.env.BACKEND}/api/mail-receiver`;
+        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mail-receiver`;
         const response = await fetch(url);
         const json = await response.json();
         if (response.ok) setEmails(json);
@@ -24,7 +24,7 @@ const Others = () => {
 
     const loadSocials = async () => {
       try {
-        const url = `${process.env.BACKEND}/api/socials`;
+        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/socials`;
         const response = await fetch(url);
         const json = await response.json();
         if (response.ok) setSociales(json);
@@ -35,7 +35,7 @@ const Others = () => {
 
     const loadAttendance = async () => {
       try {
-        const url = `${process.env.BACKEND}/api/attendance-categories`;
+        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/attendance-categories`;
         const response = await fetch(url);
         const json = (await response.json()) as any[];
         if (response.ok) {
@@ -52,7 +52,7 @@ const Others = () => {
 
   const uploadEmails = async () => {
     try {
-      const url = `${process.env.BACKEND}/api/mail-receiver`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mail-receiver`;
       const response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -73,7 +73,7 @@ const Others = () => {
   const uploadSocials = async () => {
     try {
       socials.forEach(async (social) => {
-        const url = `${process.env.BACKEND}/api/socials/${social.id}`;
+        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/socials/${social.id}`;
         const response = await fetch(url, {
           method: "PUT",
           headers: {
@@ -93,7 +93,7 @@ const Others = () => {
 
   const uploadAttendance = async () => {
     try {
-      const url = `${process.env.BACKEND}/api/attendance-categories`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/attendance-categories`;
       const orderedList = attendance.map((title, order) => {
         return { title: title, order: order };
       });

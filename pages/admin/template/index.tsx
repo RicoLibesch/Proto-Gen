@@ -17,7 +17,7 @@ const Template = () => {
 
   useEffect(() => {
     const loadTemplates = async () => {
-      const url = `${process.env.BACKEND}/api/protocol-types`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocol-types`;
       const response = await fetch(url);
       const json = await response.json();
 
@@ -61,7 +61,7 @@ const Template = () => {
   const save = async () => {
     try {
       //TODO: send templates to the backend
-      const url = `${process.env.BACKEND}/api/protocol-types`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocol-types`;
       const templates = [];
       for (let i = 0; i < content.length; i++) {
         templates.push({

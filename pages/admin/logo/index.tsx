@@ -29,7 +29,7 @@ const Logo = () => {
     }
     try {
       const putData = { image: data };
-      const url = `${process.env.BACKEND}/api/logo`;
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/logo`;
       const response = await fetch(url, {
         method: "PUT",
         headers: {

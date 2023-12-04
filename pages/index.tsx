@@ -12,7 +12,7 @@ export default function Home() {
 
   async function loadProtocols() {
     try {
-      let response = await fetch(`${process.env.BACKEND}/api/protocols`);
+      let response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/protocols`);
       let json = await response.json();
 
       let protocols = json as Protocol[];
