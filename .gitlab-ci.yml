@@ -18,9 +18,7 @@ build_images:
   #image: docker:stable
   tags:
     - protogen-runner-v2
-#  services:
-#    - name: docker:dind
-#      command: ["--privileged"]
+  image: docker:stable
   variables:
     IMAGE_TAG_BACKEND_NODE: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_1:$CI_COMMIT_REF_SLUG
     IMAGE_TAG_BACKEND_DB: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
@@ -32,7 +30,7 @@ build_images:
     - docker build -t $IMAGE_TAG_FRONTEND_NEXTJS -f Dockerfile .
   after_script:
     # löschen der images und anschließendes säubern von <none>-tags die beim Untag&Delete(muss noch überarbeitet werden) entstehen
-    - docker rmi $IMAGE_TAG_BACKEND_NODE $IMAGE_TAG_BACKEND_DB $IMAGE_TAG_FRONTEND_NEXTJS
+    # - docker rmi $IMAGE_TAG_BACKEND_NODE $IMAGE_TAG_BACKEND_DB $IMAGE_TAG_FRONTEND_NEXTJS
     #- docker rmi $(docker image -f "dangling=true" -q)
   only:
     - dev
