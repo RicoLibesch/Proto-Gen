@@ -1,31 +1,20 @@
 import { HTMLAttributes, useState } from "react";
 import { AccountCircle, Clear, Add, Check } from "@mui/icons-material";
 
-export type Category =
-  | "Vollmitglieder"
-  | "Vertreter"
-  | "Mitglieder"
-  | "Gäste"
-  | "Entschuldigt"
-  | "Unentschuldigt";
-
-export const Categories: Category[] = [
-  "Vollmitglieder",
-  "Vertreter",
-  "Mitglieder",
-  "Gäste",
-  "Entschuldigt",
-  "Unentschuldigt",
-];
-
-export type Attendance = Record<Category, string[]>;
+export type Attendance = Record<string, string[]>;
 
 export interface AttendanceProps extends HTMLAttributes<HTMLDivElement> {
   list: Attendance;
+  editable?: boolean;
   update: (value: Attendance) => void;
 }
 
-const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
+const AttendanceList = ({
+  list,
+  update,
+  editable = true,
+  ...props
+}: AttendanceProps) => {
   const [state, updateState] = useState(0); // used to re-render the component when we update the list
   const refresh = () => updateState(state + 1);
   const [pending, setPending] = useState<string[]>([]);
@@ -36,11 +25,7 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
    * @param index
    * @returns
    */
-  function renderMember(
-    category: Category,
-    index: number,
-    onRemove: () => void
-  ) {
+  function renderMember(category: string, index: number, onRemove: () => void) {
     return (
       <div
         key={list[category][index] + index}
@@ -64,7 +49,7 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
     );
   }
 
-  function renderCategory(category: Category, members: string[]) {
+  function renderCategory(category: string, members: string[]) {
     return (
       <div
         className="p-1"
@@ -102,14 +87,18 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
             >
               <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
               <span className="text-neutral p-1.5 truncate">{name}</span>
-              <Clear
-                className="mr-2 hover:cursor-pointer fill-neutral"
-                onClick={() => {
-                  pending.splice(index, 1);
-                  setPending(pending);
-                  refresh();
-                }}
-              />
+              {editable ? (
+                <Clear
+                  className="mr-2 hover:cursor-pointer fill-neutral"
+                  onClick={() => {
+                    pending.splice(index, 1);
+                    setPending(pending);
+                    refresh();
+                  }}
+                />
+              ) : (
+                <div />
+              )}
             </div>
           ))}
           <div className="rounded-full border border-neutral flex flex-wrap items-center m-1">
@@ -153,22 +142,25 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
   }
 
   function onDragPending(e: React.DragEvent, name: string, index: number) {
+    if (!editable) return;
     e.dataTransfer.clearData();
     e.dataTransfer.setData("name", name);
     e.dataTransfer.setData("index", index.toString());
   }
 
-  function onDrag(e: React.DragEvent, category: Category, index: number) {
+  function onDrag(e: React.DragEvent, category: string, index: number) {
+    if (!editable) return;
     e.dataTransfer.clearData();
     e.dataTransfer.setData("category", category);
     e.dataTransfer.setData("index", index.toString());
     e.dataTransfer.setData("name", list[category][index]);
   }
 
-  function onDrop(e: React.DragEvent, category: Category) {
+  function onDrop(e: React.DragEvent, category: string) {
+    if (!editable) return;
     const name = e.dataTransfer.getData("name");
     const index = +e.dataTransfer.getData("index");
-    const fromCategory = e.dataTransfer.getData("category") as Category;
+    const fromCategory = e.dataTransfer.getData("category") as string;
     if (fromCategory) {
       list[fromCategory].splice(index, 1);
     } else {
@@ -184,8 +176,8 @@ const AttendanceList = ({ list, update, ...props }: AttendanceProps) => {
     <div {...props}>
       <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all overflow-x-scroll">
         <div className="text-lg font-medium truncate">Anwesenheitsliste</div>
-        {Categories.map((x) => renderCategory(x, list[x]))}
-        {renderPending()}
+        {Object.keys(list).map((x) => renderCategory(x, list[x]))}
+        {editable ? renderPending() : <div />}
       </div>
     </div>
   );

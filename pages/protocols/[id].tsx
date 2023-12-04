@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import Error from "../_error";
 import "@uiw/react-markdown-preview/markdown.css";
 import jsPDF from "jspdf";
+import AttendanceList from "@/components/Attendance";
 
 const ProtocolView = () => {
   const router = useRouter();
@@ -19,14 +20,7 @@ const ProtocolView = () => {
     start_timestamp: 0,
     end_timestamp: 0,
     topics: [],
-    attendanceList: {
-      Vollmitglieder: [],
-      Entschuldigt: [],
-      Gäste: [],
-      Mitglieder: [],
-      Unentschuldigt: [],
-      Vertreter: [],
-    },
+    attendanceList: {},
   });
 
   const [prev, setPrevButton] = useState<boolean>(false);
@@ -48,7 +42,7 @@ const ProtocolView = () => {
   const checkButtons = async (id: number) => {
     try {
       let response = await fetch(
-        `${process.env.BACKEND}/api/protocols/${id - 1}`
+        `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id - 1}`
       );
       let _ = await response.json();
       setPrevButton(response.status == 200);
@@ -57,7 +51,7 @@ const ProtocolView = () => {
     }
     try {
       let response = await fetch(
-        `${process.env.BACKEND}/api/protocols/${id + 1}`
+        `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id + 1}`
       );
       let _ = await response.json();
       setNextButton(response.status == 200);
@@ -108,10 +102,11 @@ const ProtocolView = () => {
         try {
           await checkButtons(id);
           let response = await fetch(
-            `${process.env.BACKEND}/api/protocols/${id}`
+            `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id}`
           );
           let json = await response.json();
           let protocol = json as Protocol;
+          protocol.attendanceList = protocol.attendanceList.roles as any;
           if (response.status == 200) setProtocol(protocol);
           else
             setError(
@@ -145,8 +140,18 @@ const ProtocolView = () => {
             {"vom " + formatProtocolDate(protocol)}
           </h4>
         </div>
-        <hr />
-        <div data-color-mode="light" className="pt-5">
+      </div>
+      <hr />
+      <div
+        data-color-mode="light"
+        className="flex py-5 max-lg:flex-wrap-reverse flex-wrap"
+      >
+        <AttendanceList
+          className="p-5 max-lg:w-full w-1/4 mr-10"
+          list={protocol.attendanceList}
+          update={() => {}}
+        />
+        <div className="pt-5">
           <Markdown skipHtml className="wmde-markdown">
             {protocol.content}
           </Markdown>
