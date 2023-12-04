@@ -14,20 +14,18 @@ const MDEditor = dynamic(
 );
 
 const ProtocolCreate = () => {
-  const router = useRouter();
-  const [content, setContent] = useState("");
-  const [start, _] = useState(Date.now());
-  const [template, setTemplate] = useState("");
-  const [protocolType, setProtocolType] = useState("Fachschaftssitzung");
+  interface Template {
+    template: string;
+    title: string;
+  }
 
-  const [attendanceList, setAttendanceList] = useState<Attendance>({
-    Vollmitglieder: ["Hendrik Wagner"],
-    Vertreter: ["Fabian Ruckdäschel"],
-    Mitglieder: ["Roman Schnackenberg"],
-    Gäste: [],
-    Entschuldigt: ["Egemen Demir"],
-    Unentschuldigt: ["Richard Keitsch"],
-  });
+  const router = useRouter();
+  const [content, setContent] = useState<string>("");
+  const [start, _] = useState(Date.now());
+  const [protocolType, setProtocolType] = useState("Fachschaftssitzung");
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [index, setIndex] = useState(0);
+  const [attendanceList, setAttendanceList] = useState<Attendance>({});
 
   useEffect(() => {
     (async () => {
@@ -35,9 +33,20 @@ const ProtocolCreate = () => {
         const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocol-types`;
         const response = await fetch(url);
         const templatesJson = (await response.json()) as any[];
-        const template = templatesJson[0].template as string;
-        setTemplate(template);
-        setContent(template);
+        setTemplates(templatesJson);
+        setContent(templatesJson[0].template);
+
+        const attendanceUrl = `${process.env.NEXT_PUBLIC_BACKEND}/api/attendance-categories`;
+        const attendanceResponse = await fetch(attendanceUrl);
+        const categories = await attendanceResponse.json();
+
+        const attendance: Attendance = {};
+        for (const i in categories) {
+          const value = categories[i];
+          attendance[value.title] = [];
+        }
+        console.log(attendance);
+        setAttendanceList(attendance);
       } catch {
         /* NOTHING TODO*/
       }
@@ -45,7 +54,7 @@ const ProtocolCreate = () => {
   }, []);
 
   async function uploadProtocol() {
-    if (template === content) {
+    if (templates[index].template === content) {
       window.alert("Protokoll ist leer!");
       return;
     }
@@ -74,8 +83,7 @@ const ProtocolCreate = () => {
         },
         body: JSON.stringify(protocol),
       });
-      if (response.status == 201) {
-        //TODO redirect to page
+      if (response.ok) {
         router.push("/");
       }
     } catch {
@@ -89,13 +97,18 @@ const ProtocolCreate = () => {
       <div className="container mx-auto items-center px-2">
         <select
           className="block py-5 px-0 w-full text-3xl text-primary bg-transparent border-b-2 border-outline"
-          defaultValue="Fachschaftssitzung"
-          onChange={(x) => setProtocolType(x.target.value)}
+          defaultValue={templates.length > 0 ? templates[0].title : ""}
+          onChange={(x) => {
+            setProtocolType(x.target.value);
+            setContent(templates[x.target.selectedIndex].template);
+            setIndex(x.target.selectedIndex);
+          }}
         >
-          <option value="Fachschaftssitzung">Fachschaftssitzung</option>
-          <option value="Konstituierende Sitzung">
-            Konstituierende Sitzung
-          </option>
+          {templates.map((t, index) => (
+            <option key={index} value={t.title}>
+              {t.title}
+            </option>
+          ))}
         </select>
         <div
           data-color-mode="light"

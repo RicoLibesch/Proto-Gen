@@ -110,10 +110,10 @@ const ProtocolView = () => {
       <hr />
       <div
         data-color-mode="light"
-        className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
+        className="flex py-5 max-lg:flex-wrap-reverse flex-wrap"
       >
         <AttendanceList
-          className="p-5 max-lg:w-full w-1/4"
+          className="p-5 max-lg:w-full w-1/4 mr-10"
           list={protocol.attendanceList}
           update={() => {}}
         />
