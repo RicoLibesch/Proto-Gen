@@ -3,7 +3,6 @@ import { Protocol } from '../models/protocolModel';
 import { AttendanceList } from '../models/attendanceListModel';
 import {insertProtocolAttendance, selectProtocolAttendance} from './protocolAttendanceService';
 import {insertProtocolTopics, selectProtocolTopics} from './protocolTopicService';
-import {selectProtocolTypeId, selectProtocolTypeTitle} from './protocolTypeService';
 
 export const selectProtocolById = async (protocolId: number): Promise<Protocol> => {
     console.log("Select Protocol ID ", protocolId);
@@ -13,10 +12,9 @@ export const selectProtocolById = async (protocolId: number): Promise<Protocol> 
         if (result.rows.length > 0) {
             const attendanceList: AttendanceList = await selectProtocolAttendance(result.rows[0].id);
             const topics: string[] = await selectProtocolTopics(result.rows[0].id);
-            const type: string = await selectProtocolTypeTitle(result.rows[0].protocol_type_id);
 
             const protocol: Protocol = new Protocol(
-                type,
+                result.rows[0].protocol_type,
                 result.rows[0].start_timestamp,
                 result.rows[0].end_timestamp,
                 result.rows[0].content,
@@ -44,10 +42,9 @@ export const selectProtocols = async (): Promise<Protocol[]> => {
             for(const row of protocolsData.rows) {
                 const attendanceList: AttendanceList = await selectProtocolAttendance(row.id);
                 const topics: string[] = await selectProtocolTopics(row.id);
-                const type: string = await selectProtocolTypeTitle(row.protocol_type_id);
 
                 const protocol: Protocol = new Protocol(
-                    type,
+                    row.protocol_type,
                     row.start_timestamp,
                     row.end_timestamp,
                     row.content,
@@ -67,9 +64,7 @@ export const selectProtocols = async (): Promise<Protocol[]> => {
 export const insertProtocol = async (protocol: Protocol): Promise<void> => {
     console.log("Inserting new Procotol")
     try {
-        const protocolTypeId = await selectProtocolTypeId(protocol.protocol_type);
-
-        const protocolId = await insertProtocolData(protocol, protocolTypeId);
+        const protocolId = await insertProtocolData(protocol);
         await insertProtocolTopics(protocolId, protocol.topics);
         await insertProtocolAttendance(protocolId, protocol.attendanceList);
 
@@ -78,11 +73,11 @@ export const insertProtocol = async (protocol: Protocol): Promise<void> => {
     }
 };
 
-const insertProtocolData = async (protocol: Protocol, protocolTypeId: number): Promise<number> => {
+const insertProtocolData = async (protocol: Protocol): Promise<number> => {
     try {
         const result = await pool.query(
-            'INSERT INTO protocols(protocol_type_id, start_timestamp, end_timestamp, content) VALUES ($1, $2, $3, $4) RETURNING id', 
-            [protocolTypeId, protocol.start_timestamp, protocol.end_timestamp, protocol.content]);
+            'INSERT INTO protocols(protocol_type, start_timestamp, end_timestamp, content) VALUES ($1, $2, $3, $4) RETURNING id', 
+            [protocol.protocol_type, protocol.start_timestamp, protocol.end_timestamp, protocol.content]);
 
         return result.rows[0].id;
 
