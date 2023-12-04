@@ -93,6 +93,10 @@ const StringList = ({
                   onChange={(x) => setName(x.target.value)}
                   onKeyDown={(x) => {
                     if (x.key === "Enter") {
+                      if (name.length <= 0) {
+                        setAdding(false);
+                        return;
+                      }
                       list.push(name);
                       setName("");
                       setAdding(false);
@@ -110,6 +114,10 @@ const StringList = ({
                 <Check
                   className="mr-2 hover:cursor-pointer fill-neutral"
                   onClick={() => {
+                    if (name.length <= 0) {
+                      setAdding(false);
+                      return;
+                    }
                     list.push(name);
                     setName("");
                     setAdding(false);

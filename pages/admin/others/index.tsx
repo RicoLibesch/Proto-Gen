@@ -137,7 +137,7 @@ const Others = () => {
         </div>
         <div className="col-span-1">
           <div className="text-2xl font-bold text-center">Footer</div>
-          <SocialLinks socials={socials} update={setSociales}/>
+          <SocialLinks socials={socials} update={setSociales} />
           <div className="text-center pt-4">
             <button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
@@ -156,6 +156,7 @@ const Others = () => {
             title="Anwesenheits Kategorien: "
             update={(x) => setAttendance(x)}
             list={attendance}
+            deleteCallback={(_) => attendance.length > 1}
           />
           <div className="text-center pt-4">
             <button
