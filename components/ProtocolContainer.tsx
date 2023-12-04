@@ -35,6 +35,9 @@ export function formatProtocolDate(protocol: Protocol): String {
 }
 
 const ProtocolContainer = ({ protocol, ...props }: ProtocolContainerProps) => {
+  const getLast3 = (topics: string[]) => {
+    return [...topics].reverse().splice(0, 3)
+  }
   return (
     <div {...props}>
       <div className="grid grid-rows-2 items-center rounded-xl border-2 border-outline justify-center p-2 shadow hover:shadow-lg hover:cursor-pointer">
@@ -48,7 +51,7 @@ const ProtocolContainer = ({ protocol, ...props }: ProtocolContainerProps) => {
           </div>
         </div>
         <div className="row-span-1 flex">
-          {protocol.topics.reverse().slice(0, 3).map((topic) => {
+          {getLast3(protocol.topics).map((topic) => {
             return (
               <div
                 key={topic}

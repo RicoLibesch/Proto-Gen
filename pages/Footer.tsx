@@ -26,10 +26,8 @@ const Footer = () => {
         const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/socials`;
         const response = await fetch(url);
         const json = await response.json();
-        console.log(json);
         if (response.ok) setSociales(json);
       } catch (error) {
-        window.alert("Error while fetching socials!");
       }
     };
 

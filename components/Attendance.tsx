@@ -182,7 +182,7 @@ const AttendanceList = ({
 
   return (
     <div {...props}>
-      <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all overflow-x-scroll">
+      <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all">
         <div className="text-lg font-medium truncate">Anwesenheitsliste</div>
         {Object.keys(list).map((x) => renderCategory(x, list[x]))}
         {editable ? renderPending() : <div />}

@@ -33,7 +33,7 @@ const SocialLinks = ({ socials, update, ...props }: SocialLinksProps) => {
 
   return (
     <div {...props}>
-      <div className="flex flex-col items-center rounded-xl border border-outline p-2 shadow hover:shadow-lg transition-all overflow-x-scroll">
+      <div className="flex flex-col items-center rounded-xl border border-outline p-2 shadow hover:shadow-lg transition-all">
         {socials.map((social, index) => (
           <div key={index}>
             <div className="flex flex-nowrap items-center">
