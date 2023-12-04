@@ -14,6 +14,8 @@
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@uiw/react-md-editor": "^3.25.2",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "next": "14.0.0",
     "next-remove-imports": "^1.0.12",
     "react": "^18",
