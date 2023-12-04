@@ -9,6 +9,54 @@ CREATE SEQUENCE "protocols_id_seq";
 CREATE SEQUENCE "protocol_roles_id_seq";
 
 -- ----------------------------
+-- Table structure for attendance_categories
+-- ----------------------------
+DROP TABLE IF EXISTS "attendance_categories";
+CREATE TABLE "attendance_categories" (
+  "title" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "order" int4 NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of attendance_categories
+-- ----------------------------
+BEGIN;
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Vollmitglieder', 1);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Vertreter', 2);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Mitglieder', 3);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Gäste', 4);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Enschuldigt', 5);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Unenschuldigt', 6);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for logo
+-- ----------------------------
+DROP TABLE IF EXISTS "logo";
+CREATE TABLE "logo" (
+  "id" int4 NOT NULL,
+  "image" bytea
+)
+;
+
+-- ----------------------------
+-- Records of logo
+-- ----------------------------
+BEGIN;
+INSERT INTO "logo" ("id", "image") VALUES (1, NULL);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for mail_receiver
+-- ----------------------------
+DROP TABLE IF EXISTS "mail_receiver";
+CREATE TABLE "mail_receiver" (
+  "mail" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
+)
+;
+
+-- ----------------------------
 -- Table structure for protocol_attendances
 -- ----------------------------
 DROP TABLE IF EXISTS "protocol_attendances";
@@ -63,8 +111,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS "protocol_types";
 CREATE TABLE "protocol_types" (
-  "id" int4 NOT NULL DEFAULT nextval('protocol_types_id_seq'::regclass),
-  "title" varchar COLLATE "pg_catalog"."default" NOT NULL,
+  "title" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "template" varchar COLLATE "pg_catalog"."default"
 )
 ;
@@ -73,7 +120,7 @@ CREATE TABLE "protocol_types" (
 -- Records of protocol_types
 -- ----------------------------
 BEGIN;
-INSERT INTO "protocol_types" ("id", "title", "template") VALUES (2, 'Konstituierende Sitzung', 'Eröffnung durch 
+INSERT INTO "protocol_types" ("title", "template") VALUES ('Konstituierende Sitzung', 'Eröffnung durch 
 
 Protokoll geschrieben von 
 
@@ -104,7 +151,7 @@ Protokoll geschrieben von
 # Top 9 Sonstige Themen
 
 ');
-INSERT INTO "protocol_types" ("id", "title", "template") VALUES (1, 'Fachschaftssitzung', 'Eröffnung durch 
+INSERT INTO "protocol_types" ("title", "template") VALUES ('Fachschaftssitzung', 'Eröffnung durch 
 
 Protokoll geschrieben von 
 
@@ -143,7 +190,7 @@ COMMIT;
 DROP TABLE IF EXISTS "protocols";
 CREATE TABLE "protocols" (
   "id" int4 NOT NULL DEFAULT nextval('protocols_id_seq'::regclass),
-  "protocol_type_id" int4 NOT NULL,
+  "protocol_type" varchar COLLATE "pg_catalog"."default",
   "start_timestamp" int4 NOT NULL,
   "end_timestamp" int4,
   "content" varchar COLLATE "pg_catalog"."default"
@@ -155,6 +202,33 @@ CREATE TABLE "protocols" (
 -- ----------------------------
 BEGIN;
 COMMIT;
+
+-- ----------------------------
+-- Table structure for socials
+-- ----------------------------
+DROP TABLE IF EXISTS "socials";
+CREATE TABLE "socials" (
+  "id" int4 NOT NULL,
+  "title" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "value" varchar(255) COLLATE "pg_catalog"."default"
+)
+;
+
+-- ----------------------------
+-- Records of socials
+-- ----------------------------
+BEGIN;
+INSERT INTO "socials" ("id", "title", "value") VALUES (1, 'webname', 'FS MNI');
+INSERT INTO "socials" ("id", "title", "value") VALUES (2, 'facebook', NULL);
+INSERT INTO "socials" ("id", "title", "value") VALUES (3, 'instagram', 'https://www.instagram.com/fachschaftmni/');
+INSERT INTO "socials" ("id", "title", "value") VALUES (4, 'twitter', NULL);
+INSERT INTO "socials" ("id", "title", "value") VALUES (5, 'git', NULL);
+COMMIT;
+
+-- ----------------------------
+-- Primary Key structure for table mail_receiver
+-- ----------------------------
+ALTER TABLE "mail_receiver" ADD CONSTRAINT "mail_receiver_pkey" PRIMARY KEY ("mail");
 
 -- ----------------------------
 -- Primary Key structure for table protocol_attendances
@@ -174,7 +248,7 @@ ALTER TABLE "protocol_topics" ADD CONSTRAINT "protocol_topics_pkey" PRIMARY KEY 
 -- ----------------------------
 -- Primary Key structure for table protocol_types
 -- ----------------------------
-ALTER TABLE "protocol_types" ADD CONSTRAINT "protocol_types_pkey" PRIMARY KEY ("id");
+ALTER TABLE "protocol_types" ADD CONSTRAINT "protocol_types_pkey" PRIMARY KEY ("title");
 
 -- ----------------------------
 -- Primary Key structure for table protocols
@@ -190,8 +264,3 @@ ALTER TABLE "protocol_attendances" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY (
 -- Foreign Keys structure for table protocol_topics
 -- ----------------------------
 ALTER TABLE "protocol_topics" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY ("protocol_id") REFERENCES "protocols" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
--- ----------------------------
--- Foreign Keys structure for table protocols
--- ----------------------------
-ALTER TABLE "protocols" ADD CONSTRAINT "fk_protocol_type_id" FOREIGN KEY ("protocol_type_id") REFERENCES "protocol_types" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;

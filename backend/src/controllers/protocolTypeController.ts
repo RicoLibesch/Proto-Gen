@@ -1,51 +1,28 @@
 import { ProtocolType } from '../models/protocolTypeModel';
-import { insertProtocolType, selectProtocolTypeById, selectProtocolTypes, updateProtocolType } from '../services/protocolTypeService';
+import { selectProtocolTypes, updateProtocolTypes } from '../services/protocolTypeService';
 
 export const getProtocolTypes = async (req, res) => {
-    console.log("Get Protocol Types");
     try {
         const protocolTypes: ProtocolType[] = await selectProtocolTypes();
         res.status(200).json(protocolTypes);
     } catch(err) {
-        return res.status(404).json({message: `No Protocol Types found`});
+        return res.status(500).json({message: "An unknown error occured"});
     }
 };
 
-export const getProtocolType = async (req, res) => {
-    console.log(`Get Protocol Type with ID ${req.params.id}`);
-    try {
-        const protocolType: ProtocolType = await selectProtocolTypeById(req.params.id);
-        res.status(200).json(protocolType);
-    } catch(err) {
-        return res.status(404).json({message: `Protocol Type with ID ${req.params.id} not found`});
-    }
-};
+export const editProtocolTypes = async (req, res) => {
+    const protocolTypes: ProtocolType[] = req.body;
 
-export const createProtocolType = async (req, res) => {
-    const title: string = req.body.title;
-    const template: string = req.body.template;
-    const protocolType: ProtocolType = new ProtocolType(title, template);    
-    console.log("Create Protocol Type");
+    //Check for name duplicates
+    const titles: string[] = protocolTypes.map((type) => type.title);
+    if(new Set(titles).size !== titles.length)
+        return res.status(400).json({message: "The request contains duplicate titles. Duplicate values are not allowed."});
 
     try {
-        await insertProtocolType(protocolType);
+        await updateProtocolTypes(protocolTypes);
+        res.status(200).json({message: "Protocol Types updated"});
     } catch(err) {
         console.log(err);
-        return res.status(500).json({message: `An unknown error occured`});
-    }
-    res.status(201).json({message: "Created new Protocol Type"});
-};
-
-export const editProtocolType = async (req, res) => {
-    console.log(`Update Protocol Type with ID ${req.params.id}`);
-    const title: string = req.body.title;
-    const template: string = req.body.template;
-    const protocolType: ProtocolType = new ProtocolType(title, template);
-    try {
-        await updateProtocolType(req.params.id, protocolType);
-        res.status(200).json({message: "Protocol Type updated"});
-    } catch(err) {
-        console.log(err);
-        return res.status(404).json({message: `Protocol Typ with ID ${req.params.id} not found`});
+        return res.status(500).json({message: "Error updating Protocol Types"});
     }
 };
