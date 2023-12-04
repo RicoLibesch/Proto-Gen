@@ -1,15 +1,16 @@
 import Protocol from "@/components/Protocol";
-import { useEffect, useState } from "react";
+import { createRef, useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import { formatProtocolDate } from "@/components/ProtocolContainer";
 import { useRouter } from "next/router";
 import Error from "../_error";
 import "@uiw/react-markdown-preview/markdown.css";
+import jsPDF from "jspdf";
 
 const ProtocolView = () => {
   const router = useRouter();
-
   const [error, setError] = useState<string>();
+  const [isDownloading, setDownloading] = useState(false);
 
   let [protocol, setProtocol] = useState<Protocol>({
     id: 0,
@@ -32,6 +33,7 @@ const ProtocolView = () => {
   const [next, setNextButton] = useState<boolean>(false);
   const [id, setId] = useState(0);
   const [loading, setLoading] = useState(true);
+  const md = createRef<HTMLDivElement>();
 
   const redirectNextPage = () => {
     if (loading) return;
@@ -45,18 +47,52 @@ const ProtocolView = () => {
 
   const checkButtons = async (id: number) => {
     try {
-      let response = await fetch(`${process.env.BACKEND}/api/protocols/${id - 1}`);
+      let response = await fetch(
+        `${process.env.BACKEND}/api/protocols/${id - 1}`
+      );
       let _ = await response.json();
       setPrevButton(response.status == 200);
     } catch (error) {
       setPrevButton(false);
     }
     try {
-      let response = await fetch(`${process.env.BACKEND}/api/protocols/${id + 1}`);
+      let response = await fetch(
+        `${process.env.BACKEND}/api/protocols/${id + 1}`
+      );
       let _ = await response.json();
       setNextButton(response.status == 200);
     } catch (error) {
       setNextButton(false);
+    }
+  };
+
+  const generatePdf = () => {
+    try {
+      setDownloading(true); // Setzen Sie den Ladezustand auf true, um den Download zu signalisieren
+
+      const jsPdfdoc = new jsPDF("p", "pt", "a4");
+
+      const options = {
+        margin: [20, 72, 72, 72],
+        html2canvas: {
+          allowTaint: true, //Bilder von unteschiedlichen Quellen erlauben
+          dpi: 300,
+          letterRendering: true, //Buchstaben im Text genauer zu rendern.
+          logging: false, //Conoslen ausgaben
+          scale: 0.3, // Adjust the scale factor as needed
+          imageTimeout: 15000,
+        },
+      };
+      if (md.current)
+        jsPdfdoc.html(md.current, options).then(() => {
+          jsPdfdoc.save(
+            `${protocol.protocol_type}von${formatProtocolDate(protocol)}.pdf`
+          );
+          setDownloading(false); // Setzen Sie den Ladezustand auf false, um das Ende des Downloads zu signalisieren
+        });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      setError("Error generating PDF. Please try again.");
     }
   };
 
@@ -100,27 +136,29 @@ const ProtocolView = () => {
 
   return (
     <div className="container mx-auto items-center justify-center">
-      <div className="flex flex-col justify-center text-center">
-        <h2 className=" text-4xl font-bold leading-10 text-primary">
-          {protocol?.protocol_type}
-        </h2>
-        <h4 className="pt-3 pb-3 text-1xl leading-5 text-secondary sm:text-2xl sm:truncate">
-          {"vom " + formatProtocolDate(protocol)}
-        </h4>
-      </div>
-      <hr />
-      <div data-color-mode="light" className="pt-5">
-        <Markdown skipHtml className="wmde-markdown">
-          {protocol.content}
-        </Markdown>
+      <div ref={md}>
+        <div className="flex flex-col justify-center text-center">
+          <h2 className=" text-4xl font-bold leading-10 text-primary">
+            {protocol?.protocol_type}
+          </h2>
+          <h4 className="pt-3 pb-3 text-1xl leading-5 text-secondary sm:text-2xl sm:truncate">
+            {"vom " + formatProtocolDate(protocol)}
+          </h4>
+        </div>
+        <hr />
+        <div data-color-mode="light" className="pt-5">
+          <Markdown skipHtml className="wmde-markdown">
+            {protocol.content}
+          </Markdown>
+        </div>
       </div>
       <div className="fixed font-medium bottom-10 right-1 w-full flex justify-end mb-4 pr-20">
-        {/* <button
+        <button
           className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni mr-2"
-          onClick={}
+          onClick={generatePdf}
         >
-          Download as PDF
-        </button> */}
+          {isDownloading ? "Loading..." : "Download as PDF"}
+        </button>
         <button
           className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni mr-2 disabled:cursor-default disabled:bg-secondary_hover disabled:text-secondary"
           onClick={redirectPreviousPage}
