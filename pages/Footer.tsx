@@ -78,7 +78,7 @@ const Footer = () => {
             </span>
           ))}
         </div>
-        <div>
+        <div className="flex">
           {socials.map((social, index) =>
             social.value ? (
               <span key={index} onClick={(x) => window.open(social.value)}>
