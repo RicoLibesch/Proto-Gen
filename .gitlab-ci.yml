@@ -6,29 +6,34 @@ stages:
 # - deploy
 
 variables:
-  DOCKER_HOST: tcp://docker:2375/
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""
+#  DOCKER_HOST: tcp://docker:2375
+  #DOCKER_DRIVER: overlay2
+#  DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE_1: "protogen_backend_node"
   DOCKER_IMAGE_2: "protogen_backend_db"
   DOCKER_IMAGE_3: "protogen_frontend_nextjs"
 
 build_images:
   stage: build
+  #image: docker:stable
   tags:
-    - protogen-runner
-  services:
-    - name: docker:dind
-      entrypoint: ["env", "-u", "DOCKER_HOST"]
-      command: ["dockerd-entrypoint.sh"]
+    - protogen-runner-v2
+#  services:
+#    - name: docker:dind
+#      command: ["--privileged"]
   variables:
     IMAGE_TAG_BACKEND_NODE: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_1:$CI_COMMIT_REF_SLUG
     IMAGE_TAG_BACKEND_DB: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
     IMAGE_TAG_FRONTEND_NEXTJS: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_3:$CI_COMMIT_REF_SLUG
   script:
+    # bauen der Docker images
     - docker build -t $IMAGE_TAG_BACKEND_NODE -f backend/Dockerfile .
     - docker build -t $IMAGE_TAG_BACKEND_DB ./database
     - docker build -t $IMAGE_TAG_FRONTEND_NEXTJS -f Dockerfile .
+  after_script:
+    # löschen der images und anschließendes säubern von <none>-tags die beim Untag&Delete(muss noch überarbeitet werden) entstehen
+    - docker rmi $IMAGE_TAG_BACKEND_NODE $IMAGE_TAG_BACKEND_DB $IMAGE_TAG_FRONTEND_NEXTJS
+    #- docker rmi $(docker image -f "dangling=true" -q)
   only:
     - dev
 
@@ -60,7 +65,6 @@ build_images:
 #    - docker push $IMAGE_TAG
 #  only:
 #    - feature/CI 
-
 
 #build_backend_db:
 #  stage: build
