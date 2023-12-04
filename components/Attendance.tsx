@@ -37,14 +37,18 @@ const AttendanceList = ({
         <span className="text-neutral p-1.5 truncate">
           {list[category][index]}
         </span>
-        <Clear
-          className="mr-2 hover:cursor-pointer fill-neutral"
-          onClick={() => {
-            list[category].splice(index, 1);
-            onRemove();
-            refresh();
-          }}
-        />
+        {editable ? (
+          <Clear
+            className="mr-2 hover:cursor-pointer fill-neutral"
+            onClick={() => {
+              list[category].splice(index, 1);
+              onRemove();
+              refresh();
+            }}
+          />
+        ) : (
+          <div />
+        )}
       </div>
     );
   }
@@ -87,18 +91,14 @@ const AttendanceList = ({
             >
               <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
               <span className="text-neutral p-1.5 truncate">{name}</span>
-              {editable ? (
-                <Clear
-                  className="mr-2 hover:cursor-pointer fill-neutral"
-                  onClick={() => {
-                    pending.splice(index, 1);
-                    setPending(pending);
-                    refresh();
-                  }}
-                />
-              ) : (
-                <div />
-              )}
+              <Clear
+                className="mr-2 hover:cursor-pointer fill-neutral"
+                onClick={() => {
+                  pending.splice(index, 1);
+                  setPending(pending);
+                  refresh();
+                }}
+              />
             </div>
           ))}
           <div className="rounded-full border border-neutral flex flex-wrap items-center m-1">

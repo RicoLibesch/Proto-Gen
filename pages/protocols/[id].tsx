@@ -65,7 +65,6 @@ const ProtocolView = () => {
       setDownloading(true); // Setzen Sie den Ladezustand auf true, um den Download zu signalisieren
 
       const jsPdfdoc = new jsPDF("p", "pt", "a4");
-
       const options = {
         margin: [20, 72, 72, 72],
         html2canvas: {
@@ -77,16 +76,18 @@ const ProtocolView = () => {
           imageTimeout: 15000,
         },
       };
-      if (md.current)
+      if (md.current) {
         jsPdfdoc.html(md.current, options).then(() => {
           jsPdfdoc.save(
             `${protocol.protocol_type}von${formatProtocolDate(protocol)}.pdf`
           );
           setDownloading(false); // Setzen Sie den Ladezustand auf false, um das Ende des Downloads zu signalisieren
         });
+      }
     } catch (error) {
       console.error("Error generating PDF:", error);
       setError("Error generating PDF. Please try again.");
+      setDownloading(false);
     }
   };
 
@@ -140,23 +141,24 @@ const ProtocolView = () => {
             {"vom " + formatProtocolDate(protocol)}
           </h4>
         </div>
-      </div>
-      <hr />
-      <div
-        data-color-mode="light"
-        className="flex py-5 max-lg:flex-wrap-reverse flex-wrap"
-      >
-        <AttendanceList
-          className="p-5 max-lg:w-full w-1/4 mr-10"
-          list={protocol.attendanceList}
-          update={() => {}}
-        />
-        <div className="pt-5">
-          <Markdown skipHtml className="wmde-markdown">
-            {protocol.content}
-          </Markdown>
+        <hr />
+        <div
+          data-color-mode="light"
+          className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
+        >
+          <div className="pt-5">
+            <Markdown skipHtml className="wmde-markdown">
+              {protocol.content}
+            </Markdown>
+          </div>
         </div>
       </div>
+      <AttendanceList
+        list={protocol.attendanceList}
+        className="p-5 max-2xl:w-full w-1/5 top-60 left-10 absolute max-2xl:relative max-2xl:left-0 max-2xl:top-0"
+        editable={false}
+        update={() => {}}
+      />
       <div className="fixed font-medium bottom-10 right-1 w-full flex justify-end mb-4 pr-20">
         <button
           className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni mr-2"
