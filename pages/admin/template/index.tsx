@@ -58,8 +58,32 @@ const Template = () => {
     return true;
   };
 
-  const save = () => {
-    //TODO: send templates to the backend
+  const save = async () => {
+    try {
+      //TODO: send templates to the backend
+      const url = `${process.env.BACKEND}/api/protocol-types`;
+      const templates = [];
+      for (let i = 0; i < content.length; i++) {
+        templates.push({
+          title: list[i],
+          template: content[i],
+        });
+      }
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(templates),
+      });
+      if (response.ok) {
+        window.alert("updated!");
+      } else {
+        window.alert("Error: " + response);
+      }
+    } catch (error) {
+      window.alert("Error: " + error);
+    }
   };
 
   return (
