@@ -5,7 +5,9 @@ import { insertProtocol, selectProtocolById, selectProtocols } from '../services
 export const getProtocols = async (req, res) => {
     console.log("Get all Protocols");
     try {
-        const protocols: Protocol[] = await selectProtocols();
+        const page: number = req.query.page || 1; 
+        const pageSize: number = req.query.pageSize || 10;
+        const protocols: Protocol[] = await selectProtocols(page, pageSize);
         res.status(200).json(protocols);
     } catch(err) {
         console.log(err);

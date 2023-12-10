@@ -34,10 +34,11 @@ export const selectProtocolById = async (protocolId: number): Promise<Protocol> 
     }
 }
 
-export const selectProtocols = async (): Promise<Protocol[]> => {
+export const selectProtocols = async (page: number, pageSize: number): Promise<Protocol[]> => {
     try {
         const protocols: Protocol[] = [];
-        const protocolsData = await pool.query('SELECT * FROM protocols');
+        const offset: number = (page - 1) * pageSize;
+        const protocolsData = await pool.query('SELECT * FROM protocols ORDER BY id DESC OFFSET $1 LIMIT $2', [offset, pageSize]);
         if(protocolsData.rows.length > 0) {
             for(const row of protocolsData.rows) {
                 const attendanceList: AttendanceList = await selectProtocolAttendance(row.id);
