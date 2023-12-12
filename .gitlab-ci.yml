@@ -6,16 +6,12 @@ stages:
 # - deploy
 
 variables:
-#  DOCKER_HOST: tcp://docker:2375
-  #DOCKER_DRIVER: overlay2
-#  DOCKER_TLS_CERTDIR: ""
   DOCKER_IMAGE_1: "protogen_backend_node"
   DOCKER_IMAGE_2: "protogen_backend_db"
   DOCKER_IMAGE_3: "protogen_frontend_nextjs"
 
 build_images:
   stage: build
-  #image: docker:stable
   tags:
     - protogen-runner-v2
   image: docker:stable
