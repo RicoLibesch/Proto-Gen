@@ -1,16 +1,17 @@
+import { Request, Response } from "express";
 import { ProtocolType } from '../models/protocolTypeModel';
 import { selectProtocolTypes, updateProtocolTypes } from '../services/protocolTypeService';
 
-export const getProtocolTypes = async (req, res) => {
+export const getProtocolTypes = async (req: Request, res: Response) => {
     try {
         const protocolTypes: ProtocolType[] = await selectProtocolTypes();
         res.status(200).json(protocolTypes);
     } catch(err) {
-        return res.status(500).json({message: "An unknown error occured"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 };
 
-export const editProtocolTypes = async (req, res) => {
+export const editProtocolTypes = async (req: Request, res: Response) => {
     const protocolTypes: ProtocolType[] = req.body;
 
     //Check for name duplicates
@@ -22,7 +23,6 @@ export const editProtocolTypes = async (req, res) => {
         await updateProtocolTypes(protocolTypes);
         res.status(200).json({message: "Protocol Types updated"});
     } catch(err) {
-        console.log(err);
-        return res.status(500).json({message: "Error updating Protocol Types"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 };

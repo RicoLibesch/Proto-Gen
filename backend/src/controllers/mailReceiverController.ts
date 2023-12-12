@@ -1,15 +1,16 @@
+import { Request, Response } from "express";
 import { selectReceiver, updateReceiver } from '../services/mailReceiverService';
 
-export const getReceiver = async (req, res) => {
+export const getReceiver = async (req: Request, res: Response) => {
     try {
         const mails: string[] = await selectReceiver();
         res.status(200).json(mails);
     } catch(err) {
-        return res.status(500).json({message: "Error retrieving Mails"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 };
 
-export const editReceiver = async (req, res) => {
+export const editReceiver = async (req: Request, res: Response) => {
     const mails: string[] = req.body;
 
     //Check if mails are valid
@@ -25,6 +26,6 @@ export const editReceiver = async (req, res) => {
         await updateReceiver(mails);
         res.status(200).json({message: "Mails updated"});
     } catch(err) {
-        return res.status(500).json({message: "Error updating Mail Receivers"});
+        return res.status(500).json({message: "Internal Server Error"});
     }
 };

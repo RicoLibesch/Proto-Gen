@@ -6,11 +6,11 @@ export const updateLogo = async (image: string): Promise<void> => {
         const base64Image = image.replace(/^data:image\/png;base64,/, '');
         const result = await pool.query('UPDATE logo SET image = decode($1, \'base64\') WHERE id = $2', [base64Image, 1]);
         if(result.rowCount === 0) {
-            throw new Error("Error updating Logo");
+            throw new Error("SQL Error");
         }
     } catch (err) {
-        console.log(err);
-        throw new Error("Error updating Logo");
+        console.log(`Error updating the logo: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -19,14 +19,13 @@ export const selectLogo = async (): Promise<string> => {
         console.log("Get Logo");
         const result = await pool.query('SELECT encode(image, \'base64\') FROM logo WHERE id = $1', [1]);
 
-        if (result.rows.length > 0) {
+        if (result.rows.length > 0 && result.rows[0].encode != null) {
             return `data:image/png;base64,${result.rows[0].encode}`;
         } else {
-            throw new Error("Error retrieving Logo");
+            return null;
         }
-
     } catch (err) {
-        console.log(err);
-        throw new Error("Error retrieving Logo");
+        console.log(`Error reading logo: ${err}`);
+        throw new Error("SQL Error");
     }
 };

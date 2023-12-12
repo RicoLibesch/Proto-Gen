@@ -12,11 +12,10 @@ export const updateCategories = async (categories: AttendanceCategory[]): Promis
             const attendanceValues = [category.title, category.order];
             await pool.query(insertQuery, attendanceValues);
         }
-
         await pool.query('COMMIT');
     } catch (err) {
-        console.log(err);
-        throw new Error("Error updating Categories");
+        console.log(`Error updating Attendance Categories: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -29,7 +28,7 @@ export const selectCategories = async (): Promise<AttendanceCategory[]> => {
             result.rows.forEach(row => categories.push(new AttendanceCategory(row.title, row.order)));
         return categories;
     } catch (err) {
-        console.log(err);
-        throw new Error("Error retrieving Attendance Categories");
+        console.log(`Error retrieving Attendance Categories: ${err}`);
+        throw new Error("SQL Error");
     }
 };
