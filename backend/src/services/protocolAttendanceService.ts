@@ -12,7 +12,8 @@ export const insertProtocolAttendance = async (protocolId: number, attendanceLis
             }
         }
     }catch (err) {
-        console.log(err);
+        console.log(`Error inserting protocol attendees: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -31,6 +32,7 @@ export const selectProtocolAttendance = async (protocolId: number): Promise<Atte
         });
         return new AttendanceList(attendanceList);
     } catch (err) {
-        console.log(err);
+        console.log(`Error selecting protocol attendees: ${err}`);
+        throw new Error("SQL Error");
     }
 };

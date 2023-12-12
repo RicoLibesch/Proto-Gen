@@ -13,7 +13,8 @@ export const selectProtocolTypes = async (): Promise<ProtocolType[]> => {
         }
         return protocolTypes;      
     } catch(err) {
-        console.log(err);
+        console.log(`Error reading protocol types: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -29,7 +30,7 @@ export const updateProtocolTypes = async (protocolTypes: ProtocolType[]): Promis
 
         await pool.query('COMMIT');
     } catch (err) {
-        console.log(err);
-        throw new Error("Error updating protocol types");
+        console.log(`Error updating protocol types: ${err}`);
+        throw new Error("SQL Error");
     }
 };

@@ -6,11 +6,14 @@ export const updateSocial = async (id: number, value: string): Promise<void> => 
         console.log("Update Social");
         const result = await pool.query('UPDATE socials SET value = $1 WHERE id = $2', [value ,id]);
         if(result.rowCount === 0) {
-            throw new Error("Error updating Socials");
+            throw new Error("Not found");
         }
     } catch (err) {
-        console.log(err);
-        throw new Error("Error updating Socials");
+        if(err.message === "Not found") {
+            throw new Error("Not found");
+        }
+        console.log(`Error updating socials: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -23,7 +26,7 @@ export const selectSocials = async (): Promise<Social[]> => {
             result.rows.forEach(row => socials.push(new Social(row.id, row.title, row.value)));        
         return socials;
     } catch (err) {
-        console.log(err);
-        throw new Error("Error retrieving Socials");
+        console.log(`Error reading socials: ${err}`);
+        throw new Error("SQL Error");
     }
 };

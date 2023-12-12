@@ -2,8 +2,7 @@ import { pool } from '../config/postgresConfig';
 
 export const updateReceiver = async (mails: string[]): Promise<void> => {
     try {
-        console.log("Update Mail Receiver");
-        
+        console.log("Update Mail Receiver");        
         await pool.query('BEGIN');
         await pool.query('DELETE FROM mail_receiver');
         const insertQuery = 'INSERT INTO mail_receiver(mail) VALUES($1)';
@@ -11,11 +10,10 @@ export const updateReceiver = async (mails: string[]): Promise<void> => {
             const attendanceValues = [mail];
             await pool.query(insertQuery, attendanceValues);
         }
-
         await pool.query('COMMIT');
     } catch (err) {
-        console.log(err);
-        throw new Error("Error updating Mail");
+        console.log(`Error updating mail receivers: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -28,7 +26,7 @@ export const selectReceiver = async (): Promise<string[]> => {
             result.rows.forEach(row => mails.push(row.mail));
         return mails;
     } catch (err) {
-        console.log(err);
-        throw new Error("Error retrieving Mail Receivers");
+        console.log(`Error reading mail receivers: ${err}`);
+        throw new Error("SQL Error");
     }
 };

@@ -22,15 +22,13 @@ export const selectProtocolById = async (protocolId: number): Promise<Protocol> 
                 attendanceList,
                 result.rows[0].id
             );
-
             return protocol;
         } else {
-            throw new Error(`Protocol with ID '${protocolId}' not found`);
+            return null;
         }
-
     } catch (err) {
-        console.log(err);
-        throw new Error(`Protocol with ID '${protocolId}' not found`);
+        console.log(`Error selecting protocol with ID ${protocolId}: ${err}`);
+        throw new Error("SQL Error");
     }
 }
 
@@ -58,7 +56,8 @@ export const selectProtocols = async (page: number, pageSize: number): Promise<P
         }
         return protocols;        
     } catch(err) {
-        console.log(err);
+        console.log(`Error selecting protocols: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -70,7 +69,8 @@ export const insertProtocol = async (protocol: Protocol): Promise<void> => {
         await insertProtocolAttendance(protocolId, protocol.attendanceList);
 
     } catch (err) {
-        throw new Error("Inserting Error");
+        console.log(`Error inserting protocol: ${err}`);
+        throw new Error("SQL Error");
     }
 };
 
@@ -79,11 +79,9 @@ const insertProtocolData = async (protocol: Protocol): Promise<number> => {
         const result = await pool.query(
             'INSERT INTO protocols(protocol_type, start_timestamp, end_timestamp, content) VALUES ($1, $2, $3, $4) RETURNING id', 
             [protocol.protocol_type, protocol.start_timestamp, protocol.end_timestamp, protocol.content]);
-
         return result.rows[0].id;
-
     } catch (err) {
-        console.log(err);
-        throw new Error("Error inserting protocol data");
+        console.log(`Error inserting protocol data: ${err}`);
+        throw new Error("SQL Error");
     }
 };
