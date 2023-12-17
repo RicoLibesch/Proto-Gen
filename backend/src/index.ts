@@ -7,6 +7,7 @@ import { router as logoRouter } from './routes/logoRoutes';
 import { router as mailRouter } from './routes/mailReceiverRoutes';
 import { router as socialRouter } from './routes/socialRoutes';
 import { router as categoryRouter } from './routes/attendanceCategoryRoutes';
+import { router as authRouter } from './routes/authRoutes';
 const app = express();
 
 app.use(cors());
@@ -20,5 +21,6 @@ app.use("/api/logo", logoRouter);
 app.use("/api/mail-receiver", mailRouter);
 app.use("/api/socials", socialRouter);
 app.use("/api/attendance-categories", categoryRouter);
+app.use("/api/auth", authRouter);
 
 app.listen(port, () => console.log(`Listening on Port ${port}`));
