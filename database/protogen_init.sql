@@ -226,6 +226,24 @@ INSERT INTO "socials" ("id", "title", "value") VALUES (5, 'git', NULL);
 COMMIT;
 
 -- ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS "users";
+CREATE TABLE "users" (
+  "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
+  "first_name" varchar(255) COLLATE "pg_catalog"."default",
+  "last_name" varchar(255) COLLATE "pg_catalog"."default",
+  "mail" varchar(255) COLLATE "pg_catalog"."default"
+)
+;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
 -- Primary Key structure for table mail_receiver
 -- ----------------------------
 ALTER TABLE "mail_receiver" ADD CONSTRAINT "mail_receiver_pkey" PRIMARY KEY ("mail");
@@ -254,6 +272,11 @@ ALTER TABLE "protocol_types" ADD CONSTRAINT "protocol_types_pkey" PRIMARY KEY ("
 -- Primary Key structure for table protocols
 -- ----------------------------
 ALTER TABLE "protocols" ADD CONSTRAINT "protocols_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table users
+-- ----------------------------
+ALTER TABLE "users" ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Foreign Keys structure for table protocol_attendances
