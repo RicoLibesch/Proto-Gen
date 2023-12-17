@@ -1,8 +1,9 @@
 import AdminHeader from "@/components/AdminHeader";
 import Header from "@/pages/Header";
+import { setLogo } from "@/utils/API";
 import { UploadFile } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Logo = () => {
   const [data, setData] = useState<string | null>(null);
@@ -27,23 +28,15 @@ const Logo = () => {
       window.alert("No image selected!");
       return;
     }
-    try {
-      const putData = { image: data };
-      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/logo`;
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(putData),
-      });
-      if (response.ok) {
-        router.reload();
-      }
-    } catch (error) {
-      window.alert("Error: " + error);
-    }
+    await setLogo(data);
+    setData(null);
   };
+
+  useEffect(() => {
+    window.onbeforeunload = (e) => {
+      if (data) e.preventDefault();
+    };
+  }, [data]);
 
   return (
     <div>

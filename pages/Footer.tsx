@@ -1,4 +1,5 @@
 import { Social } from "@/components/SocialLinks";
+import { getSocials } from "@/utils/API";
 import { Facebook, Instagram, Twitter, GitHub } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
@@ -22,13 +23,8 @@ const Footer = () => {
 
   useEffect(() => {
     const fetchSocials = async () => {
-      try {
-        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/socials`;
-        const response = await fetch(url);
-        const json = await response.json();
-        if (response.ok) setSociales(json);
-      } catch (error) {
-      }
+      const socials = await getSocials();
+      setSociales(socials);
     };
 
     fetchSocials();

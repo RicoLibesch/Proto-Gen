@@ -29,7 +29,7 @@ const AttendanceList = ({
     return (
       <div
         key={list[category][index] + index}
-        className="rounded-full border border-neutral flex items-center overflow-hidden m-1"
+        className="rounded-full border border-neutral flex items-center overflow-hidden m-1 cursor-grab"
         onDragStart={(e) => onDrag(e, category, index)}
         draggable
       >
@@ -85,7 +85,7 @@ const AttendanceList = ({
           {pending.map((name, index) => (
             <div
               key={name + index}
-              className="rounded-full border border-neutral flex items-center overflow-hidden m-1"
+              className="rounded-full border border-neutral flex items-center overflow-hidden m-1 cursor-grab"
               onDragStart={(e) => onDragPending(e, name, index)}
               draggable
             >

@@ -8,8 +8,6 @@ function Error({ statusCode }: any) {
         errorMessage = 'Internal Server Error.';
     }
 
-
-
     return (
         <p className="text-center text-xl">
             {`Error ${statusCode}: ${errorMessage}`}

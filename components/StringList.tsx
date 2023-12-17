@@ -9,6 +9,7 @@ export interface StringListProps extends HTMLAttributes<HTMLDivElement> {
   selected?: (index: number) => void;
   deleteCallback?: (index: number) => boolean;
   flex?: boolean;
+  draggable?: boolean;
 }
 
 const StringList = ({
@@ -19,6 +20,7 @@ const StringList = ({
   placeholder,
   deleteCallback,
   flex,
+  draggable,
   ...props
 }: StringListProps) => {
   const [state, updateState] = useState(0); // used to re-render the component when we update the list
@@ -32,6 +34,9 @@ const StringList = ({
   function onDrag(e: React.DragEvent, index: number) {
     e.dataTransfer.clearData();
     e.dataTransfer.setData("index", index.toString());
+    const target = e.target as any;
+    if (target.tagName.toLowerCase() !== "div") return;
+    target.style.borderTop = "solid 1px";
   }
 
   function onDrop(e: React.DragEvent, index: number) {
@@ -39,10 +44,28 @@ const StringList = ({
     const name = list[from];
     list.splice(from, 1);
     list.splice(index, 0, name);
-    console.log("in!\n");
     update(list);
     refresh();
+    const target = e.target as any;
+    if (target.tagName.toLowerCase() !== "div") return;
+    target.style.borderTop = "solid 1px";
   }
+
+  function onDragOver(e: React.DragEvent, index: number) {
+    // console.log(e.target);
+    const target = e.target as any;
+    if (target.tagName.toLowerCase() !== "div") return;
+    target.style.borderTop = "solid 2px";
+    e.preventDefault();
+  }
+
+  function onDragLeave(e: React.DragEvent, index: number) {
+    const target = e.target as any;
+    if (target.tagName.toLowerCase() !== "div") return;
+    target.style.borderTop = "solid 1px";
+    e.preventDefault();
+  }
+
   return (
     <div {...props}>
       <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all">
@@ -52,13 +75,15 @@ const StringList = ({
             return (
               <div
                 className={
-                  "rounded-full border border-neutral flex items-center justify-between overflow-hidden m-1 pl-3 cursor-pointer " +
-                  (selectedIndex === index ? "bg-secondary_hover" : "")
+                  "rounded-full border border-neutral flex items-center justify-between overflow-hidden m-1 pl-3 " +
+                  (selectedIndex === index ? "bg-secondary_hover" : "") +
+                  (draggable ? "cursor-grab" : "")
                 }
-                draggable
+                draggable={draggable}
                 onDragStart={(e) => onDrag(e, index)}
                 onDrop={(e) => onDrop(e, index)}
-                onDragOver={(e) => e.preventDefault()}
+                onDragOver={(e) => onDragOver(e, index)}
+                onDragLeave={(e) => onDragLeave(e, index)}
                 key={index}
                 onClick={() => {
                   if (!selected) return;

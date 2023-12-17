@@ -7,6 +7,7 @@ import Error from "../_error";
 import "@uiw/react-markdown-preview/markdown.css";
 import jsPDF from "jspdf";
 import AttendanceList from "@/components/Attendance";
+import { getProtocol } from "@/utils/API";
 
 const ProtocolView = () => {
   const router = useRouter();
@@ -92,34 +93,20 @@ const ProtocolView = () => {
   };
 
   useEffect(() => {
+    if (!router.isReady) return;
     setLoading(true);
-    if (router.query.id === undefined) return;
+    if (!router.isReady) return;
     try {
       setError(undefined);
       const id = parseInt(router.query.id as string);
       setId(id);
 
       (async () => {
-        try {
-          await checkButtons(id);
-          let response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id}`
-          );
-          let json = await response.json();
-          let protocol = json as Protocol;
-          protocol.attendanceList = protocol.attendanceList.roles as any;
-          if (response.status == 200) setProtocol(protocol);
-          else
-            setError(
-              "error occurred while fetching the protocol. Please try another protocol"
-            );
-        } catch (error) {
-          setError(
-            "error occurred while fetching the protocol. Please try another protocol"
-          );
-        } finally {
-          setLoading(false);
-        }
+        setLoading(true);
+        const protocol = await getProtocol(id);
+        checkButtons(id);
+        setProtocol(protocol);
+        setLoading(false);
       })();
     } catch {
       setError("cannot parse id");
