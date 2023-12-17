@@ -37,6 +37,7 @@ next-env.d.ts
 
 #backend
 backend/node_modules
+backend/coverage
 backend/.env
 .env
 backend/.env.2
