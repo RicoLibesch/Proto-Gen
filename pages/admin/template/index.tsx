@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import AdminHeader from "@/components/AdminHeader";
 import StringList from "@/components/StringList";
 import { useEffect, useState } from "react";
+import { getProtocolTypes, setProtoclTypes } from "@/utils/API";
 
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor").then((mod) => mod.default),
@@ -11,34 +12,31 @@ const MDEditor = dynamic(
 );
 
 const Template = () => {
-  const [list, setList] = useState<string[]>([]);
+  const [protocolNames, setProtocolNames] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
-  const [content, setContent] = useState<string[]>([]);
+  const [protocolTemplates, setProtocolTemplates] = useState<string[]>([]);
+  const [saved, setSaved] = useState(true);
 
   useEffect(() => {
     const loadTemplates = async () => {
-      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocol-types`;
-      const response = await fetch(url);
-      const json = await response.json();
-
-      const list = [];
-      const content = [];
-      for (const index in json) {
-        const template = json[index];
-        list.push(template.title);
-        content.push(template.template);
-      }
-
-      setList(list);
-      setContent(content);
+      const types = await getProtocolTypes();
+      setProtocolNames(types.map((x) => x.title));
+      setProtocolTemplates(types.map((x) => x.template));
     };
 
     loadTemplates();
   }, []);
 
+  useEffect(() => {
+    window.onbeforeunload = (e) => {
+      if (!saved) e.preventDefault();
+    };
+  }, [saved]);
+
   const update = (newList: string[]) => {
-    setList(newList);
-    content.push("");
+    setProtocolNames(newList);
+    protocolTemplates.push("");
+    setSaved(false);
   };
 
   const selected = (index: number) => {
@@ -46,44 +44,22 @@ const Template = () => {
   };
 
   const deleteCallback = (index: number) => {
-    if (content.length == 1) {
+    if (protocolTemplates.length == 1) {
       return false;
     }
-    const newContent = [...content];
-    const newList = [...list];
+    const newContent = [...protocolTemplates];
+    const newList = [...protocolNames];
     newContent.splice(index, 1);
     newList.splice(index, 1);
-    setList(newList);
-    setContent(newContent);
+    setProtocolNames(newList);
+    setProtocolTemplates(newContent);
+    setSaved(false);
     return true;
   };
 
   const save = async () => {
-    try {
-      //TODO: send templates to the backend
-      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocol-types`;
-      const templates = [];
-      for (let i = 0; i < content.length; i++) {
-        templates.push({
-          title: list[i],
-          template: content[i],
-        });
-      }
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(templates),
-      });
-      if (response.ok) {
-        window.alert("updated!");
-      } else {
-        window.alert("Error: " + response);
-      }
-    } catch (error) {
-      window.alert("Error: " + error);
-    }
+    await setProtoclTypes(protocolTemplates, protocolNames);
+    setSaved(true);
   };
 
   return (
@@ -104,17 +80,19 @@ const Template = () => {
               selected={selected}
               deleteCallback={deleteCallback}
               placeholder="new Template"
-              list={list}
+              draggable={false}
+              list={protocolNames}
             />
             <MDEditor
               className="max-lg:w-full w-3/4"
               height={"500px"}
-              value={content[index]}
+              value={protocolTemplates[index]}
               onChange={(x) => {
-                if (index >= content.length) return;
-                const newContent = [...content];
+                if (index >= protocolTemplates.length) return;
+                const newContent = [...protocolTemplates];
                 newContent[index] = x ?? "";
-                setContent(newContent);
+                setProtocolTemplates(newContent);
+                setSaved(false);
               }}
             />
           </div>

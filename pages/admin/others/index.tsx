@@ -1,117 +1,53 @@
 import AdminHeader from "@/components/AdminHeader";
 import SocialLinks, { Social } from "@/components/SocialLinks";
 import StringList from "@/components/StringList";
-import Header from "@/pages/Header";
+import {
+  getAttendanceCategories,
+  getEmails,
+  getSocials,
+  setAttendanceCategories,
+} from "@/utils/API";
 import { useEffect, useState } from "react";
+import * as API from "@/utils/API";
 
 const Others = () => {
   const [emails, setEmails] = useState<string[]>([]);
   const [attendance, setAttendance] = useState<string[]>([]);
-
-  const [socials, setSociales] = useState<Social[]>([]);
+  const [saved, setSaved] = useState(true);
+  const [socials, setSocials] = useState<Social[]>([]);
 
   useEffect(() => {
-    const loadEmails = async () => {
-      try {
-        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mail-receiver`;
-        const response = await fetch(url);
-        const json = await response.json();
-        if (response.ok) setEmails(json);
-      } catch (error) {
-        window.alert("Error while fetching emails!");
-      }
+    window.onbeforeunload = (e) => {
+      if (!saved) e.preventDefault();
     };
+  }, [saved]);
 
-    const loadSocials = async () => {
-      try {
-        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/socials`;
-        const response = await fetch(url);
-        const json = await response.json();
-        if (response.ok) setSociales(json);
-      } catch (error) {
-        window.alert("Error while fetching socials!");
-      }
+  useEffect(() => {
+    const load = async () => {
+      const emails = await getEmails();
+      setEmails(emails);
+      const socials = await getSocials();
+      setSocials(socials);
+      const attendance = await getAttendanceCategories();
+      setAttendance(attendance);
+      setSaved(true);
     };
-
-    const loadAttendance = async () => {
-      try {
-        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/attendance-categories`;
-        const response = await fetch(url);
-        const json = (await response.json()) as any[];
-        if (response.ok) {
-          setAttendance(json.map((x) => x.title));
-        }
-      } catch (error) {
-        window.alert("Error while fetching attendance!");
-      }
-    };
-    loadEmails();
-    loadSocials();
-    loadAttendance();
+    load();
   }, []);
 
   const uploadEmails = async () => {
-    try {
-      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mail-receiver`;
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(emails),
-      });
-      if (response.ok) {
-        window.alert("updated!");
-      } else {
-        window.alert("Error: " + response);
-      }
-    } catch (error) {
-      window.alert("Error: " + error);
-    }
+    await API.setEmails(emails);
+    setSaved(true);
   };
 
   const uploadSocials = async () => {
-    try {
-      socials.forEach(async (social) => {
-        const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/socials/${social.id}`;
-        const response = await fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(social),
-        });
-        if (!response.ok) {
-          throw new Error(response.toString());
-        }
-      });
-      window.alert("updated!");
-    } catch (error) {
-      window.alert("Error: " + error);
-    }
+    await API.setSocials(socials);
+    setSaved(true);
   };
 
   const uploadAttendance = async () => {
-    try {
-      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/attendance-categories`;
-      const orderedList = attendance.map((title, order) => {
-        return { title: title, order: order };
-      });
-      const response = await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(orderedList),
-      });
-      if (response.ok) {
-        window.alert("updated!");
-      } else {
-        window.alert("Error: " + response);
-      }
-    } catch (error) {
-      window.alert("Error: " + error);
-    }
+    await setAttendanceCategories(attendance);
+    setSaved(true);
   };
 
   return (
@@ -123,7 +59,10 @@ const Others = () => {
           <StringList
             className="mt-4"
             title="E-Mail List: "
-            update={(x) => setEmails(x)}
+            update={(x) => {
+              setEmails(x);
+              setSaved(false);
+            }}
             list={emails}
           />
           <div className="text-center pt-4">
@@ -137,7 +76,13 @@ const Others = () => {
         </div>
         <div className="col-span-1">
           <div className="text-2xl font-bold text-center">Footer</div>
-          <SocialLinks socials={socials} update={setSociales} />
+          <SocialLinks
+            socials={socials}
+            update={(x) => {
+              setSocials(x);
+              setSaved(false);
+            }}
+          />
           <div className="text-center pt-4">
             <button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
@@ -154,7 +99,11 @@ const Others = () => {
           <StringList
             className="mt-4"
             title="Anwesenheits Kategorien: "
-            update={(x) => setAttendance(x)}
+            update={(x) => {
+              setAttendance(x);
+              setSaved(false);
+            }}
+            draggable
             list={attendance}
             deleteCallback={(_) => attendance.length > 1}
           />
