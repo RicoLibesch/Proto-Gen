@@ -10,7 +10,7 @@ export const getProtocols = async (req: Request, res: Response) => {
         if(req.query.page && isNaN(Number(req.query.page)))
             return res.status(400).json({message: 'Query Parameters must be an Integer.'});
         if(req.query.pageSize && isNaN(Number(req.query.pageSize)))
-            return res.status(400).json({message: 'Query Parameters must be an Integer.'});  
+            return res.status(400).json({message: 'Query Parameters must be an Integer.'});
 
         const page: number = Number(req.query.page) || 1; 
         const pageSize: number = Number(req.query.pageSize) || 10;

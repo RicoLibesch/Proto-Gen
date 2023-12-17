@@ -9,7 +9,8 @@
     "dev": "nodemon src/index.ts",
     "test/ci": "jest --ci",
     "test": "jest --config jest.config.js",
-    "doc": "npx typedoc --out doc --entryPoints src/**/*.ts"
+    "doc": "npx typedoc --out doc --entryPoints src/**/*.ts",
+    "coverage": "jest --collect-coverage --watchAll"
   },
   "keywords": [],
   "author": "",

@@ -54,7 +54,7 @@ export const selectProtocols = async (page: number, pageSize: number): Promise<P
                 protocols.push(protocol);
             }
         }
-        return protocols;        
+        return protocols;
     } catch(err) {
         console.log(`Error selecting protocols: ${err}`);
         throw new Error("SQL Error");
