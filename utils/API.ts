@@ -152,7 +152,9 @@ export async function createProtocol(protocol: Protocol) {
 
 export async function getProtocol(id: number) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id}`;
-  const json = (await get(url)) ?? {};
+  const json = (await get(url));
+  if (!json)
+    return undefined;
   let protocol = json as Protocol;
   protocol.attendanceList = protocol.attendanceList.roles as any;
   return protocol;

@@ -29,9 +29,12 @@ const AttendanceList = ({
     return (
       <div
         key={list[category][index] + index}
-        className="rounded-full border border-neutral flex items-center overflow-hidden m-1 cursor-grab"
+        className={
+          "rounded-full border border-neutral flex items-center overflow-hidden m-1 " +
+          (editable ? "cursor-grab" : "")
+        }
         onDragStart={(e) => onDrag(e, category, index)}
-        draggable
+        draggable={editable}
       >
         <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
         <span className="text-neutral p-1.5 truncate">
@@ -87,7 +90,7 @@ const AttendanceList = ({
               key={name + index}
               className="rounded-full border border-neutral flex items-center overflow-hidden m-1 cursor-grab"
               onDragStart={(e) => onDragPending(e, name, index)}
-              draggable
+              draggable={editable}
             >
               <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
               <span className="text-neutral p-1.5 truncate">{name}</span>

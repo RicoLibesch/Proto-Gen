@@ -63,8 +63,7 @@ const ProtocolCreate = () => {
       attendanceList: attendanceList,
     };
 
-    for (let i = 0; i < 100; i++)
-      await createProtocol(protocol).then(() => router.push("/"));
+    await createProtocol(protocol).then(() => router.push("/"));
   }
 
   return (
