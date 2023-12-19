@@ -4,7 +4,7 @@ import { Facebook, Instagram, Twitter, GitHub } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 const Footer = () => {
-  let footerLinks = [
+  let [footerLinks, setFooterLinks] = useState([
     {
       name: "Fachschaft MNI",
       link: "/",
@@ -17,7 +17,7 @@ const Footer = () => {
       name: "Impressum",
       link: "/impressum",
     },
-  ];
+  ]);
 
   const [socials, setSociales] = useState<Social[]>([]);
 
@@ -25,6 +25,11 @@ const Footer = () => {
     const fetchSocials = async () => {
       const socials = await getSocials();
       setSociales(socials);
+      if (socials.length > 0) {
+        const newFooter = [...footerLinks];
+        newFooter[0].name = socials[0].value;
+        setFooterLinks(newFooter);
+      }
     };
 
     fetchSocials();
