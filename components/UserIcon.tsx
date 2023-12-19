@@ -1,3 +1,4 @@
+import { kennung } from "@/utils/API";
 import { AccountCircle } from "@mui/icons-material";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -5,14 +6,15 @@ import { useEffect, useState } from "react";
 const UserIcon = () => {
   const [user, setUser] = useState<string | null>();
 
-  // useEffect(() => {
-  //   //TODO: check if the user is logged in
-  // }, []);
+  useEffect(() => {
+    //TODO: check if the user is logged in
+    setUser(kennung);
+  }, [kennung]);
 
   return (
     <div>
       {user ? (
-        <div className="w-12 h-12 rounded-full bg-mni text-white flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full bg-mni text-white flex items-center justify-center">
           {user.toUpperCase().slice(0, 2)}
         </div>
       ) : (

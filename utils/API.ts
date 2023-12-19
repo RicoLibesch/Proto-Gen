@@ -2,7 +2,31 @@ import Protocol, { ProtocolType } from "@/components/Protocol";
 import { Social } from "@/components/SocialLinks";
 import { toast } from "react-toastify";
 
-let token: string | undefined = undefined;
+export let token: string | undefined = undefined;
+export let kennung: string | undefined = undefined;
+
+export function loadToken() {
+  if (typeof localStorage === "undefined") return;
+
+  const savedToken = localStorage.getItem("fsmni-auth-token");
+  const time = localStorage.getItem("fsmni-auth-date");
+  const tokenLifetime = 60 * 60 * 3;
+  if (savedToken && time) {
+    if (+time + tokenLifetime < new Date().getTime()) {
+      token = savedToken;
+    }
+    kennung = localStorage.getItem("fsmni-kennung")!;
+  }
+}
+
+export function setToken(newToken: string, newKennung: string) {
+  if (typeof localStorage === "undefined") return;
+  token = newToken;
+  kennung = newKennung;
+  localStorage.setItem("fsmni-auth-token", newToken);
+  localStorage.setItem("fsmni-auth-date", new Date().getTime().toString());
+  localStorage.setItem("fsmni-kennung", newKennung);
+}
 
 export function notify(msg: string) {
   toast.error(msg, {
@@ -17,13 +41,13 @@ export function notify(msg: string) {
   });
 }
 
-export function setToken(newToken: string) {
-  token = newToken;
-}
-
 export async function get(url: string) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText}`);
     }
@@ -40,14 +64,15 @@ export async function put(url: string, json: any) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
     },
     body: JSON.stringify(json),
   });
 
   toast.promise(response, {
     pending: "Sending ...",
-    success: "Success!",
-    error: "Something went wrong!",
+    success: { render: "Success!", delay: 100 },
+    error: { render: "Something went wrong", delay: 100 },
   });
 }
 
@@ -56,14 +81,15 @@ export async function post(url: string, json: any) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
     },
     body: JSON.stringify(json),
   });
 
   toast.promise(response, {
     pending: "Sending ...",
-    success: "Success!",
-    error: "Something went wrong!",
+    success: { render: "Success!", delay: 100 },
+    error: { render: "Something went wrong", delay: 100 },
   });
 }
 
@@ -115,6 +141,7 @@ export async function setSocials(socials: Social[]) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token
         },
         body: JSON.stringify(social),
       });
@@ -152,9 +179,8 @@ export async function createProtocol(protocol: Protocol) {
 
 export async function getProtocol(id: number) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id}`;
-  const json = (await get(url));
-  if (!json)
-    return undefined;
+  const json = await get(url);
+  if (!json) return undefined;
   let protocol = json as Protocol;
   protocol.attendanceList = protocol.attendanceList.roles as any;
   return protocol;
@@ -178,7 +204,7 @@ export async function getLogo() {
   return "/fsmniLogo.png";
 }
 
-export async function getProtocols(page=0, limit=20) {
+export async function getProtocols(page = 0, limit = 20) {
   let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols?pageSize=${limit}&page=${page}`;
   let json = (await get(url)) ?? [];
 

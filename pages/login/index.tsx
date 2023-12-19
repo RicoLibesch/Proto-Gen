@@ -2,6 +2,7 @@
 import { setToken } from "@/utils/API";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const router = useRouter();
@@ -10,7 +11,16 @@ const Login = () => {
 
   const login = async () => {
     if (!kennung || !password) {
-      window.alert("Leere felder!");
+      toast.error("Empty kennung or password!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       return;
     }
 
@@ -32,14 +42,33 @@ const Login = () => {
 
       const token = json["token"];
       if (!token) {
-        window.alert("Login daten falsch!");
+        toast.error("Login failed!", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return;
       }
-      console.log(token);
-      setToken(token);
-      // router.push("/");
+      setToken(token, kennung);
+      router.push("/");
     } catch (error) {
       console.log(error);
-    }
+      toast.error("Login failed!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+  }
   };
 
   return (
@@ -63,6 +92,9 @@ const Login = () => {
             placeholder="Passwort"
             className="focus:outline-none border border-secondary rounded-md p-2"
             onChange={(x) => setPassword(x.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") login();
+            }}
           ></input>
         </div>
         <hr></hr>

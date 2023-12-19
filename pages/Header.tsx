@@ -4,16 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Close, Menu } from "@mui/icons-material";
 import UserIcon from "@/components/UserIcon";
-import { getLogo } from "@/utils/API";
+import { getLogo, loadToken, token } from "@/utils/API";
 
 const Header = () => {
-  let links = [
-    { name: "Admin", link: "/admin" },
-    { name: "Protokolle", link: "/" },
-    { name: "Neu", link: "/new" },
-  ];
+  let [links, setLinks] = useState([{ name: "Protokolle", link: "/" }]);
   let [open, setOpen] = useState(false);
 
+  loadToken();
+  
   const [logo, setLogo] = useState("/fsmniLogo.png");
   useEffect(() => {
     const fetchLogo = async () => {
@@ -21,6 +19,26 @@ const Header = () => {
     };
     fetchLogo();
   });
+
+  useEffect(() => {
+    if (token) {
+      setLinks([
+        {
+          name: "Protokolle",
+          link: "/",
+        },
+        {
+          name: "Admin",
+          link: "/admin",
+        },
+        {
+          name: "Neu",
+          link: "/new",
+        },
+      ]);
+    }
+  }, [token]);
+
   return (
     <div className="w-full top-0 left-0 h-[100px]">
       <div className="md:flex items-center justify-between bg-white py-4 md:px-10 px-7">
