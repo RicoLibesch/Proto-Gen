@@ -22,8 +22,8 @@ const ProtocolView = () => {
     id: 0,
     protocol_type: "Fachschaftssitzung",
     content: "",
-    start_timestamp: 0,
-    end_timestamp: 0,
+    start_timestamp: -1,
+    end_timestamp: -1,
     topics: [],
     attendanceList: {},
   });

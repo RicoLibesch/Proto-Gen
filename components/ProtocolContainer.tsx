@@ -13,6 +13,7 @@ export interface ProtocolContainerProps extends HTMLAttributes<HTMLDivElement> {
  * @returns the formatted start & end time for the given protocol
  */
 export function formatProtocolDate(protocol: Protocol): String {
+  if (protocol.start_timestamp == -1) return "";
   let start = new Date(protocol.start_timestamp * 1000);
   let end = new Date(protocol.end_timestamp * 1000);
   const optionsDate: Intl.DateTimeFormatOptions = {
