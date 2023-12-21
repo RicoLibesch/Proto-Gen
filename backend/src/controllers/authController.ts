@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { authenticateUser } from "../services/ldapService";
-import { userExists, insertUser, selectPermissions } from '../services/userService'
-import { User } from '../models/userModel'
+import { userExists, insertUser } from '../services/userService';
+import { selectPermissions } from '../services/userRoleService';
+import { User } from '../models/userModel';
 
 export const loginUser = async (req: Request, res: Response) => {
     try {

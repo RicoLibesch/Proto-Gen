@@ -1,5 +1,6 @@
 import { pool } from '../config/postgresConfig';
 import { User } from '../models/userModel';
+import { hasRole } from './userRoleService';
 
 export const userExists = async (id: string): Promise<boolean> => {
     try {
@@ -22,23 +23,28 @@ export const insertUser = async (user: User): Promise<void> => {
     }
 }
 
-export const selectPermissions = async (user: User): Promise<void> => {
+export const selectAllUsers = async (): Promise<User[]> => {
     try {
-        const roles = await pool.query('SELECT role_id from user_roles WHERE user_id  = $1', [user.id]);
-        roles.rows.forEach(role => {
-            switch(role.role_id) {
-                case 1: {
-                    user.isAdmin = true;
-                    break;
-                }
-                case 2: {
-                    user.isRecorder = true;
-                    break;
-                }
-            } 
-        });
-    } catch (err) {
-        console.log(`Error reading permissions: ${err}`);
+        const users: User[] = [];
+        const userData = await pool.query('SELECT * FROM users');
+        if(userData.rows.length > 0) {
+            for(const row of userData.rows) {
+                const user: User = new User(
+                    row.id,
+                    row.first_name,
+                    row.last_name,
+                    row.mail        
+                );
+
+                user.isAdmin = await hasRole(user.id, 1);
+                user.isRecorder = await hasRole(user.id, 2);
+
+                users.push(user);
+            }
+        }
+        return users;
+    } catch(err) {
+        console.log(`Error selecting users: ${err}`);
         throw new Error("SQL Error");
-    }
+    }    
 };
