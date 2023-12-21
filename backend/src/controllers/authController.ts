@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { authenticateUser } from "../services/ldapService";
-import { userExists, insertUser } from '../services/userService'
+import { userExists, insertUser, selectPermissions } from '../services/userService'
 import { User } from '../models/userModel'
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -12,13 +12,18 @@ export const loginUser = async (req: Request, res: Response) => {
         const user: User = await authenticateUser(req.body.username, req.body.password);
         
         if(!(await userExists(user.id)))
-            await insertUser(user);      
+            await insertUser(user);    
+        
+        //Update the current User Object
+        await selectPermissions(user);
 
         const userObject = {
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
-            mail: user.mail
+            mail: user.mail,
+            isAdmin: user.isAdmin,
+            isRecorder: user.isRecorder
         };
         const accessToken = await generateAccessToken(userObject);
         return res.status(200).json({token: accessToken})
