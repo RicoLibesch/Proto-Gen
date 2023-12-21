@@ -26,8 +26,6 @@ export const insertUser = async (user: User): Promise<void> => {
 
 export const selectAllUsers = async (searchQuery: string): Promise<User[]> => {
     try {
-        console.log(searchQuery);
-
         const users: User[] = [];
         const userData = await pool.query('SELECT * FROM users WHERE LOWER(display_name) LIKE $1 LIMIT 20', [`%${searchQuery}%`]);
         if(userData.rows.length > 0) {
