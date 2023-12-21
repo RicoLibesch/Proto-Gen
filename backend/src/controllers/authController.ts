@@ -25,16 +25,13 @@ export const loginUser = async (req: Request, res: Response) => {
             isAdmin: user.isAdmin,
             isRecorder: user.isRecorder
         };
-        const accessToken = await generateAccessToken(userObject);
-        return res.status(200).json({token: accessToken})
+        const accessToken: string = jwt.sign(userObject, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '3h'});
+        return res.status(200).json({token: accessToken, user: userObject});
     } catch(err) {
         if(err.message === "Invalid Credentials") {
             return res.status(401).json({message: "Invalid Credentials"});
         }
+        console.log(`Error generating JWT: ${err}`);
         return res.status(500).json({message: "Internal Server Error"});
     }
-}
-
-const generateAccessToken = async(user: User): Promise<string> => {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '3h'})
 }

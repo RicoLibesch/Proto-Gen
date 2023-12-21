@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
-import { User } from '../models/userModel'
+import { User } from '../models/userModel';
+import { hasRole } from '../services/userRoleService';
 
 declare global {
     namespace Express {
@@ -10,7 +11,7 @@ declare global {
     }
   }
 
-export function verifyAccessToken(req: Request, res: Response, next: NextFunction) {
+export const verifyAccessToken = async (req: Request, res: Response, next: NextFunction) => {
     const authHeader: string = req.headers['authorization'];
     const token: string = authHeader && authHeader.split(' ')[1];
     if(token == null) 
@@ -25,4 +26,20 @@ export function verifyAccessToken(req: Request, res: Response, next: NextFunctio
         req.user = user;
         next();
     });
-}
+};
+
+export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  if(await hasRole(req.user.id, 1)) {
+    next();
+  } else {
+    return res.status(403).json({message: 'Unauthorized'});
+  }
+};
+
+export const isRecorder = async (req: Request, res: Response, next: NextFunction) => {
+  if(await hasRole(req.user.id, 2)) {
+    next();
+  } else {
+    return res.status(403).json({message: 'Unauthorized'});
+  }
+};
