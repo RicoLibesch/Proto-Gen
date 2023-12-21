@@ -267,6 +267,7 @@ CREATE TABLE "users" (
   "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
   "first_name" varchar(255) COLLATE "pg_catalog"."default",
   "last_name" varchar(255) COLLATE "pg_catalog"."default",
+  "display_name" varchar(255) COLLATE "pg_catalog"."default",
   "mail" varchar(255) COLLATE "pg_catalog"."default"
 )
 ;

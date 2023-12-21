@@ -22,6 +22,7 @@ export const loginUser = async (req: Request, res: Response) => {
             id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
+            displayName: user.displayName,
             mail: user.mail,
             isAdmin: user.isAdmin,
             isRecorder: user.isRecorder

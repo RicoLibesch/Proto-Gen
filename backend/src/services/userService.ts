@@ -16,23 +16,27 @@ export const userExists = async (id: string): Promise<boolean> => {
 export const insertUser = async (user: User): Promise<void> => {
     try {
         console.log(`Inserting new User: ${user.id}`);
-        await pool.query('INSERT INTO users(id, first_name, last_name, mail) VALUES ($1, $2, $3, $4)', [user.id, user.firstName, user.lastName, user.mail]);
+        await pool.query('INSERT INTO users(id, first_name, last_name, display_name, mail) VALUES ($1, $2, $3, $4, $5)', 
+            [user.id, user.firstName, user.lastName, user.displayName, user.mail]);
     } catch (err) {
         console.log(`Error inserting new User: ${err}`);
         throw new Error("SQL Error");
     }
 }
 
-export const selectAllUsers = async (): Promise<User[]> => {
+export const selectAllUsers = async (searchQuery: string): Promise<User[]> => {
     try {
+        console.log(searchQuery);
+
         const users: User[] = [];
-        const userData = await pool.query('SELECT * FROM users');
+        const userData = await pool.query('SELECT * FROM users WHERE LOWER(display_name) LIKE $1 LIMIT 20', [`%${searchQuery}%`]);
         if(userData.rows.length > 0) {
             for(const row of userData.rows) {
                 const user: User = new User(
                     row.id,
                     row.first_name,
                     row.last_name,
+                    row.display_name,
                     row.mail        
                 );
 

@@ -37,7 +37,7 @@ export const authenticateUser = async (username: string, password: string): Prom
         }
       });
     });
-    return new User(username, user.other[0].givenName, user.other[0].sn, user.other[0].mail);
+    return new User(username, user.other[0].givenName, user.other[0].sn, user.other[0].displayName, user.other[0].mail);
   } catch (err) {
     if(err.message === "Invalid Credentials") {
       throw new Error("Invalid Credentials");
