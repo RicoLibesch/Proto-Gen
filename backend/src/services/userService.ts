@@ -1,6 +1,6 @@
 import { pool } from '../config/postgresConfig';
 import { User } from '../models/userModel';
-import { hasRole } from './userRoleService';
+import { hasRole, insertPermission } from './userRoleService';
 
 export const userExists = async (id: string): Promise<boolean> => {
     try {
@@ -16,8 +16,14 @@ export const userExists = async (id: string): Promise<boolean> => {
 export const insertUser = async (user: User): Promise<void> => {
     try {
         console.log(`Inserting new User: ${user.id}`);
+
         await pool.query('INSERT INTO users(id, first_name, last_name, display_name, mail) VALUES ($1, $2, $3, $4, $5)', 
             [user.id, user.firstName, user.lastName, user.displayName, user.mail]);
+
+        if(isFirstUser()) {
+            insertPermission(user.id, 1);
+            console.log(`${user.id} was the first user and received the Administrator role.`);
+        }
     } catch (err) {
         console.log(`Error inserting new User: ${err}`);
         throw new Error("SQL Error");
@@ -49,4 +55,14 @@ export const selectAllUsers = async (searchQuery: string): Promise<User[]> => {
         console.log(`Error selecting users: ${err}`);
         throw new Error("SQL Error");
     }    
+};
+
+const isFirstUser = async (): Promise<boolean> => {
+    try {
+        const result = await pool.query('SELECT * FROM users LIMIT 1');
+        return result.rows.length === 1 ? true : false;
+    } catch(err) {
+        console.log(`Error selecting users: ${err}`);
+        throw new Error("SQL Error");
+    }
 };
