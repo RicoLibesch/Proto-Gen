@@ -31,6 +31,23 @@ INSERT INTO "attendance_categories" ("title", "order") VALUES ('Unenschuldigt', 
 COMMIT;
 
 -- ----------------------------
+-- Table structure for legals
+-- ----------------------------
+DROP TABLE IF EXISTS "legals";
+CREATE TABLE "legals" (
+  "id" int4 NOT NULL,
+  "title" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "value" varchar COLLATE "pg_catalog"."default"
+)
+;
+
+-- ----------------------------
+-- Records of legals
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
 -- Table structure for logo
 -- ----------------------------
 DROP TABLE IF EXISTS "logo";
@@ -277,6 +294,11 @@ CREATE TABLE "users" (
 -- ----------------------------
 BEGIN;
 COMMIT;
+
+-- ----------------------------
+-- Primary Key structure for table legals
+-- ----------------------------
+ALTER TABLE "legals" ADD CONSTRAINT "legals_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Primary Key structure for table mail_receiver
