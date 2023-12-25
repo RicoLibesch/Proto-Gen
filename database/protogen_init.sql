@@ -45,6 +45,8 @@ CREATE TABLE "legals" (
 -- Records of legals
 -- ----------------------------
 BEGIN;
+INSERT INTO "legals" ("id", "title", "value") VALUES (1, 'Impressum', NULL);
+INSERT INTO "legals" ("id", "title", "value") VALUES (2, 'Datenschutz', NULL);
 COMMIT;
 
 -- ----------------------------
