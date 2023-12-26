@@ -67,6 +67,22 @@ INSERT INTO "logo" ("id", "image") VALUES (1, NULL);
 COMMIT;
 
 -- ----------------------------
+-- Table structure for mail_dispatch_settings
+-- ----------------------------
+DROP TABLE IF EXISTS "mail_dispatch_settings";
+CREATE TABLE "mail_dispatch_settings" (
+  "status" int2 NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of mail_dispatch_settings
+-- ----------------------------
+BEGIN;
+INSERT INTO "mail_dispatch_settings" ("status") VALUES (1);
+COMMIT;
+
+-- ----------------------------
 -- Table structure for mail_receiver
 -- ----------------------------
 DROP TABLE IF EXISTS "mail_receiver";
@@ -301,6 +317,11 @@ COMMIT;
 -- Primary Key structure for table legals
 -- ----------------------------
 ALTER TABLE "legals" ADD CONSTRAINT "legals_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table mail_dispatch_settings
+-- ----------------------------
+ALTER TABLE "mail_dispatch_settings" ADD CONSTRAINT "mail_dispatch_settings_pkey" PRIMARY KEY ("status");
 
 -- ----------------------------
 -- Primary Key structure for table mail_receiver

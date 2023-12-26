@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { selectReceiver, updateReceiver } from '../services/mailReceiverService';
+import { isMailDispatchEnabled, updateMailDispatch } from '../services/mailDispatchService';
+import { isBoolean } from "util";
 
 export const getReceiver = async (req: Request, res: Response) => {
     try {
@@ -28,4 +30,30 @@ export const editReceiver = async (req: Request, res: Response) => {
     } catch(err) {
         return res.status(500).json({message: "Internal Server Error"});
     }
+};
+
+export const getDispatchStatus = async (req: Request, res: Response) => {
+    try {
+        res.status(200).json({isEnabled: await isMailDispatchEnabled()});
+    } catch(err) {
+        return res.status(500).json({message: "Internal Server Error"});
+    }
+    
+    
+};
+
+export const setDispatchStatus = async (req: Request, res: Response) => {
+ try {
+    const setEnabled: boolean = req.body.setEnabled;
+    if(!isBoolean(setEnabled))
+        return res.status(400).json({message: 'Status must be a Boolean.'});
+
+    await updateMailDispatch(setEnabled);
+
+    const message = setEnabled ? "Sending mails activated" : "Sending mails deactivated";
+
+    res.status(200).json({message: message});
+ } catch(err) {
+    return res.status(500).json({message: "Internal Server Error"});
+}
 };
