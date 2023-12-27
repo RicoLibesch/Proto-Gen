@@ -48,9 +48,6 @@ const buildTemplate = (template: string, protocol: Protocol): string => {
         const startTime = start.toLocaleTimeString("de-DE", optionsTime);
         const endTime = end.toLocaleTimeString("de-DE", optionsTime);
 
-        console.log(protocol.attendanceList);
-        console.log(protocol.attendanceList.roles);
-
         const attendanceListHtml = Object.entries(protocol.attendanceList)
             .map(([role, users]) => `<b>${role}:</b> ${users.join(', ')}<br/>`)
             .join('');
@@ -63,7 +60,7 @@ const buildTemplate = (template: string, protocol: Protocol): string => {
             content: protocol.content,
             topics: protocol.topics.join(', '),
             link: process.env.EMAIL_BASE_LINK + protocol.id,
-            roles: new Handlebars.SafeString(attendanceListHtml)
+            attendees: new Handlebars.SafeString(attendanceListHtml)
         }
 
         const compiledTemplate = Handlebars.compile(template);

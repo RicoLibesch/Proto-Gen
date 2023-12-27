@@ -92,6 +92,24 @@ CREATE TABLE "mail_receiver" (
 ;
 
 -- ----------------------------
+-- Table structure for mail_templates
+-- ----------------------------
+DROP TABLE IF EXISTS "mail_templates";
+CREATE TABLE "mail_templates" (
+  "type" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "value" varchar COLLATE "pg_catalog"."default"
+)
+;
+
+-- ----------------------------
+-- Records of mail_templates
+-- ----------------------------
+BEGIN;
+INSERT INTO "mail_templates" ("type", "value") VALUES ('subject', 'Protokoll der {{type}} vom {{date}} {{begin}}-{{end}}');
+INSERT INTO "mail_templates" ("type", "value") VALUES ('body', 'Das Protokoll kann hier eingesehen werden: {{link}}.<br/><br/>Besprochene Themen: {{topics}}<br/><br/>Inhalt: {{content}}<br/><br/>Anwesende:<br/>{{attendees}}');
+COMMIT;
+
+-- ----------------------------
 -- Table structure for protocol_attendances
 -- ----------------------------
 DROP TABLE IF EXISTS "protocol_attendances";
@@ -327,6 +345,11 @@ ALTER TABLE "mail_dispatch_settings" ADD CONSTRAINT "mail_dispatch_settings_pkey
 -- Primary Key structure for table mail_receiver
 -- ----------------------------
 ALTER TABLE "mail_receiver" ADD CONSTRAINT "mail_receiver_pkey" PRIMARY KEY ("mail");
+
+-- ----------------------------
+-- Primary Key structure for table mail_templates
+-- ----------------------------
+ALTER TABLE "mail_templates" ADD CONSTRAINT "mail_templates_pkey" PRIMARY KEY ("type");
 
 -- ----------------------------
 -- Primary Key structure for table protocol_attendances
