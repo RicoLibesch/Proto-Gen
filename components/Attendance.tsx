@@ -1,5 +1,5 @@
 import { HTMLAttributes, useState } from "react";
-import { AccountCircle, Clear, Add, Check } from "@mui/icons-material";
+import { Clear, Add, Check } from "@mui/icons-material";
 
 export type Attendance = Record<string, string[]>;
 
@@ -20,6 +20,8 @@ const AttendanceList = ({
   const [pending, setPending] = useState<string[]>([]);
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState<string>("");
+
+  const colors = ["#007BFF", "#28A745", "#DC3545", "#FFC107", "#343A40"];
   /**
    * @param members need array because we want to delete out of it
    * @param index
@@ -30,14 +32,25 @@ const AttendanceList = ({
       <div
         key={list[category][index] + index}
         className={
-          "rounded-full border border-neutral flex items-center overflow-hidden m-1 " +
+          "rounded-full border border-neutral flex items-center overflow-hidden m-1 ml-0 mr-1.5 " +
           (editable ? "cursor-grab" : "")
         }
         onDragStart={(e) => onDrag(e, category, index)}
         draggable={editable}
       >
-        <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
-        <span className="text-neutral p-1.5 truncate">
+        <div
+          className="ml-1 w-7 h-7 rounded-full text-white flex justify-center items-center text-lg"
+          style={{
+            backgroundColor:
+              colors[
+                (index * (category.length * 31) + category.length * 31) %
+                  colors.length
+              ],
+          }}
+        >
+          {list[category][index].toUpperCase().slice(0, 1)}
+        </div>
+        <span className="text-neutral p-1.5 truncate hover:text-clip hover:overflow-x-scroll ">
           {list[category][index]}
         </span>
         {editable ? (
@@ -67,8 +80,8 @@ const AttendanceList = ({
         <div className="text-base font-medium">{category}</div>
         <div className="flex flex-wrap">
           {members.length == 0 ? (
-            <div className="rounded-full border border-neutral flex items-center m-1">
-              <span className="text-neutral p-1">Keine</span>
+            <div className="rounded-full border border-neutral flex items-center m-1 mx-0">
+              <span className="text-neutral p-1 px-2">Keine</span>
             </div>
           ) : (
             members.map((_, index) =>
@@ -88,11 +101,16 @@ const AttendanceList = ({
           {pending.map((name, index) => (
             <div
               key={name + index}
-              className="rounded-full border border-neutral flex items-center overflow-hidden m-1 cursor-grab"
+              className="rounded-full border border-neutral flex items-center overflow-hidden m-1 ml-0 mr-1.5 cursor-grab"
               onDragStart={(e) => onDragPending(e, name, index)}
               draggable={editable}
             >
-              <AccountCircle className="w-8 h-8" style={{ color: "#49454F" }} />
+              <div
+                className="ml-1 w-7 h-7 rounded-full text-white flex justify-center items-center text-lg"
+                style={{ backgroundColor: colors[index % colors.length] }}
+              >
+                {name.toUpperCase().slice(0, 1)}
+              </div>
               <span className="text-neutral p-1.5 truncate">{name}</span>
               <Clear
                 className="mr-2 hover:cursor-pointer fill-neutral"
@@ -104,12 +122,12 @@ const AttendanceList = ({
               />
             </div>
           ))}
-          <div className="rounded-full border border-neutral flex flex-wrap items-center m-1">
+          <div className="rounded-full border border-neutral flex flex-wrap items-center m-1 ml-0 mr-1.5">
             {adding ? (
-              <div className="flex flex-nowrap">
+              <div className="flex flex-nowrap items-center w-full">
                 <input
-                  className="ml-2 bg-transparent border-none focus:outline-none w-32"
-                  placeholder="Name"
+                  className="ml-2 bg-transparent border-none focus:outline-none p-1 w-full"
+                  placeholder="Vorname Nachname"
                   onChange={(x) => setName(x.target.value)}
                   onKeyDown={(x) => {
                     if (x.key === "Enter") {
@@ -142,7 +160,7 @@ const AttendanceList = ({
               </div>
             ) : (
               <Add
-                className="w-7 h-7 hover:cursor-pointer fill-neutral"
+                className="w-8 h-8 hover:cursor-pointer fill-neutral"
                 onClick={() => setAdding(true)}
               />
             )}
@@ -185,8 +203,10 @@ const AttendanceList = ({
 
   return (
     <div {...props}>
-      <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all">
-        <div className="text-lg font-medium truncate">Anwesenheitsliste</div>
+      <div className="rounded-xl border border-outline justify-center p-2 px-3 shadow hover:shadow-lg transition-all">
+        <div className="text-lg font-medium truncate mb-1">
+          Anwesenheitsliste
+        </div>
         {Object.keys(list).map((x) => renderCategory(x, list[x]))}
         {editable ? renderPending() : <div />}
       </div>

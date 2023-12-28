@@ -1,21 +1,21 @@
-import { kennung } from "@/utils/API";
+import { store } from "@/utils/API";
 import { AccountCircle } from "@mui/icons-material";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const UserIcon = () => {
-  const [user, setUser] = useState<string | null>();
-
-  useEffect(() => {
-    //TODO: check if the user is logged in
-    setUser(kennung);
-  }, [kennung]);
+  const user = store((s) => s.user);
+  const clear = store((s) => s.clear);
+  const logout = () => {
+    if (confirm("Ausloggen bestätigen"))
+      clear();
+  };
 
   return (
     <div>
       {user ? (
-        <div className="w-10 h-10 rounded-full bg-mni text-white flex items-center justify-center">
-          {user.toUpperCase().slice(0, 2)}
+        <div className="w-10 h-10 rounded-full bg-mni text-white flex items-center justify-center cursor-pointer" onClick={logout}>
+          {user.kennung.toUpperCase().slice(0, 2)}
         </div>
       ) : (
         <Link href="/login">

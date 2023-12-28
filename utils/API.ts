@@ -1,31 +1,43 @@
 import Protocol, { ProtocolType } from "@/components/Protocol";
 import { Social } from "@/components/SocialLinks";
 import { toast } from "react-toastify";
+import { create } from "zustand";
 
-export let token: string | undefined = undefined;
-export let kennung: string | undefined = undefined;
+export type Role = "Administrator" | "Recorder";
+
+export interface User {
+  id: number;
+  kennung: string;
+  token: string;
+  creation_date: number;
+  role: Role;
+}
+
+export type State = {
+  user?: User;
+  setUser: (user: User) => void;
+  clear: () => void;
+};
+
+export const store = create<State>((set) => ({
+  user: undefined,
+  setUser: (user: User) => set({ user }),
+  clear: () => set({ user: undefined }),
+}));
 
 export function loadToken() {
   if (typeof localStorage === "undefined") return;
-
-  const savedToken = localStorage.getItem("fsmni-auth-token");
-  const time = localStorage.getItem("fsmni-auth-date");
-  const tokenLifetime = 60 * 60 * 3;
-  if (savedToken && time) {
-    if (+time + tokenLifetime < new Date().getTime()) {
-      token = savedToken;
+  try {
+    const savedUser = JSON.parse(
+      localStorage.getItem("fsmni-user") ?? ""
+    ) as User;
+    const tokenLifetime = 60 * 60 * 3;
+    if (savedUser) {
+      if (savedUser.creation_date + tokenLifetime < new Date().getTime()) {
+        store.getState().setUser(savedUser);
+      }
     }
-    kennung = localStorage.getItem("fsmni-kennung")!;
-  }
-}
-
-export function setToken(newToken: string, newKennung: string) {
-  if (typeof localStorage === "undefined") return;
-  token = newToken;
-  kennung = newKennung;
-  localStorage.setItem("fsmni-auth-token", newToken);
-  localStorage.setItem("fsmni-auth-date", new Date().getTime().toString());
-  localStorage.setItem("fsmni-kennung", newKennung);
+  } catch {}
 }
 
 export function notify(msg: string) {
@@ -45,7 +57,26 @@ export async function get(url: string) {
   try {
     const response = await fetch(url, {
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: "Bearer " + store.getState().user!.token,
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    return await response.json();
+  } catch (e) {
+    console.log("Error while fetching: " + url);
+    console.log(JSON.stringify(e));
+    notify("Error loading: " + url);
+  }
+}
+
+export async function del(url: string) {
+  try {
+    const response = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + store.getState().user!.token,
       },
     });
     if (!response.ok) {
@@ -64,7 +95,7 @@ export async function put(url: string, json: any) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+      Authorization: "Bearer " + store.getState().user!.token,
     },
     body: JSON.stringify(json),
   });
@@ -81,7 +112,7 @@ export async function post(url: string, json: any) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + token,
+      Authorization: "Bearer " + store.getState().user!.token,
     },
     body: JSON.stringify(json),
   });
@@ -141,7 +172,7 @@ export async function setSocials(socials: Social[]) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+          Authorization: "Bearer " + store.getState().user!.token,
         },
         body: JSON.stringify(social),
       });
@@ -161,7 +192,8 @@ export async function setSocials(socials: Social[]) {
 export async function getAttendanceCategories() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/attendance-categories`;
   const json = await get(url);
-  return (json.map((x: any) => x.title) as string[]) ?? [];
+  if (!json) return [];
+  return json.map((x: any) => x.title) as string[];
 }
 
 export async function setAttendanceCategories(attendance: string[]) {
@@ -212,4 +244,39 @@ export async function getProtocols(page = 0, limit = 20) {
   // sort the protocols after time
   protocols.sort((a, b) => b.end_timestamp - a.start_timestamp);
   return protocols;
+}
+
+export async function getUsers() {
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users`;
+  return ((await get(url)) as User[]) ?? [];
+}
+
+export async function setRole(user: User, role: Role) {
+  let roleId = 0;
+  switch (role) {
+    case "Administrator":
+      roleId = 0;
+      break;
+    case "Recorder":
+      roleId = 1;
+      break;
+  }
+
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${user.id}/roles/${roleId}`;
+  const result = await put(url, {});
+}
+
+export async function removeRole(user: User, role: Role) {
+  let roleId = 0;
+  switch (role) {
+    case "Administrator":
+      roleId = 0;
+      break;
+    case "Recorder":
+      roleId = 1;
+      break;
+  }
+
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${user.id}/roles/${roleId}`;
+  const result = await del(url);
 }

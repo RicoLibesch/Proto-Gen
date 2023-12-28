@@ -7,22 +7,26 @@ export interface AdminHeaderProps extends HTMLAttributes<HTMLDivElement> {
 const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
   const links = [
     {
-      name: "Edit Logo",
+      name: "Logo editieren",
       path: "/admin/logo",
     },
     {
-      name: "Protocol Template",
+      name: "Protokollvorlagen",
       path: "/admin/template",
     },
     {
-      name: "Others",
+      name: "Rechte",
+      path: "/admin/roles",
+    },
+    {
+      name: "Weiteres",
       path: "/admin/others",
     },
   ];
 
   return (
     <div {...props}>
-      <div className="flex flex-nowrap p-2">
+      <div className="flex flex-nowrap p-2 ml-6">
         {links.map((x, index) => {
           return (
             <a

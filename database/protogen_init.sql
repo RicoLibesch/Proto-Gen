@@ -26,8 +26,8 @@ INSERT INTO "attendance_categories" ("title", "order") VALUES ('Vollmitglieder',
 INSERT INTO "attendance_categories" ("title", "order") VALUES ('Vertreter', 2);
 INSERT INTO "attendance_categories" ("title", "order") VALUES ('Mitglieder', 3);
 INSERT INTO "attendance_categories" ("title", "order") VALUES ('Gäste', 4);
-INSERT INTO "attendance_categories" ("title", "order") VALUES ('Enschuldigt', 5);
-INSERT INTO "attendance_categories" ("title", "order") VALUES ('Unenschuldigt', 6);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Entschuldigt', 5);
+INSERT INTO "attendance_categories" ("title", "order") VALUES ('Unentschuldigt', 6);
 COMMIT;
 
 -- ----------------------------

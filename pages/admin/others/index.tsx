@@ -55,14 +55,14 @@ const Others = () => {
       <AdminHeader path="admin/others" />
       <div className="grid grid-cols-3 gap-10 justify-around p-10">
         <div className="col-span-1">
-          <div className="text-2xl font-bold text-center">E-Mail receiver</div>
+          <div className="text-2xl mb-3 font-bold text-center">E-Mail receiver</div>
           <StringList
-            className="mt-4"
             title="E-Mail List: "
             update={(x) => {
               setEmails(x);
               setSaved(false);
             }}
+            height={450}
             list={emails}
           />
           <div className="text-center pt-4">
@@ -75,13 +75,14 @@ const Others = () => {
           </div>
         </div>
         <div className="col-span-1">
-          <div className="text-2xl font-bold text-center">Footer</div>
+          <div className="text-2xl mb-3 font-bold text-center">Footer</div>
           <SocialLinks
             socials={socials}
             update={(x) => {
               setSocials(x);
               setSaved(false);
             }}
+            height={450}
           />
           <div className="text-center pt-4">
             <button
@@ -93,16 +94,16 @@ const Others = () => {
           </div>
         </div>
         <div className="col-span-1">
-          <div className="text-2xl font-bold text-center">
+          <div className="text-2xl mb-3 font-bold text-center">
             Anwesenheits Kategorien
           </div>
           <StringList
-            className="mt-4"
             title="Anwesenheits Kategorien: "
             update={(x) => {
               setAttendance(x);
               setSaved(false);
             }}
+            height={450}
             draggable
             list={attendance}
             deleteCallback={(_) => attendance.length > 1}
