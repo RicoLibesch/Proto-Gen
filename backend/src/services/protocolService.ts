@@ -3,6 +3,7 @@ import { Protocol } from '../models/protocolModel';
 import { AttendanceList } from '../models/attendanceListModel';
 import {insertProtocolAttendance, selectProtocolAttendance} from './protocolAttendanceService';
 import {insertProtocolTopics, selectProtocolTopics} from './protocolTopicService';
+import { stopSession } from '../services/sessionService';
 
 export const selectProtocolById = async (protocolId: number): Promise<Protocol> => {
     console.log("Select Protocol ID ", protocolId);
@@ -95,7 +96,7 @@ export const insertProtocol = async (protocol: Protocol): Promise<void> => {
         protocol.id = await insertProtocolData(protocol);
         await insertProtocolTopics(protocol.id, protocol.topics);
         await insertProtocolAttendance(protocol.id, protocol.attendanceList);
-
+        await stopSession();
     } catch (err) {
         console.log(`Error inserting protocol: ${err}`);
         throw new Error("SQL Error");
