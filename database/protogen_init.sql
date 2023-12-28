@@ -294,6 +294,7 @@ INSERT INTO "socials" ("id", "title", "value") VALUES (2, 'facebook', NULL);
 INSERT INTO "socials" ("id", "title", "value") VALUES (3, 'instagram', 'https://www.instagram.com/fachschaftmni/');
 INSERT INTO "socials" ("id", "title", "value") VALUES (4, 'twitter', NULL);
 INSERT INTO "socials" ("id", "title", "value") VALUES (5, 'git', NULL);
+INSERT INTO "socials" ("id", "title", "value") VALUES (6, 'meeting-room', NULL);
 COMMIT;
 
 -- ----------------------------
