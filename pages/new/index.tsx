@@ -8,8 +8,11 @@ import AttendanceList, { Attendance } from "@/components/Attendance";
 import { useRouter } from "next/router";
 import {
   createProtocol,
+  deleteSession,
   getAttendanceCategories,
   getProtocolTypes,
+  sessionRunning,
+  startSession,
 } from "@/utils/API";
 
 // NOTE: have to do this for next-js support
@@ -29,6 +32,10 @@ const ProtocolCreate = () => {
 
   useEffect(() => {
     (async () => {
+      const running = await sessionRunning();
+      if (!running) {
+        await startSession();
+      }
       const protocolTypes = await getProtocolTypes();
       setProtocolTypes(protocolTypes);
       // there is always at least one type
@@ -40,7 +47,11 @@ const ProtocolCreate = () => {
       setAttendanceList(attendance);
       setProtocolType(protocolTypes[0].title);
     })();
+    return () => {
+      deleteSession();
+    }
   }, []);
+
 
   async function uploadProtocol() {
     if (protocolTypes[index].template === content) {

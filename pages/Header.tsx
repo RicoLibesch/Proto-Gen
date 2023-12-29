@@ -3,13 +3,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { Close, Menu } from "@mui/icons-material";
 import UserIcon from "@/components/UserIcon";
-import { getLogo, loadToken, store } from "@/utils/API";
+import {
+  getLogo,
+  getSocials,
+  loadToken,
+  sessionRunning,
+  store,
+} from "@/utils/API";
 
 const Header = () => {
   const [links, setLinks] = useState([{ name: "Protokolle", link: "/" }]);
   const [open, setOpen] = useState(false);
   const user = store((s) => s.user);
   const [logo, setLogo] = useState("/fsmniLogo.png");
+
   useEffect(() => {
     const fetchLogo = async () => {
       setLogo(await getLogo());
@@ -19,23 +26,38 @@ const Header = () => {
 
   useEffect(() => {
     loadToken();
-  }, [])
+  }, []);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    const links = [{ name: "Protokolle", link: "/" }];
-    if (user) {
-      if (user.isAdmin)
-        links.push({
-          name: "Admin",
-          link: "/admin",
-        });
-      if (user.isRecorder)
-        links.push({
-          name: "Neu",
-          link: "/new",
-        });
-    }
-    setLinks(links);
+    const loadLinks = async () => {
+      const links = [{ name: "Protokolle", link: "/" }];
+      if (user) {
+        if (user.isAdmin)
+          links.push({
+            name: "Admin",
+            link: "/admin",
+          });
+        if (user.isRecorder)
+          links.push({
+            name: "Neu",
+            link: "/new",
+          });
+      }
+      if (!(await sessionRunning())) {
+        setLinks(links);
+        return;
+      }
+      links.push({ name: "Enter", link: "/enter" });
+      const socials = await getSocials();
+      const room = socials.find((x) => x.title === "meeting-room");
+      if (room && room.value) {
+        links.push({ name: "Meeting Room", link: room.value });
+      }
+      setLinks(links);
+    };
+    loadLinks();
   }, [user]);
 
   return (

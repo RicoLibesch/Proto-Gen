@@ -157,12 +157,12 @@ export async function setProtoclTypes(
 }
 
 export async function getEmails() {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mail-receiver`;
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/receiver`;
   return ((await get(url)) as string[]) ?? [];
 }
 
 export async function setEmails(emails: string[]) {
-  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mail-receiver`;
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/receiver`;
   await put(url, emails);
 }
 
@@ -287,4 +287,34 @@ export async function removeRole(userId: string, role: Role) {
 
   let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
   const result = await del(url);
+}
+
+export async function startSession() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session`;
+  await post(url, {});
+}
+
+export async function sessionRunning() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session`;
+  const result = (await get(url)) ?? { status: "inactive" };
+  return result.status === "active";
+}
+
+export async function deleteSession() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session`;
+  await del(url);
+}
+
+export async function getAttendees() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session/attendees`;
+  const result = (await get(url)) ?? [];
+  if (result.message || !result.attendees) {
+    return [] as string[];
+  }
+  return result.attendees as string[];
+}
+
+export async function addAttendees(name: string) {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session/attendees`;
+  await post(url, { name });
 }
