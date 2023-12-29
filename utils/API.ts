@@ -3,15 +3,19 @@ import { Social } from "@/components/SocialLinks";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 
-export type Role = "Administrator" | "Recorder";
-
 export interface User {
-  id: number;
-  kennung: string;
-  token: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  mail: string;
+  isAdmin: boolean;
+  isRecorder: boolean;
   creation_date: number;
-  role: Role;
+  token: string;
 }
+
+export type Role = "Administrator" | "Recorder";
 
 export type State = {
   user?: User;
@@ -21,9 +25,18 @@ export type State = {
 
 export const store = create<State>((set) => ({
   user: undefined,
-  setUser: (user: User) => set({ user }),
+  setUser: (user: User) => {
+    localStorage.setItem("fsmni-user", JSON.stringify(user));
+    set({ user });
+  },
   clear: () => set({ user: undefined }),
 }));
+
+function getToken() {
+  const user = store.getState().user;
+  if (user) return user.token;
+  return undefined;
+}
 
 export function loadToken() {
   if (typeof localStorage === "undefined") return;
@@ -31,9 +44,9 @@ export function loadToken() {
     const savedUser = JSON.parse(
       localStorage.getItem("fsmni-user") ?? ""
     ) as User;
-    const tokenLifetime = 60 * 60 * 3;
+    const tokenLifetime = 60 * 60 * 3 * 1000;
     if (savedUser) {
-      if (savedUser.creation_date + tokenLifetime < new Date().getTime()) {
+      if (savedUser.creation_date + tokenLifetime > new Date().getTime()) {
         store.getState().setUser(savedUser);
       }
     }
@@ -57,7 +70,7 @@ export async function get(url: string) {
   try {
     const response = await fetch(url, {
       headers: {
-        Authorization: "Bearer " + store.getState().user!.token,
+        Authorization: "Bearer " + getToken(),
       },
     });
     if (!response.ok) {
@@ -65,29 +78,24 @@ export async function get(url: string) {
     }
     return await response.json();
   } catch (e) {
-    console.log("Error while fetching: " + url);
+    console.log("Error while fetching: " + url + e);
     console.log(JSON.stringify(e));
     notify("Error loading: " + url);
   }
 }
 
 export async function del(url: string) {
-  try {
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + store.getState().user!.token,
-      },
-    });
-    if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
-    }
-    return await response.json();
-  } catch (e) {
-    console.log("Error while fetching: " + url);
-    console.log(JSON.stringify(e));
-    notify("Error loading: " + url);
-  }
+  const response = fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: "Bearer " + getToken(),
+    },
+  });
+  toast.promise(response, {
+    pending: "Deleting ...",
+    success: { render: "Success!", delay: 100 },
+    error: { render: "Something went wrong", delay: 100 },
+  });
 }
 
 export async function put(url: string, json: any) {
@@ -95,7 +103,7 @@ export async function put(url: string, json: any) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + store.getState().user!.token,
+      Authorization: "Bearer " + getToken(),
     },
     body: JSON.stringify(json),
   });
@@ -112,7 +120,7 @@ export async function post(url: string, json: any) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + store.getState().user!.token,
+      Authorization: "Bearer " + getToken(),
     },
     body: JSON.stringify(json),
   });
@@ -172,7 +180,7 @@ export async function setSocials(socials: Social[]) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + store.getState().user!.token,
+          Authorization: "Bearer " + getToken(),
         },
         body: JSON.stringify(social),
       });
@@ -251,32 +259,32 @@ export async function getUsers() {
   return ((await get(url)) as User[]) ?? [];
 }
 
-export async function setRole(user: User, role: Role) {
+export async function setRole(userId: string, role: Role) {
   let roleId = 0;
   switch (role) {
     case "Administrator":
-      roleId = 0;
+      roleId = 1;
       break;
     case "Recorder":
-      roleId = 1;
+      roleId = 2;
       break;
   }
 
-  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${user.id}/roles/${roleId}`;
-  const result = await put(url, {});
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
+  await post(url, {});
 }
 
-export async function removeRole(user: User, role: Role) {
+export async function removeRole(userId: string, role: Role) {
   let roleId = 0;
   switch (role) {
     case "Administrator":
-      roleId = 0;
+      roleId = 1;
       break;
     case "Recorder":
-      roleId = 1;
+      roleId = 2;
       break;
   }
 
-  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${user.id}/roles/${roleId}`;
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
   const result = await del(url);
 }

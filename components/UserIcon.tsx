@@ -15,7 +15,7 @@ const UserIcon = () => {
     <div>
       {user ? (
         <div className="w-10 h-10 rounded-full bg-mni text-white flex items-center justify-center cursor-pointer" onClick={logout}>
-          {user.kennung.toUpperCase().slice(0, 2)}
+          {user.id.toUpperCase().slice(0, 2)}
         </div>
       ) : (
         <Link href="/login">

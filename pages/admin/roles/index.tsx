@@ -1,7 +1,8 @@
 import AdminHeader from "@/components/AdminHeader";
 import StringList from "@/components/StringList";
-import { User, getUsers } from "@/utils/API";
+import { User, getUsers, removeRole, setRole } from "@/utils/API";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const Roles = () => {
   const [admins, setAdmins] = useState<string[]>([]);
@@ -14,16 +15,57 @@ const Roles = () => {
       const users = await getUsers();
       setUsers(users);
 
-      setRecorder(
-        users.filter((x) => x.role === "Recorder").map((x) => x.kennung)
-      );
-      setAdmins(
-        users.filter((x) => x.role === "Administrator").map((x) => x.kennung)
-      );
+      setRecorder(users.filter((x) => x.isRecorder).map((x) => x.id));
+      setAdmins(users.filter((x) => x.isAdmin).map((x) => x.id));
     };
 
     load();
   }, []);
+
+  const deleteAdmin = (index: number) => {
+    removeRole(admins[index], "Administrator");
+    return true;
+  };
+  const deleteRecorder = (index: number) => {
+    removeRole(admins[index], "Recorder");
+    return true;
+  };
+
+  const addAdmin = (value: string) => {
+    if (!users.find((x) => x.id === value)) {
+      toast.error("User not found!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return false;
+    }
+    setRole(value, "Administrator");
+    return true;
+  };
+
+  const addRecorder = (value: string) => {
+    if (!users.find((x) => x.id === value)) {
+      toast.error("User not found!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return false;
+    }
+    setRole(value, "Recorder");
+    return true;
+  };
 
   const save = () => {
     //TODO!
@@ -42,6 +84,8 @@ const Roles = () => {
               setAdmins(x);
               setSaved(false);
             }}
+            deleteCallback={deleteAdmin}
+            add={addAdmin}
             height={450}
             list={admins}
           />
@@ -55,13 +99,17 @@ const Roles = () => {
           </div>
         </div>
         <div className="col-span-1">
-          <div className="text-2xl mb-3 font-bold text-center">Protokollant</div>
+          <div className="text-2xl mb-3 font-bold text-center">
+            Protokollant
+          </div>
           <StringList
             title="Protokollant"
             update={(x) => {
               setRecorder(x);
               setSaved(false);
             }}
+            deleteCallback={deleteRecorder}
+            add={addRecorder}
             height={450}
             list={recorder}
           />

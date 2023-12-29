@@ -8,9 +8,10 @@ export interface StringListProps extends HTMLAttributes<HTMLDivElement> {
   update: (value: string[]) => void;
   selected?: (index: number) => void;
   deleteCallback?: (index: number) => boolean;
+  add?: (value: string) => boolean;
   flex?: boolean;
   draggable?: boolean;
-  height?: number
+  height?: number;
 }
 
 const StringList = ({
@@ -23,6 +24,7 @@ const StringList = ({
   flex,
   draggable,
   height,
+  add,
   ...props
 }: StringListProps) => {
   const [state, updateState] = useState(0); // used to re-render the component when we update the list
@@ -70,7 +72,10 @@ const StringList = ({
 
   return (
     <div {...props}>
-      <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all" style={{height: height}}>
+      <div
+        className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all"
+        style={{ height: height }}
+      >
         <div className="text-lg font-medium truncate mx-2">{title}</div>
         <div className={flex === true ? "flex items-center" : ""}>
           {list.map((x, index) => {
@@ -124,6 +129,10 @@ const StringList = ({
                         setAdding(false);
                         return;
                       }
+                      if (add && !add(name)) {
+                        setAdding(false);
+                        return;
+                      }
                       list.push(name);
                       setName("");
                       setAdding(false);
@@ -142,6 +151,10 @@ const StringList = ({
                   className="mr-2 hover:cursor-pointer fill-neutral"
                   onClick={() => {
                     if (name.length <= 0) {
+                      setAdding(false);
+                      return;
+                    }
+                    if (add && !add(name)) {
                       setAdding(false);
                       return;
                     }

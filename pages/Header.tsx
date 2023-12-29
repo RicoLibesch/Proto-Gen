@@ -1,16 +1,14 @@
-"use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Close, Menu } from "@mui/icons-material";
 import UserIcon from "@/components/UserIcon";
-import { getLogo, store } from "@/utils/API";
+import { getLogo, loadToken, store } from "@/utils/API";
 
 const Header = () => {
   const [links, setLinks] = useState([{ name: "Protokolle", link: "/" }]);
   const [open, setOpen] = useState(false);
   const user = store((s) => s.user);
-
   const [logo, setLogo] = useState("/fsmniLogo.png");
   useEffect(() => {
     const fetchLogo = async () => {
@@ -20,21 +18,22 @@ const Header = () => {
   });
 
   useEffect(() => {
+    loadToken();
+  }, [])
+
+  useEffect(() => {
     const links = [{ name: "Protokolle", link: "/" }];
     if (user) {
-      switch (user.role) {
-        case "Administrator":
-          links.push({
-            name: "Admin",
-            link: "/admin",
-          });
-        default:
-          links.push({
-            name: "Neu",
-            link: "/new",
-          });
-          break;
-      }
+      if (user.isAdmin)
+        links.push({
+          name: "Admin",
+          link: "/admin",
+        });
+      if (user.isRecorder)
+        links.push({
+          name: "Neu",
+          link: "/new",
+        });
     }
     setLinks(links);
   }, [user]);

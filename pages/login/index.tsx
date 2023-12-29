@@ -55,7 +55,8 @@ const Login = () => {
         });
         return;
       }
-      setUser(json);
+      const user = { ...json["user"], token, creation_date: new Date().getTime() };
+      setUser(user);
       router.push("/");
     } catch (error) {
       console.log(error);
