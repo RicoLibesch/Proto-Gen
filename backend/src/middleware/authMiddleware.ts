@@ -43,3 +43,11 @@ export const isRecorder = async (req: Request, res: Response, next: NextFunction
     return res.status(403).json({message: 'Unauthorized'});
   }
 };
+
+export const isAdminOrRecorder = async (req: Request, res: Response, next: NextFunction) => {
+  if(await hasRole(req.user.id, 1) || await hasRole(req.user.id, 2)) {
+    next();
+  } else {
+    return res.status(403).json({message: 'Unauthorized'});
+  }
+};
