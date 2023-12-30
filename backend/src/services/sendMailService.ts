@@ -4,6 +4,7 @@ import { selectReceiver } from './mailReceiverService';
 import { Protocol } from '../models/protocolModel';
 import { selectTemplate } from './mailTemplateService';
 import Handlebars from 'handlebars';
+import { marked } from 'marked';
 
 const transporter = nodemailer.createTransport(mailConfig);
 
@@ -12,8 +13,8 @@ export const sendMail = async (protocol: Protocol): Promise<void> => {
         const subject: string = await selectTemplate("subject");
         const body: string = await selectTemplate("body");
         
-        const compiledSubject = buildTemplate(subject, protocol);
-        const compiledBody = buildTemplate(body, protocol); 
+        const compiledSubject = await buildTemplate(subject, protocol);
+        const compiledBody = await buildTemplate(body, protocol); 
 
       const info = await transporter.sendMail({
         from: {
@@ -29,7 +30,7 @@ export const sendMail = async (protocol: Protocol): Promise<void> => {
     }
 };
 
-const buildTemplate = (template: string, protocol: Protocol): string => {
+const buildTemplate = async (template: string, protocol: Protocol): Promise<string> => {
     try {
         let start = new Date(protocol.start_timestamp * 1000);
         let end = new Date(protocol.end_timestamp * 1000);
@@ -44,6 +45,9 @@ const buildTemplate = (template: string, protocol: Protocol): string => {
             timeZone: "Europe/Berlin",
         };
 
+        const parsedContent: string = await marked(protocol.content);
+        console.log(parsedContent);
+
         const startDate = start.toLocaleDateString("de-DE", optionsDate);
         const startTime = start.toLocaleTimeString("de-DE", optionsTime);
         const endTime = end.toLocaleTimeString("de-DE", optionsTime);
@@ -57,7 +61,7 @@ const buildTemplate = (template: string, protocol: Protocol): string => {
             begin: startTime,
             end: endTime,
             type: protocol.protocol_type,
-            content: protocol.content,
+            content: new Handlebars.SafeString(parsedContent),
             topics: protocol.topics.join(', '),
             link: process.env.EMAIL_BASE_LINK + protocol.id,
             attendees: new Handlebars.SafeString(attendanceListHtml)
