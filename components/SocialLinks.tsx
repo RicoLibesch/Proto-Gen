@@ -5,6 +5,7 @@ import {
   Twitter,
   GitHub,
   Circle,
+  Videocam
 } from "@mui/icons-material";
 
 export interface Social {
@@ -38,6 +39,8 @@ const SocialLinks = ({
         return <Twitter className="fill-neutral w-8 h-8" />;
       case "git":
         return <GitHub className="fill-neutral w-8 h-8" />;
+      case "meeting-room":
+        return <Videocam className="fill-neutral w-8 h-8" />;
       default:
         return <Circle className="fill-neutral w-8 h-8" />;
     }

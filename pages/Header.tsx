@@ -49,7 +49,7 @@ const Header = () => {
         setLinks(links);
         return;
       }
-      links.push({ name: "Enter", link: "/enter" });
+      links.push({ name: "Beitreten", link: "/enter" });
       const socials = await getSocials();
       const room = socials.find((x) => x.title === "meeting-room");
       if (room && room.value) {
