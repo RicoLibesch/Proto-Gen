@@ -318,3 +318,24 @@ export async function addAttendees(name: string) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session/attendees`;
   await post(url, { name });
 }
+
+export async function getTemplates() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/templates`;
+  return (await get(url)) ?? { subject: "", body: "" };
+}
+
+export async function setTemplate(template: any) {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/templates`;
+  await put(url, template);
+}
+
+export async function isSendingMails() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/dispatch`;
+  const result = (await get(url)) ?? { isEnabled: false };
+  return result.isEnabled;
+}
+
+export async function setSendingMails(value: boolean) {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/dispatch`;
+  return put(url, { setEnabled: value });
+}

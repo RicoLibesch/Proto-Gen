@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import * as API from "@/utils/API";
 
 const Others = () => {
-  const [emails, setEmails] = useState<string[]>([]);
   const [attendance, setAttendance] = useState<string[]>([]);
   const [saved, setSaved] = useState(true);
   const [socials, setSocials] = useState<Social[]>([]);
@@ -20,12 +19,14 @@ const Others = () => {
     window.onbeforeunload = (e) => {
       if (!saved) e.preventDefault();
     };
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, [saved]);
 
   useEffect(() => {
     const load = async () => {
       const emails = await getEmails();
-      setEmails(emails);
       const socials = await getSocials();
       setSocials(socials);
       const attendance = await getAttendanceCategories();
@@ -34,11 +35,6 @@ const Others = () => {
     };
     load();
   }, []);
-
-  const uploadEmails = async () => {
-    await API.setEmails(emails);
-    setSaved(true);
-  };
 
   const uploadSocials = async () => {
     await API.setSocials(socials);
@@ -54,26 +50,6 @@ const Others = () => {
     <div>
       <AdminHeader path="admin/others" />
       <div className="grid grid-cols-3 gap-10 justify-around p-10">
-        <div className="col-span-1">
-          <div className="text-2xl mb-3 font-bold text-center">E-Mail receiver</div>
-          <StringList
-            title="E-Mail List: "
-            update={(x) => {
-              setEmails(x);
-              setSaved(false);
-            }}
-            height={450}
-            list={emails}
-          />
-          <div className="text-center pt-4">
-            <button
-              className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
-              onClick={uploadEmails}
-            >
-              Speichern
-            </button>
-          </div>
-        </div>
         <div className="col-span-1">
           <div className="text-2xl mb-3 font-bold text-center">Footer</div>
           <SocialLinks

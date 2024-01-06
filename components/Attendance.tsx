@@ -72,7 +72,7 @@ const AttendanceList = ({
         >
           {list[category][index].toUpperCase().slice(0, 1)}
         </div>
-        <span className="text-neutral p-1.5 truncate hover:text-clip hover:overflow-x-scroll ">
+        <span className="text-neutral p-1.5 truncate hover:text-clip hover:overflow-x-auto ">
           {list[category][index]}
         </span>
         {editable ? (
