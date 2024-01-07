@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: "standalone",
-};
+const nextConfig = {};
 
 const removeImports = require("next-remove-imports")();
 
