@@ -82,7 +82,7 @@ const Email = () => {
 
   return (
     <>
-      <AdminHeader path="admin/logo" />
+      <AdminHeader path="admin/email" />
       <div className="grid grid-cols-4 gap-10 justify-around p-10">
         <div className="col-span-1">
           <div className="text-2xl mb-3 font-bold text-center">

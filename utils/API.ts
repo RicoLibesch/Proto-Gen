@@ -29,7 +29,11 @@ export const store = create<State>((set) => ({
     localStorage.setItem("fsmni-user", JSON.stringify(user));
     set({ user });
   },
-  clear: () => set({ user: undefined }),
+  clear: () => {
+    set({ user: undefined });
+    if (typeof localStorage === "undefined") return;
+    localStorage.removeItem("fsmni-user");
+  },
 }));
 
 function getToken() {
@@ -78,10 +82,72 @@ export async function get(url: string) {
     }
     return await response.json();
   } catch (e) {
-    console.log("Error while fetching: " + url + e);
+    console.log("Fehler: " + url + e);
     console.log(JSON.stringify(e));
-    notify("Error loading: " + url);
+    notify("Fehler: " + url);
   }
+}
+
+function createToast(response: Promise<Response>) {
+  const id = toast.loading("Senden ...", {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  response
+    .then(async (x) => {
+      if (x.ok)
+        toast.update(id, {
+          render: "Erfolgreich",
+          type: "success",
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          isLoading: false,
+          theme: "light",
+        });
+      else {
+        const text = await x.text();
+        toast.update(id, {
+          render: "Fehlgeschlagen: " + text,
+          type: "error",
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          isLoading: false,
+          theme: "light",
+        });
+      }
+    })
+    .catch((e) => {
+      toast.update(id, {
+        render: "Fehlgeschlagen: " + e.toString(),
+        type: "error",
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        isLoading: false,
+        theme: "light",
+      });
+    });
 }
 
 export async function del(url: string) {
@@ -91,11 +157,10 @@ export async function del(url: string) {
       Authorization: "Bearer " + getToken(),
     },
   });
-  toast.promise(response, {
-    pending: "Deleting ...",
-    success: { render: "Success!", delay: 100 },
-    error: { render: "Something went wrong", delay: 100 },
-  });
+
+  createToast(response);
+
+  return response;
 }
 
 export async function put(url: string, json: any) {
@@ -107,12 +172,8 @@ export async function put(url: string, json: any) {
     },
     body: JSON.stringify(json),
   });
-
-  toast.promise(response, {
-    pending: "Sending ...",
-    success: { render: "Success!", delay: 100 },
-    error: { render: "Something went wrong", delay: 100 },
-  });
+  createToast(response);
+  return response;
 }
 
 export async function post(url: string, json: any) {
@@ -125,11 +186,8 @@ export async function post(url: string, json: any) {
     body: JSON.stringify(json),
   });
 
-  toast.promise(response, {
-    pending: "Sending ...",
-    success: { render: "Success!", delay: 100 },
-    error: { render: "Something went wrong", delay: 100 },
-  });
+  createToast(response);
+  return response;
 }
 
 export async function getProtocolTypes() {
@@ -153,7 +211,7 @@ export async function setProtoclTypes(
     });
   }
 
-  await put(url, templates);
+  return await put(url, templates);
 }
 
 export async function getEmails() {
@@ -163,7 +221,7 @@ export async function getEmails() {
 
 export async function setEmails(emails: string[]) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/receiver`;
-  await put(url, emails);
+  return await put(url, emails);
 }
 
 export async function getSocials() {
@@ -209,12 +267,12 @@ export async function setAttendanceCategories(attendance: string[]) {
   const orderedList = attendance.map((title, order) => {
     return { title: title, order: order };
   });
-  put(url, orderedList);
+  return await put(url, orderedList);
 }
 
 export async function createProtocol(protocol: Protocol) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols`;
-  await post(url, protocol);
+  return await post(url, protocol);
 }
 
 export async function getProtocol(id: number) {
@@ -229,7 +287,7 @@ export async function getProtocol(id: number) {
 export async function setLogo(logo: string) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/logo`;
   const data = { image: logo };
-  await put(url, data);
+  return await put(url, data);
 }
 
 export async function getLogo() {
@@ -271,7 +329,7 @@ export async function setRole(userId: string, role: Role) {
   }
 
   let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
-  await post(url, {});
+  return await post(url, {});
 }
 
 export async function removeRole(userId: string, role: Role) {
@@ -286,12 +344,12 @@ export async function removeRole(userId: string, role: Role) {
   }
 
   let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
-  const result = await del(url);
+  return await del(url);
 }
 
 export async function startSession() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session`;
-  await post(url, {});
+  return await post(url, {});
 }
 
 export async function sessionRunning() {
@@ -302,7 +360,7 @@ export async function sessionRunning() {
 
 export async function deleteSession() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session`;
-  await del(url);
+  return await del(url);
 }
 
 export async function getAttendees() {
@@ -316,7 +374,7 @@ export async function getAttendees() {
 
 export async function addAttendees(name: string) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session/attendees`;
-  await post(url, { name });
+  return await post(url, { name });
 }
 
 export async function getTemplates() {
@@ -326,7 +384,7 @@ export async function getTemplates() {
 
 export async function setTemplate(template: any) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/templates`;
-  await put(url, template);
+  return await put(url, template);
 }
 
 export async function isSendingMails() {

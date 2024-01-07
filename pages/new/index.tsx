@@ -112,7 +112,7 @@ const ProtocolCreate = () => {
             onChange={(x) => setContent(x ?? "")}
           />
         </div>
-        <div className="flex">
+        <div className="flex mt-3">
           <button
             className="ml-auto font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation"
             onClick={uploadProtocol}
