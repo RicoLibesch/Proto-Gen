@@ -397,3 +397,14 @@ export async function setSendingMails(value: boolean) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/dispatch`;
   return put(url, { setEnabled: value });
 }
+
+export async function getLegals() {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/legals`;
+  const data = await get(url) ?? {};
+  return data;
+}
+
+export async function setLegals(legal: any) {
+  const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/legals/${legal.id}`;
+  return put(url, legal);
+}

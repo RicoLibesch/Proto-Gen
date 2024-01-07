@@ -23,6 +23,10 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
       path: "/admin/roles",
     },
     {
+      name: "Rechtliches",
+      path: "/admin/legals",
+    },
+    {
       name: "Weiteres",
       path: "/admin/others",
     },
