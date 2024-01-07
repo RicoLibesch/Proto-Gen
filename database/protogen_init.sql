@@ -294,6 +294,37 @@ INSERT INTO "roles" ("id", "title") VALUES (2, 'Recorder');
 COMMIT;
 
 -- ----------------------------
+-- Table structure for session
+-- ----------------------------
+DROP TABLE IF EXISTS "session";
+CREATE TABLE "session" (
+  "status" int2 NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of session
+-- ----------------------------
+BEGIN;
+INSERT INTO "session" ("status") VALUES (0);
+COMMIT;
+
+-- ----------------------------
+-- Table structure for session_attendees
+-- ----------------------------
+DROP TABLE IF EXISTS "session_attendees";
+CREATE TABLE "session_attendees" (
+  "attendee" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of session_attendees
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
 -- Table structure for socials
 -- ----------------------------
 DROP TABLE IF EXISTS "socials";
@@ -313,6 +344,7 @@ INSERT INTO "socials" ("id", "title", "value") VALUES (2, 'facebook', NULL);
 INSERT INTO "socials" ("id", "title", "value") VALUES (3, 'instagram', 'https://www.instagram.com/fachschaftmni/');
 INSERT INTO "socials" ("id", "title", "value") VALUES (4, 'twitter', NULL);
 INSERT INTO "socials" ("id", "title", "value") VALUES (5, 'git', NULL);
+INSERT INTO "socials" ("id", "title", "value") VALUES (6, 'meeting-room', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -399,6 +431,11 @@ ALTER TABLE "protocols" ADD CONSTRAINT "protocols_pkey" PRIMARY KEY ("id");
 -- Primary Key structure for table roles
 -- ----------------------------
 ALTER TABLE "roles" ADD CONSTRAINT "roles_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table session
+-- ----------------------------
+ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("status");
 
 -- ----------------------------
 -- Primary Key structure for table user_roles

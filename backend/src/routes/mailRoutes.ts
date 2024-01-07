@@ -9,5 +9,5 @@ router.route("/receiver").put(verifyAccessToken, isAdmin, editReceiver);
 router.route("/dispatch").get(getDispatchStatus, isAdmin, getReceiver);
 router.route("/dispatch").put(setDispatchStatus, isAdmin, editReceiver);
 
-router.route("/templates").get(getTemplates, isAdmin, getReceiver);
-router.route("/templates").put(setTemplate, isAdmin, editReceiver);
+router.route("/templates").get(getTemplates);
+router.route("/templates").put(setTemplate);
