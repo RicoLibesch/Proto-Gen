@@ -61,6 +61,34 @@ export const selectProtocols = async (page: number, pageSize: number): Promise<P
     }
 };
 
+export const selectAllProtocols = async (): Promise<Protocol[]> => {
+    try {
+        const protocols: Protocol[] = [];
+        const protocolsData = await pool.query('SELECT * FROM protocols ORDER BY id DESC');
+        if(protocolsData.rows.length > 0) {
+            for(const row of protocolsData.rows) {
+                const attendanceList: AttendanceList = await selectProtocolAttendance(row.id);
+                const topics: string[] = await selectProtocolTopics(row.id);
+
+                const protocol: Protocol = new Protocol(
+                    row.protocol_type,
+                    row.start_timestamp,
+                    row.end_timestamp,
+                    row.content,
+                    topics,
+                    attendanceList,
+                    row.id
+                );
+                protocols.push(protocol);
+            }
+        }
+        return protocols;
+    } catch(err) {
+        console.log(`Error selecting protocols: ${err}`);
+        throw new Error("SQL Error");
+    }
+};
+
 export const insertProtocol = async (protocol: Protocol): Promise<void> => {
     console.log("Inserting new Procotol")
     try {
