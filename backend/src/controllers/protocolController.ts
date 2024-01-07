@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Protocol } from '../models/protocolModel';
 import { AttendanceList } from '../models/attendanceListModel'
-import { insertProtocol, selectProtocolById, selectProtocols, selectAllProtocols, selectAllProtocols } from '../services/protocolService';
+import { insertProtocol, selectProtocolById, selectProtocols, selectAllProtocols } from '../services/protocolService';
 import { isMailDispatchEnabled } from '../services/mailDispatchService';
 import { sendMail } from '../services/sendMailService';
 
