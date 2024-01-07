@@ -204,6 +204,24 @@ BEGIN;
 COMMIT;
 
 -- ----------------------------
+-- Table structure for roles
+-- ----------------------------
+DROP TABLE IF EXISTS "roles";
+CREATE TABLE "roles" (
+  "id" int4 NOT NULL,
+  "title" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of roles
+-- ----------------------------
+BEGIN;
+INSERT INTO "roles" ("id", "title") VALUES (1, 'Administrator');
+INSERT INTO "roles" ("id", "title") VALUES (2, 'Recorder');
+COMMIT;
+
+-- ----------------------------
 -- Table structure for socials
 -- ----------------------------
 DROP TABLE IF EXISTS "socials";
@@ -226,6 +244,22 @@ INSERT INTO "socials" ("id", "title", "value") VALUES (5, 'git', NULL);
 COMMIT;
 
 -- ----------------------------
+-- Table structure for user_roles
+-- ----------------------------
+DROP TABLE IF EXISTS "user_roles";
+CREATE TABLE "user_roles" (
+  "user_id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
+  "role_id" int4 NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of user_roles
+-- ----------------------------
+BEGIN;
+COMMIT;
+
+-- ----------------------------
 -- Table structure for users
 -- ----------------------------
 DROP TABLE IF EXISTS "users";
@@ -233,6 +267,7 @@ CREATE TABLE "users" (
   "id" varchar(50) COLLATE "pg_catalog"."default" NOT NULL,
   "first_name" varchar(255) COLLATE "pg_catalog"."default",
   "last_name" varchar(255) COLLATE "pg_catalog"."default",
+  "display_name" varchar(255) COLLATE "pg_catalog"."default",
   "mail" varchar(255) COLLATE "pg_catalog"."default"
 )
 ;
@@ -274,6 +309,16 @@ ALTER TABLE "protocol_types" ADD CONSTRAINT "protocol_types_pkey" PRIMARY KEY ("
 ALTER TABLE "protocols" ADD CONSTRAINT "protocols_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
+-- Primary Key structure for table roles
+-- ----------------------------
+ALTER TABLE "roles" ADD CONSTRAINT "roles_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Primary Key structure for table user_roles
+-- ----------------------------
+ALTER TABLE "user_roles" ADD CONSTRAINT "user_roles_pkey" PRIMARY KEY ("user_id", "role_id");
+
+-- ----------------------------
 -- Primary Key structure for table users
 -- ----------------------------
 ALTER TABLE "users" ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
@@ -287,3 +332,9 @@ ALTER TABLE "protocol_attendances" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY (
 -- Foreign Keys structure for table protocol_topics
 -- ----------------------------
 ALTER TABLE "protocol_topics" ADD CONSTRAINT "fk_protocol_id" FOREIGN KEY ("protocol_id") REFERENCES "protocols" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- ----------------------------
+-- Foreign Keys structure for table user_roles
+-- ----------------------------
+ALTER TABLE "user_roles" ADD CONSTRAINT "fk_role_id" FOREIGN KEY ("role_id") REFERENCES "roles" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "user_roles" ADD CONSTRAINT "fk_user_id" FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
