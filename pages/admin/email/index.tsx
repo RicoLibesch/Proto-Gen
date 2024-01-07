@@ -125,12 +125,12 @@ const Email = () => {
           <div className="text-lg font-bold text-left">
             Variablen die zur verfügung stehen:
           </div>
-          <div className="flex">
-            {variables.map((value, index) => (
-              <div key={index} className="flex">
+          <div className="flex flex-wrap">
+          {variables.map((value, index) => (
+              <span key={index} className="flex">
                 <b className="px-1 font-mono">{value.variable}</b>-
-                <div className="px-1 text-secondary">{value.desc}</div> |
-              </div>
+                <div className="px-1 text-secondary">{value.desc}</div>
+              </span>
             ))}
           </div>
           <div className="flex px-1">
