@@ -1,5 +1,6 @@
-import { HTMLAttributes, useState } from "react";
+import { HTMLAttributes, useEffect, useRef, useState } from "react";
 import { Clear, Add, Check } from "@mui/icons-material";
+import { getAttendees, sessionRunning } from "@/utils/API";
 
 export type Attendance = Record<string, string[]>;
 
@@ -17,9 +18,30 @@ const AttendanceList = ({
 }: AttendanceProps) => {
   const [state, updateState] = useState(0); // used to re-render the component when we update the list
   const refresh = () => updateState(state + 1);
-  const [pending, setPending] = useState<string[]>([]);
   const [adding, setAdding] = useState(false);
   const [name, setName] = useState<string>("");
+  const deleted = useRef<string[]>([]);
+  const pending = useRef<string[]>([]);
+
+  useEffect(() => {
+    if (!editable) return;
+    let id: any;
+    const session = async () => {
+      let diff = await getAttendees();
+      for (const key in list) diff = diff.filter((x) => !list[key].includes(x));
+      diff = diff.filter((x) => !pending.current.includes(x));
+      diff = diff.filter((x) => !deleted.current.includes(x));
+      if (diff.length != 0) {
+        pending.current = [...pending.current, ...diff];
+        refresh();
+      }
+      id = setTimeout(session, 1000);
+    };
+    session();
+    return () => {
+      clearTimeout(id);
+    };
+  }, [list]);
 
   const colors = ["#007BFF", "#28A745", "#DC3545", "#FFC107", "#343A40"];
   /**
@@ -57,6 +79,7 @@ const AttendanceList = ({
           <Clear
             className="mr-2 hover:cursor-pointer fill-neutral"
             onClick={() => {
+              deleted.current.push(list[category][index]);
               list[category].splice(index, 1);
               onRemove();
               refresh();
@@ -98,7 +121,7 @@ const AttendanceList = ({
       <div className="p-1">
         <div className="text-base font-medium">Ausstehend</div>
         <div className="flex flex-wrap">
-          {pending.map((name, index) => (
+          {pending.current.map((name, index) => (
             <div
               key={name + index}
               className="rounded-full border border-neutral flex items-center overflow-hidden m-1 ml-0 mr-1.5 cursor-grab"
@@ -115,8 +138,8 @@ const AttendanceList = ({
               <Clear
                 className="mr-2 hover:cursor-pointer fill-neutral"
                 onClick={() => {
-                  pending.splice(index, 1);
-                  setPending(pending);
+                  deleted.current.push(pending.current[index]);
+                  pending.current.splice(index, 1);
                   refresh();
                 }}
               />
@@ -135,7 +158,7 @@ const AttendanceList = ({
                         setAdding(false);
                         return;
                       }
-                      pending.push(name);
+                      pending.current.push(name);
                       setName("");
                       setAdding(false);
                     }
@@ -152,7 +175,7 @@ const AttendanceList = ({
                       setAdding(false);
                       return;
                     }
-                    pending.push(name);
+                    pending.current.push(name);
                     setName("");
                     setAdding(false);
                   }}
@@ -194,7 +217,7 @@ const AttendanceList = ({
       list[fromCategory].splice(index, 1);
     } else {
       // from pending moved
-      pending.splice(index, 1);
+      pending.current.splice(index, 1);
     }
     list[category].push(name);
     update(list);
