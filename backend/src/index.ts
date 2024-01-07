@@ -9,6 +9,7 @@ import { router as socialRouter } from './routes/socialRoutes';
 import { router as categoryRouter } from './routes/attendanceCategoryRoutes';
 import { router as authRouter } from './routes/authRoutes';
 import { router as userRouter } from './routes/userRoutes';
+import { router as legalRouter } from './routes/legalRoutes';
 const app = express();
 
 app.use(cors());
@@ -24,5 +25,6 @@ app.use("/api/socials", socialRouter);
 app.use("/api/attendance-categories", categoryRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/legals", legalRouter);
 
 app.listen(port, () => console.log(`Listening on Port ${port}`));

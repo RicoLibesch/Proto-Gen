@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Protocol } from '../models/protocolModel';
 import { AttendanceList } from '../models/attendanceListModel'
-import { insertProtocol, selectProtocolById, selectProtocols } from '../services/protocolService';
+import { insertProtocol, selectProtocolById, selectProtocols, selectAllProtocols } from '../services/protocolService';
 
 export const getProtocols = async (req: Request, res: Response) => {
     console.log("Get all Protocols");
@@ -15,6 +15,16 @@ export const getProtocols = async (req: Request, res: Response) => {
         const page: number = Number(req.query.page) || 1; 
         const pageSize: number = Number(req.query.pageSize) || 10;
         const protocols: Protocol[] = await selectProtocols(page, pageSize);
+        res.status(200).json(protocols);
+    } catch(err) {
+        return res.status(500).json({message: "Internal Server Error"});
+    }
+};
+
+export const getAllProtocols = async (req: Request, res: Response) => {
+    console.log("Export all Protocols");
+    try {
+        const protocols: Protocol[] = await selectAllProtocols();
         res.status(200).json(protocols);
     } catch(err) {
         return res.status(500).json({message: "Internal Server Error"});
