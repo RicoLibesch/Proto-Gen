@@ -1,14 +1,16 @@
 require("dotenv").config();
 import ActiveDirectory from 'activedirectory2';
 import { User } from '../models/userModel';
+import { ldapConfig } from '../config/ldapConfig';
 
 export const authenticateUser = async (username: string, password: string): Promise<User> => {
   try {
-    var config = { url: 'ldaps://ldap.fh-giessen.de',
-                baseDN: 'ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de',
-                bindDN: `uid=${username},ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de`,
-                password: password
-              }
+    const config = {
+      url: ldapConfig.ldap.url,
+      baseDN: ldapConfig.ldap.baseDN,
+      bindDN: ldapConfig.ldap.getBindDN(username),
+      bindCredentials: password,
+    };
     const activeDirectory = new ActiveDirectory(config);
 
     const auth = await new Promise<boolean>((resolve, reject) => {
