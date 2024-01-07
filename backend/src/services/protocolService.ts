@@ -92,9 +92,9 @@ export const selectAllProtocols = async (): Promise<Protocol[]> => {
 export const insertProtocol = async (protocol: Protocol): Promise<void> => {
     console.log("Inserting new Procotol")
     try {
-        const protocolId = await insertProtocolData(protocol);
-        await insertProtocolTopics(protocolId, protocol.topics);
-        await insertProtocolAttendance(protocolId, protocol.attendanceList);
+        protocol.id = await insertProtocolData(protocol);
+        await insertProtocolTopics(protocol.id, protocol.topics);
+        await insertProtocolAttendance(protocol.id, protocol.attendanceList);
 
     } catch (err) {
         console.log(`Error inserting protocol: ${err}`);

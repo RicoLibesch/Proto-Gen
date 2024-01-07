@@ -50,6 +50,25 @@ INSERT INTO "legals" ("id", "title", "value") VALUES (2, 'Datenschutz', NULL);
 COMMIT;
 
 -- ----------------------------
+-- Table structure for legals
+-- ----------------------------
+DROP TABLE IF EXISTS "legals";
+CREATE TABLE "legals" (
+  "id" int4 NOT NULL,
+  "title" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "value" varchar COLLATE "pg_catalog"."default"
+)
+;
+
+-- ----------------------------
+-- Records of legals
+-- ----------------------------
+BEGIN;
+INSERT INTO "legals" ("id", "title", "value") VALUES (1, 'Impressum', NULL);
+INSERT INTO "legals" ("id", "title", "value") VALUES (2, 'Datenschutz', NULL);
+COMMIT;
+
+-- ----------------------------
 -- Table structure for logo
 -- ----------------------------
 DROP TABLE IF EXISTS "logo";
@@ -67,6 +86,22 @@ INSERT INTO "logo" ("id", "image") VALUES (1, NULL);
 COMMIT;
 
 -- ----------------------------
+-- Table structure for mail_dispatch_settings
+-- ----------------------------
+DROP TABLE IF EXISTS "mail_dispatch_settings";
+CREATE TABLE "mail_dispatch_settings" (
+  "status" int2 NOT NULL
+)
+;
+
+-- ----------------------------
+-- Records of mail_dispatch_settings
+-- ----------------------------
+BEGIN;
+INSERT INTO "mail_dispatch_settings" ("status") VALUES (1);
+COMMIT;
+
+-- ----------------------------
 -- Table structure for mail_receiver
 -- ----------------------------
 DROP TABLE IF EXISTS "mail_receiver";
@@ -74,6 +109,24 @@ CREATE TABLE "mail_receiver" (
   "mail" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
 )
 ;
+
+-- ----------------------------
+-- Table structure for mail_templates
+-- ----------------------------
+DROP TABLE IF EXISTS "mail_templates";
+CREATE TABLE "mail_templates" (
+  "type" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "value" varchar COLLATE "pg_catalog"."default"
+)
+;
+
+-- ----------------------------
+-- Records of mail_templates
+-- ----------------------------
+BEGIN;
+INSERT INTO "mail_templates" ("type", "value") VALUES ('subject', 'Protokoll der {{type}} vom {{date}} {{begin}}-{{end}}');
+INSERT INTO "mail_templates" ("type", "value") VALUES ('body', 'Das Protokoll kann hier eingesehen werden: {{link}}.<br/><br/>Besprochene Themen: {{topics}}<br/><br/>Inhalt: {{content}}<br/><br/>Anwesende:<br/>{{attendees}}');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for protocol_attendances
@@ -303,9 +356,19 @@ COMMIT;
 ALTER TABLE "legals" ADD CONSTRAINT "legals_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
+-- Primary Key structure for table mail_dispatch_settings
+-- ----------------------------
+ALTER TABLE "mail_dispatch_settings" ADD CONSTRAINT "mail_dispatch_settings_pkey" PRIMARY KEY ("status");
+
+-- ----------------------------
 -- Primary Key structure for table mail_receiver
 -- ----------------------------
 ALTER TABLE "mail_receiver" ADD CONSTRAINT "mail_receiver_pkey" PRIMARY KEY ("mail");
+
+-- ----------------------------
+-- Primary Key structure for table mail_templates
+-- ----------------------------
+ALTER TABLE "mail_templates" ADD CONSTRAINT "mail_templates_pkey" PRIMARY KEY ("type");
 
 -- ----------------------------
 -- Primary Key structure for table protocol_attendances

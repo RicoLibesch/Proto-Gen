@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { Protocol } from '../models/protocolModel';
 import { AttendanceList } from '../models/attendanceListModel'
-import { insertProtocol, selectProtocolById, selectProtocols, selectAllProtocols } from '../services/protocolService';
+import { insertProtocol, selectProtocolById, selectProtocols, selectAllProtocols, selectAllProtocols } from '../services/protocolService';
+import { isMailDispatchEnabled } from '../services/mailDispatchService';
+import { sendMail } from '../services/sendMailService';
 
 export const getProtocols = async (req: Request, res: Response) => {
     console.log("Get all Protocols");
@@ -48,6 +50,10 @@ export const createProtocol = async (req: Request, res: Response) => {
     try {
         await insertProtocol(protocol);
         res.status(201).json({message: "Created new Protocol"});
+
+        if(await isMailDispatchEnabled()) {
+            sendMail(protocol);
+        }
     } catch(err) {
         return res.status(500).json({message: "Internal Server Error"});
     }
