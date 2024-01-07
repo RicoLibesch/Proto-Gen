@@ -37,7 +37,7 @@ export default function Home() {
     <div className="container mx-auto">
       <h1 className="text-primary">Protokolle</h1>
       <hr></hr>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 mt-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 md:grid-cols-2 mt-4">
         {protocols.map((protocol, index) => {
           return (
             <a key={index} href={"protocols/" + protocol.id}>
@@ -47,7 +47,7 @@ export default function Home() {
         })}
       </div>
 
-      <div className="flex items-center justify-center flex-nowrap mt-3">
+      <div className="flex items-center justify-center flex-nowrap mt-6">
         <button
           className="bg-seperation hover:bg-secondary_hover rounded-full px-6 py-2 text-secondary transition-all disabled:hover:cursor-not-allowed disabled:hover:bg-seperation"
           onClick={prevPage}

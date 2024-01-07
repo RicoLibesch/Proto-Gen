@@ -231,8 +231,8 @@ const ProtocolView = () => {
    */
 
   return (
-    <div className="container mx-auto flex flex-col min-h-screen">
-      <div ref={md}>
+    <div className="min-h-screen">
+      <div ref={md} className="mx-5">
         <div className="flex flex-col items-center text-center">
           <h2 className=" text-4xl font-bold leading-10 text-primary">
             {protocol?.protocol_type}
@@ -244,9 +244,9 @@ const ProtocolView = () => {
         <hr />
         <div
           data-color-mode="light"
-          className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
+          className="flex justify-center"
         >
-          <div className="pt-5 ml-5 w-3/5">
+          <div className="pt-5 md:w-1/2 sm:w-full">
             <Markdown skipHtml className="wmde-markdown">
               {protocol.content}
             </Markdown>
@@ -262,22 +262,22 @@ const ProtocolView = () => {
         update={() => {}}
       />
 
-      <div className="fixed font-medium bottom-10 right-1 w-full flex justify-end mb-4 pr-20">
+      <div className="fixed font-medium bottom-10 w-full flex justify-center md:justify-end flex-wrap mb-4 md:pr-20">
         <button
-          className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni mr-2"
+          className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni m-2 transition-all"
           onClick={generatePdf}
         >
           {isDownloading ? "Loading..." : "Download as PDF"}
         </button>
         <button
-          className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni mr-2 disabled:cursor-default disabled:bg-secondary_hover disabled:text-secondary"
+          className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni m-2 disabled:cursor-default disabled:bg-secondary_hover disabled:text-secondary transition-all"
           onClick={redirectPreviousPage}
           disabled={!prev}
         >
           Vorheriges
         </button>
         <button
-          className="bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-white disabled:cursor-default disabled:bg-secondary"
+          className="bg-mni hover:bg-mni_hover rounded-full px-6 py-2 m-2 text-white disabled:cursor-default disabled:bg-secondary transition-all"
           onClick={redirectNextPage}
           disabled={!next}
         >

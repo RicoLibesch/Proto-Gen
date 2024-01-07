@@ -1,5 +1,11 @@
 import { HTMLAttributes, useState } from "react";
-import { Facebook, Instagram, Twitter, GitHub, Circle } from "@mui/icons-material";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  GitHub,
+  Circle,
+} from "@mui/icons-material";
 
 export interface Social {
   id: number;
@@ -9,10 +15,16 @@ export interface Social {
 
 export interface SocialLinksProps extends HTMLAttributes<HTMLDivElement> {
   socials: Social[];
+  height?: number;
   update: (newSocials: Social[]) => void;
 }
 
-const SocialLinks = ({ socials, update, ...props }: SocialLinksProps) => {
+const SocialLinks = ({
+  socials,
+  update,
+  height,
+  ...props
+}: SocialLinksProps) => {
   const [state, updateState] = useState(0); // used to re-render the component when we update the list
   const refresh = () => updateState(state + 1);
 
@@ -33,14 +45,18 @@ const SocialLinks = ({ socials, update, ...props }: SocialLinksProps) => {
 
   return (
     <div {...props}>
-      <div className="flex flex-col items-center rounded-xl border border-outline p-2 shadow hover:shadow-lg transition-all">
+      <div
+        className="flex flex-col rounded-xl border border-outline p-2 shadow hover:shadow-lg transition-all"
+        style={{ height: height }}
+      >
+        <div className="text-lg font-medium truncate mx-2 mb-1">Socialmedia Kanäle:</div>
         {socials.map((social, index) => (
           <div key={index}>
-            <div className="flex flex-nowrap items-center">
+            <div className="flex flex-nowrap items-center mx-2">
               {getIcon(social.title)}
-              <div className="rounded-full border border-neutral items-center justify-between overflow-hidden m-1 p-1">
+              <div className="rounded-full border border-neutral items-center justify-between overflow-hidden m-1 p-1 w-full">
                 <input
-                  className="ml-2 bg-transparent border-none focus:outline-none w-40"
+                  className="ml-2 bg-transparent border-none focus:outline-none w-full"
                   placeholder={social.title}
                   value={social.value}
                   onChange={(x) => {

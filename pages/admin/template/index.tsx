@@ -66,7 +66,7 @@ const Template = () => {
     <div>
       <AdminHeader path="admin/template" />
       <div className="p-5">
-        <div className="text-2xl text-primary pb-3">Protocol Template</div>
+        <div className="text-2xl text-primary pb-3">Protokollvorlagen</div>
         <hr />
         <div className="container mx-auto items-center px-2">
           <div
@@ -74,12 +74,12 @@ const Template = () => {
             className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
           >
             <StringList
-              className="p-2 w-1/4"
-              title="Template-List:"
+              className="w-1/4 px-5"
+              title="Protokollvorlagen:"
               update={update}
               selected={selected}
               deleteCallback={deleteCallback}
-              placeholder="new Template"
+              placeholder="Neue Vorlage"
               draggable={false}
               list={protocolNames}
             />

@@ -87,7 +87,7 @@ const ProtocolCreate = () => {
         </select>
         <div
           data-color-mode="light"
-          className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
+          className="flex justify-center pt-5 max-lg:flex-wrap-reverse flex-wrap"
         >
           <AttendanceList
             className="p-5 max-lg:w-full w-1/4"
@@ -96,7 +96,7 @@ const ProtocolCreate = () => {
           />
           <MDEditor
             className="max-lg:w-full w-3/4"
-            height={"100%"}
+            height={"75vh"}
             value={content}
             onChange={(x) => setContent(x ?? "")}
           />

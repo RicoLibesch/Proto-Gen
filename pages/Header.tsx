@@ -1,17 +1,14 @@
-"use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Close, Menu } from "@mui/icons-material";
 import UserIcon from "@/components/UserIcon";
-import { getLogo, loadToken, token } from "@/utils/API";
+import { getLogo, loadToken, store } from "@/utils/API";
 
 const Header = () => {
-  let [links, setLinks] = useState([{ name: "Protokolle", link: "/" }]);
-  let [open, setOpen] = useState(false);
-
-  loadToken();
-  
+  const [links, setLinks] = useState([{ name: "Protokolle", link: "/" }]);
+  const [open, setOpen] = useState(false);
+  const user = store((s) => s.user);
   const [logo, setLogo] = useState("/fsmniLogo.png");
   useEffect(() => {
     const fetchLogo = async () => {
@@ -21,23 +18,25 @@ const Header = () => {
   });
 
   useEffect(() => {
-    if (token) {
-      setLinks([
-        {
-          name: "Protokolle",
-          link: "/",
-        },
-        {
+    loadToken();
+  }, [])
+
+  useEffect(() => {
+    const links = [{ name: "Protokolle", link: "/" }];
+    if (user) {
+      if (user.isAdmin)
+        links.push({
           name: "Admin",
           link: "/admin",
-        },
-        {
+        });
+      if (user.isRecorder)
+        links.push({
           name: "Neu",
           link: "/new",
-        },
-      ]);
+        });
     }
-  }, [token]);
+    setLinks(links);
+  }, [user]);
 
   return (
     <div className="w-full top-0 left-0 h-[100px]">
@@ -67,7 +66,7 @@ const Header = () => {
               </a>
             </div>
           ))}
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center ml-4">
             <UserIcon />
           </div>
         </ul>

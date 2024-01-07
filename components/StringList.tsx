@@ -8,8 +8,10 @@ export interface StringListProps extends HTMLAttributes<HTMLDivElement> {
   update: (value: string[]) => void;
   selected?: (index: number) => void;
   deleteCallback?: (index: number) => boolean;
+  add?: (value: string) => boolean;
   flex?: boolean;
   draggable?: boolean;
+  height?: number;
 }
 
 const StringList = ({
@@ -21,6 +23,8 @@ const StringList = ({
   deleteCallback,
   flex,
   draggable,
+  height,
+  add,
   ...props
 }: StringListProps) => {
   const [state, updateState] = useState(0); // used to re-render the component when we update the list
@@ -68,14 +72,17 @@ const StringList = ({
 
   return (
     <div {...props}>
-      <div className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all">
-        <div className="text-lg font-medium truncate">{title}</div>
+      <div
+        className="rounded-xl border border-outline justify-center p-2 shadow hover:shadow-lg transition-all"
+        style={{ height: height }}
+      >
+        <div className="text-lg font-medium truncate mx-2">{title}</div>
         <div className={flex === true ? "flex items-center" : ""}>
           {list.map((x, index) => {
             return (
               <div
                 className={
-                  "rounded-full border border-neutral flex items-center justify-between overflow-hidden m-1 pl-3 " +
+                  "rounded-full border border-neutral flex items-center justify-between overflow-hidden m-2 pl-3 py-1 " +
                   (selectedIndex === index ? "bg-secondary_hover" : "") +
                   (draggable ? "cursor-grab" : "")
                 }
@@ -110,7 +117,7 @@ const StringList = ({
             );
           })}
           {adding ? (
-            <div className="rounded-full border border-neutral items-center justify-between overflow-hidden m-1 pl-1">
+            <div className="rounded-full border border-neutral items-center justify-between overflow-hidden m-2 pl-1 py-1">
               <div className="flex flex-nowrap">
                 <input
                   className="ml-2 bg-transparent border-none focus:outline-none w-full"
@@ -119,6 +126,10 @@ const StringList = ({
                   onKeyDown={(x) => {
                     if (x.key === "Enter") {
                       if (name.length <= 0) {
+                        setAdding(false);
+                        return;
+                      }
+                      if (add && !add(name)) {
                         setAdding(false);
                         return;
                       }
@@ -143,6 +154,10 @@ const StringList = ({
                       setAdding(false);
                       return;
                     }
+                    if (add && !add(name)) {
+                      setAdding(false);
+                      return;
+                    }
                     list.push(name);
                     setName("");
                     setAdding(false);
@@ -156,7 +171,7 @@ const StringList = ({
             </div>
           ) : (
             <Add
-              className="w-7 h-7 hover:cursor-pointer fill-neutral rounded-full border border-neutral ml-1"
+              className="w-8 h-8 hover:cursor-pointer fill-neutral rounded-full border border-neutral ml-2 mb-1"
               onClick={() => setAdding(true)}
             />
           )}

@@ -1,5 +1,5 @@
 "use client";
-import { setToken } from "@/utils/API";
+import { store } from "@/utils/API";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ const Login = () => {
   const router = useRouter();
   const [kennung, setKennung] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const setUser = store((s) => s.setUser);
 
   const login = async () => {
     if (!kennung || !password) {
@@ -54,7 +55,8 @@ const Login = () => {
         });
         return;
       }
-      setToken(token, kennung);
+      const user = { ...json["user"], token, creation_date: new Date().getTime() };
+      setUser(user);
       router.push("/");
     } catch (error) {
       console.log(error);
@@ -68,7 +70,7 @@ const Login = () => {
         progress: undefined,
         theme: "light",
       });
-  }
+    }
   };
 
   return (
