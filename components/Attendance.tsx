@@ -22,11 +22,16 @@ const AttendanceList = ({
   const [name, setName] = useState<string>("");
   const deleted = useRef<string[]>([]);
   const pending = useRef<string[]>([]);
+  const [running, setRunning] = useState(false);
 
   useEffect(() => {
     if (!editable) return;
-    let id: any;
-    const session = async () => {
+    const interval = setInterval(async () => {
+      if (!running) {
+        const session = await sessionRunning();
+        if (!session) return;
+        setRunning(true);
+      }
       let diff = await getAttendees();
       for (const key in list) diff = diff.filter((x) => !list[key].includes(x));
       diff = diff.filter((x) => !pending.current.includes(x));
@@ -35,13 +40,11 @@ const AttendanceList = ({
         pending.current = [...pending.current, ...diff];
         refresh();
       }
-      id = setTimeout(session, 1000);
-    };
-    session();
+    }, 1000);
     return () => {
-      clearTimeout(id);
+      clearInterval(interval);
     };
-  }, [list]);
+  }, [list, editable, refresh]);
 
   const colors = ["#007BFF", "#28A745", "#DC3545", "#FFC107", "#343A40"];
   /**
@@ -72,7 +75,7 @@ const AttendanceList = ({
         >
           {list[category][index].toUpperCase().slice(0, 1)}
         </div>
-        <span className="text-neutral p-1.5 truncate hover:text-clip hover:overflow-x-scroll ">
+        <span className="text-neutral p-1.5 truncate hover:text-clip hover:overflow-x-auto ">
           {list[category][index]}
         </span>
         {editable ? (

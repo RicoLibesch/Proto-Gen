@@ -52,7 +52,7 @@ const ProtocolContainer = ({ protocol, ...props }: ProtocolContainerProps) => {
           </div>
         </div>
 
-        <div className="flex flex-nowrap whitespace-nowrap overflow-x-scroll">
+        <div className="flex flex-nowrap whitespace-nowrap overflow-x-auto">
           {protocol.topics.length != 0 ? (
             getLast3(protocol.topics).map((topic) => {
               return (

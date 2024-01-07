@@ -15,6 +15,10 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
       path: "/admin/template",
     },
     {
+      name: "E-Mail",
+      path: "/admin/email",
+    },
+    {
       name: "Rechte",
       path: "/admin/roles",
     },

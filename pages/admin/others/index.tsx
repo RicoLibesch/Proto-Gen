@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import * as API from "@/utils/API";
 
 const Others = () => {
-  const [emails, setEmails] = useState<string[]>([]);
   const [attendance, setAttendance] = useState<string[]>([]);
   const [saved, setSaved] = useState(true);
   const [socials, setSocials] = useState<Social[]>([]);
@@ -20,12 +19,14 @@ const Others = () => {
     window.onbeforeunload = (e) => {
       if (!saved) e.preventDefault();
     };
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, [saved]);
 
   useEffect(() => {
     const load = async () => {
       const emails = await getEmails();
-      setEmails(emails);
       const socials = await getSocials();
       setSocials(socials);
       const attendance = await getAttendanceCategories();
@@ -34,11 +35,6 @@ const Others = () => {
     };
     load();
   }, []);
-
-  const uploadEmails = async () => {
-    await API.setEmails(emails);
-    setSaved(true);
-  };
 
   const uploadSocials = async () => {
     await API.setSocials(socials);
@@ -50,27 +46,32 @@ const Others = () => {
     setSaved(true);
   };
 
+  const downloadJson = async () => {
+    try {
+      const link = document.createElement("a");
+      const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/export`;
+      const json = await fetch(url);
+      const blob = await json.blob();
+      link.href = URL.createObjectURL(blob);
+      link.download = "protokolle.json";
+      link.click();
+    } catch {}
+  };
+
   return (
     <div>
       <AdminHeader path="admin/others" />
       <div className="grid grid-cols-3 gap-10 justify-around p-10">
-        <div className="col-span-1">
-          <div className="text-2xl mb-3 font-bold text-center">E-Mail receiver</div>
-          <StringList
-            title="E-Mail List: "
-            update={(x) => {
-              setEmails(x);
-              setSaved(false);
-            }}
-            height={450}
-            list={emails}
-          />
+        <div className="col-span-1 flex flex-col justify-center">
+          <div className="text-2xl mb-3 font-bold text-center">
+            Herundertladen von allen Protokollen als json
+          </div>
           <div className="text-center pt-4">
             <button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
-              onClick={uploadEmails}
+              onClick={downloadJson}
             >
-              Speichern
+              Download
             </button>
           </div>
         </div>

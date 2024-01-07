@@ -14,12 +14,12 @@ const UserIcon = () => {
   return (
     <div>
       {user ? (
-        <div className="w-10 h-10 rounded-full bg-mni text-white flex items-center justify-center cursor-pointer" onClick={logout}>
+        <div className="w-10 h-10 rounded-full bg-mni text-white flex items-center justify-center cursor-pointer text-xl" onClick={logout}>
           {user.id.toUpperCase().slice(0, 2)}
         </div>
       ) : (
         <Link href="/login">
-          <AccountCircle className="fill-secondary w-12 h-12 hover:fill-primary cursor-pointer" />
+          <AccountCircle className="!fill-secondary !w-12 !h-12 hover:!fill-primary !cursor-pointer" />
         </Link>
       )}
     </div>
