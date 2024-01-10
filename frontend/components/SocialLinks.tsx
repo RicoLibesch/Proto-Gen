@@ -52,7 +52,7 @@ const SocialLinks = ({
         className="flex flex-col rounded-xl border border-outline p-2 shadow hover:shadow-lg transition-all"
         style={{ height: height }}
       >
-        <div className="text-lg font-medium truncate mx-2 mb-1">Socialmedia Kanäle:</div>
+        <div className="text-lg font-medium truncate mx-2 mb-1">Social-Media-Kanäle:</div>
         {socials.map((social, index) => (
           <div key={index}>
             <div className="flex flex-nowrap items-center mx-2">

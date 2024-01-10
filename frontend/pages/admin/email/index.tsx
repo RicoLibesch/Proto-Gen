@@ -15,11 +15,11 @@ const Email = () => {
   const variables = [
     {
       variable: "type",
-      desc: "Type des Protokolls",
+      desc: "Typ des Protokolls",
     },
     {
       variable: "date",
-      desc: "Datum an dem das Protokoll geschriebne wurde",
+      desc: "Datum, an dem das Protokoll verfasst wurde",
     },
     {
       variable: "begin",
@@ -31,7 +31,7 @@ const Email = () => {
     },
     {
       variable: "link",
-      desc: "Link zur ansicht",
+      desc: "Link zur Ansicht",
     },
     {
       variable: "content",
@@ -86,10 +86,10 @@ const Email = () => {
       <div className="grid grid-cols-4 gap-10 justify-around p-10">
         <div className="col-span-1">
           <div className="text-2xl mb-3 font-bold text-center">
-            E-Mail receiver
+            E-Mail Empfänger
           </div>
           <StringList
-            title="E-Mail List: "
+            title="E-Mail Liste: "
             update={(x) => {
               setEmails(x);
               setSaved(false);
@@ -108,14 +108,14 @@ const Email = () => {
           </div>
         </div>
         <div className="col-span-3">
-          <div className="text-xl mb-3 font-bold text-left">E-Mail Betreff</div>
+          <div className="text-xl mb-3 font-bold text-left">Betreff</div>
           <input
             type="text"
             className="w-full focus:outline-none rounded-xl border border-outline p-2 mb-2"
             onChange={(e) => setSubject(e.target.value)}
             value={subject}
           ></input>
-          <div className="text-xl mb-3 font-bold text-left">E-Mail körper</div>
+          <div className="text-xl mb-3 font-bold text-left">Inhalt</div>
           <div
             className="overflow-y-auto rounded-xl border border-outline"
             style={{ height: "500px" }}
@@ -123,7 +123,7 @@ const Email = () => {
             <CodeMirror extensions={[html()]} onChange={setBody} value={body} />
           </div>
           <div className="text-lg font-bold text-left">
-            Variablen die zur verfügung stehen:
+            Liste der verfügbaren Variablen:
           </div>
           <div className="flex flex-wrap">
           {variables.map((value, index) => (
