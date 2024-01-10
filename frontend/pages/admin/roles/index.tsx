@@ -77,9 +77,9 @@ const Roles = () => {
 
       <div className="grid grid-cols-2 gap-10 justify-around p-10">
         <div className="col-span-1">
-          <div className="text-2xl mb-3 font-bold text-center">Admins</div>
+          <div className="text-2xl mb-3 font-bold text-center">Administratoren</div>
           <StringList
-            title="Admins: "
+            title="Administratoren"
             update={(x) => {
               setAdmins(x);
               setSaved(false);
@@ -100,10 +100,10 @@ const Roles = () => {
         </div>
         <div className="col-span-1">
           <div className="text-2xl mb-3 font-bold text-center">
-            Protokollant
+            Protokollanten
           </div>
           <StringList
-            title="Protokollant"
+            title="Protokollanten"
             update={(x) => {
               setRecorder(x);
               setSaved(false);

@@ -64,7 +64,7 @@ const Others = () => {
       <div className="grid grid-cols-3 gap-10 justify-around p-10">
         <div className="col-span-1 flex flex-col justify-center">
           <div className="text-2xl mb-3 font-bold text-center">
-            Herundertladen von allen Protokollen als json
+            Herunterladen von allen Protokollen im JSON-Format
           </div>
           <div className="text-center pt-4">
             <button

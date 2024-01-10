@@ -19,11 +19,11 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
       path: "/admin/email",
     },
     {
-      name: "Rechte",
+      name: "Rechtevergabe",
       path: "/admin/roles",
     },
     {
-      name: "Rechtliches",
+      name: "Gesetzliches",
       path: "/admin/legals",
     },
     {
