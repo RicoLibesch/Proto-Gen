@@ -46,7 +46,6 @@ const buildTemplate = async (template: string, protocol: Protocol): Promise<stri
         };
 
         const parsedContent: string = await marked(protocol.content);
-        console.log(parsedContent);
 
         const startDate = start.toLocaleDateString("de-DE", optionsDate);
         const startTime = start.toLocaleTimeString("de-DE", optionsTime);

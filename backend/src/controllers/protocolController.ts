@@ -4,9 +4,9 @@ import { AttendanceList } from '../models/attendanceListModel'
 import { insertProtocol, selectProtocolById, selectProtocols, selectAllProtocols } from '../services/protocolService';
 import { isMailDispatchEnabled } from '../services/mailDispatchService';
 import { sendMail } from '../services/sendMailService';
+import { selectReceiver } from '../services/mailReceiverService';
 
 export const getProtocols = async (req: Request, res: Response) => {
-    console.log("Get all Protocols");
     try {
         //Check if Query Parameters are an Integer
         if(req.query.page && isNaN(Number(req.query.page)))
@@ -24,7 +24,6 @@ export const getProtocols = async (req: Request, res: Response) => {
 };
 
 export const getAllProtocols = async (req: Request, res: Response) => {
-    console.log("Export all Protocols");
     try {
         const protocols: Protocol[] = await selectAllProtocols();
         res.status(200).json(protocols);
@@ -52,7 +51,10 @@ export const createProtocol = async (req: Request, res: Response) => {
         res.status(201).json({message: "Created new Protocol"});
 
         if(await isMailDispatchEnabled()) {
-            sendMail(protocol);
+            const receiver: string[] = await selectReceiver();
+            if(receiver.length > 0) {
+                sendMail(protocol);
+            }
         }
     } catch(err) {
         return res.status(500).json({message: "Internal Server Error"});

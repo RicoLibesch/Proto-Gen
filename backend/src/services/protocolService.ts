@@ -6,7 +6,6 @@ import {insertProtocolTopics, selectProtocolTopics} from './protocolTopicService
 import { stopSession } from '../services/sessionService';
 
 export const selectProtocolById = async (protocolId: number): Promise<Protocol> => {
-    console.log("Select Protocol ID ", protocolId);
     try {
         const result = await pool.query('SELECT * FROM protocols WHERE id = $1', [protocolId]);
 
@@ -91,7 +90,6 @@ export const selectAllProtocols = async (): Promise<Protocol[]> => {
 };
 
 export const insertProtocol = async (protocol: Protocol): Promise<void> => {
-    console.log("Inserting new Procotol")
     try {
         protocol.id = await insertProtocolData(protocol);
         await insertProtocolTopics(protocol.id, protocol.topics);

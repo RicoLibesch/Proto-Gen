@@ -1,8 +1,7 @@
 import { pool } from '../config/postgresConfig';
 
 export const updateReceiver = async (mails: string[]): Promise<void> => {
-    try {
-        console.log("Update Mail Receiver");        
+    try {      
         await pool.query('BEGIN');
         await pool.query('DELETE FROM mail_receiver');
         const insertQuery = 'INSERT INTO mail_receiver(mail) VALUES($1)';
@@ -19,7 +18,6 @@ export const updateReceiver = async (mails: string[]): Promise<void> => {
 
 export const selectReceiver = async (): Promise<string[]> => {
     try {
-        console.log("Get Mail Receiver");
         const result = await pool.query('SELECT mail FROM mail_receiver');
         const mails: string[] = [];
         if (result.rows.length > 0)

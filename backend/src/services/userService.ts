@@ -4,7 +4,6 @@ import { hasRole, insertPermission } from './userRoleService';
 
 export const userExists = async (id: string): Promise<boolean> => {
     try {
-        console.log("Get User");
         const result = await pool.query('SELECT id FROM users WHERE id = $1', [id]);
         return result.rows.length > 0 ? true : false;
     } catch (err) {
@@ -15,13 +14,11 @@ export const userExists = async (id: string): Promise<boolean> => {
 
 export const insertUser = async (user: User): Promise<void> => {
     try {
-        console.log(`Inserting new User: ${user.id}`);
-
         await pool.query('INSERT INTO users(id, first_name, last_name, display_name, mail) VALUES ($1, $2, $3, $4, $5)', 
             [user.id, user.firstName, user.lastName, user.displayName, user.mail]);
 
-        if(isFirstUser()) {
-            insertPermission(user.id, 1);
+        if(await isFirstUser()) {
+            await insertPermission(user.id, 1);
             console.log(`${user.id} was the first user and received the Administrator role.`);
         }
     } catch (err) {
