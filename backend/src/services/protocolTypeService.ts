@@ -20,7 +20,6 @@ export const selectProtocolTypes = async (): Promise<ProtocolType[]> => {
 
 export const updateProtocolTypes = async (protocolTypes: ProtocolType[]): Promise<void> => {
     try {
-        console.log("Update Protocol Types");
         await pool.query('BEGIN');
         await pool.query('DELETE FROM protocol_types');
         const insertQuery = 'INSERT INTO protocol_types(title, template) VALUES ($1, $2)';

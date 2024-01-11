@@ -2,9 +2,7 @@ import { pool } from '../config/postgresConfig';
 import { AttendanceCategory } from '../models/attendanceCategoryModel';
 
 export const updateCategories = async (categories: AttendanceCategory[]): Promise<void> => {
-    try {
-        console.log("Update Attendance Categories");
-        
+    try {        
         await pool.query('BEGIN');
         await pool.query('DELETE FROM attendance_categories');
         const insertQuery = 'INSERT INTO attendance_categories(title, "order") VALUES($1, $2)';
@@ -21,7 +19,6 @@ export const updateCategories = async (categories: AttendanceCategory[]): Promis
 
 export const selectCategories = async (): Promise<AttendanceCategory[]> => {
     try {
-        console.log("Get Attendance Categories");
         const result = await pool.query('SELECT * FROM attendance_categories');
         const categories: AttendanceCategory[] = [];
         if (result.rows.length > 0)

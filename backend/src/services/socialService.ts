@@ -3,7 +3,6 @@ import { Social } from '../models/socialModel';
 
 export const updateSocial = async (id: number, value: string): Promise<void> => {
     try {
-        console.log("Update Social");
         const result = await pool.query('UPDATE socials SET value = $1 WHERE id = $2', [value ,id]);
         if(result.rowCount === 0) {
             throw new Error("Not found");
@@ -19,7 +18,6 @@ export const updateSocial = async (id: number, value: string): Promise<void> => 
 
 export const selectSocials = async (): Promise<Social[]> => {
     try {
-        console.log("Get Socials");
         const socials: Social[] = [];
         const result = await pool.query('SELECT * FROM socials');        
         if (result.rows.length > 0)
