@@ -1,99 +1,165 @@
 
 # Stages der pipeline (Build zum bauen der Anwendung)
 stages:
+  - test
   - build
-# - test
-# - deploy
+  - deploy
 
 variables:
-#  DOCKER_HOST: tcp://docker:2375
-  #DOCKER_DRIVER: overlay2
-#  DOCKER_TLS_CERTDIR: ""
-  DOCKER_IMAGE_1: "protogen_backend_node"
-  DOCKER_IMAGE_2: "protogen_backend_db"
-  DOCKER_IMAGE_3: "protogen_frontend_nextjs"
 
-build_images:
-  stage: build
-  #image: docker:stable
+  BACKEND_IMAGE_NAME: "protogen_backend_node"
+  DB_IMAGE_NAME: "protogen_backend_db"
+  FRONTEND_IMAGE_NAME: "protogen_frontend_next"
+
+
+
+test-app-node:
+  stage: test
+  image: node:alpine
   tags:
     - protogen-runner-v2
-  image: docker:stable
-  variables:
-    IMAGE_TAG_BACKEND_NODE: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_1:$CI_COMMIT_REF_SLUG
-    IMAGE_TAG_BACKEND_DB: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
-    IMAGE_TAG_FRONTEND_NEXTJS: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_3:$CI_COMMIT_REF_SLUG
   script:
-    # bauen der Docker images
-    - docker build -t $IMAGE_TAG_BACKEND_NODE -f backend/Dockerfile .
-    - docker build -t $IMAGE_TAG_BACKEND_DB ./database
-    - docker build -t $IMAGE_TAG_FRONTEND_NEXTJS -f Dockerfile .
-  after_script:
-    # löschen der images und anschließendes säubern von <none>-tags die beim Untag&Delete(muss noch überarbeitet werden) entstehen
-    # - docker rmi $IMAGE_TAG_BACKEND_NODE $IMAGE_TAG_BACKEND_DB $IMAGE_TAG_FRONTEND_NEXTJS
-    #- docker rmi $(docker image -f "dangling=true" -q)
-  only:
-    - dev
+    - cd backend
+    - npm install
+    - npm run test/ci
+
+doc-app-node:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner-v2
+  script:
+    - cd backend
+    - npm install
+    - npm run doc
+
+lint-app-node:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner-v2
+  script:
+    - echo "lint"
+  #  - cd backend
+  #  - npm install
+  #  - npm run lint
+
+test-app-next:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner-v2
+  script:
+    - echo "test next"
+    #- echo ${TEST_AUTHCONTROLLER} > authController.ts
+    #- mv -f authController.ts proto-gen/backend/src/controllers/authController.ts
+    #- npm install
+    #- npm run test/ci //Muss noch im Frontend installiert werden die packages etc.
+
+doc-app-next:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner-v2
+  script: 
+    - echo "doc"
+    #- npm install
+    #- npm run doc
+
+lint-app-next:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner-v2
+  script:
+    - npm install
+    - npm run lint
+
+#---------------------- BUILD
 
 
-#test_node_backend:
-#  stage: test
-#  tags:
-#    - npm
-#  script:
-#    - npm install backend/package.json 
-#    - npm test
-#  only:
-#    - feature/CI
+build-image-backend:
+  stage: build
+  needs:
+    - job: test-app-node
+    - job: doc-app-node
+    - job: lint-app-node
+  tags:
+    - protogen-runner-v2
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+     --context $CI_PROJECT_DIR/backend
+     --dockerfile $CI_PROJECT_DIR/backend/Dockerfile
+     --destination "${CI_REGISTRY_IMAGE}/${BACKEND_IMAGE_NAME}:${CI_COMMIT_TAG}"
+  allow_failure: True
 
 
-# build_backend_node:
-#  stage: build
-#  tags:
-#    - protogen-runner
-#  services:
-#    - name: docker:dind
-#      entrypoint: ["env", "-u", "DOCKER_HOST"]
-#      command: ["dockerd-entrypoint.sh"] 
-#  variables:
-#    IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_1:$CI_COMMIT_REF_SLUG
-#  script:
-#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#    - docker build -t $IMAGE_TAG -f backend/Dockerfile .
-#    - docker push $IMAGE_TAG
-#  only:
-#    - feature/CI 
+build-image-db:
+  stage: build
+  tags:
+    - protogen-runner-v2
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+     --context $CI_PROJECT_DIR/database
+     --dockerfile $CI_PROJECT_DIR/database/Dockerfile
+     --destination "${CI_REGISTRY_IMAGE}/${DB_IMAGE_NAME}:${CI_COMMIT_TAG}"
+  allow_failure: True
 
-#build_backend_db:
-#  stage: build
-#  tags:
-#    - protogen-runner
-#  services:
-#    - name: docker:dind
-#      entrypoint: ["env", "-u", "DOCKER_HOST"]
-#      command: ["dockerd-entrypoint.sh"] 
-#  variables:
-#    IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_2:$CI_COMMIT_REF_SLUG
-#  script:
-#     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#     - docker build -t $IMAGE_TAG ./database
-#     - docker push $IMAGE_TAG
-#  only:
-#    - feature/CI 
 
-#build_frontend_nextjs:
-#  stage: build
-#  tags:
-#    - protogen-runner
-#  services:
-#    - name: docker:dind
-#      entrypoint: ["env", "-u", "DOCKER_HOST"]
-#      command: ["dockerd-entrypoint.sh"] 
-#  variables:
-#    IMAGE_TAG: $CI_REGISTRY_IMAGE/$DOCKER_IMAGE_3:$CI_COMMIT_REF_SLUG
-#  script:
-#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#    - docker build -t $IMAGE_TAG -f Dockerfile .
-#    - docker push $IMAGE_TAG
-#  only:
-#    - feature/CI 
+build-image-frontend:
+  stage: build
+  needs:
+    - job: test-app-next
+    - job: doc-app-next
+    - job: lint-app-next
+  tags:
+    - protogen-runner-v2
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+     --context $CI_PROJECT_DIR/
+     --dockerfile $CI_PROJECT_DIR/Dockerfile
+     --destination "${CI_REGISTRY_IMAGE}/${FRONTEND_IMAGE_NAME}:${CI_COMMIT_TAG}"
+  allow_failure: True
+
+
+deploy-stack-dev:
+  stage: deploy
+  needs: 
+    - job: build-image-backend
+    - job: build-image-db
+    - job: build-image-frontend
+  tags: 
+    - protogen-runner-v2
+  image:
+    name: alpine:latest
+  before_script:
+    - 'command -v ssh-agent >/dev/null || ( apk update && apk add openssh-client )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 400 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY_DEV" | ssh-add - 
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+    - cd ..
+  script:
+    - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'whoami && echo success'
+    #- ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'rm -rf /home/fsmni/proto-gen'
+    #- scp -r proto-gen ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/
+    #- ssh-add <(echo "$SSH_PRIVATE_KEY_DEV")
+    #- ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'cd /home/fsmni/prot-gen && sudo docker compose up -d'
+  #only:
+    #- develop
+
+
+
+
+
+
