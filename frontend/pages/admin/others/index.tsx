@@ -62,7 +62,7 @@ const Others = () => {
     <div>
       <AdminHeader path="admin/others" />
       <div className="grid grid-cols-3 gap-10 justify-around p-10">
-        <div className="col-span-1 flex flex-col justify-center">
+        <div className="col-span-1 flex flex-col justify-center max-md:col-span-3">
           <div className="text-2xl mb-3 font-bold text-center">
             Herunterladen von allen Protokollen im JSON-Format
           </div>
@@ -75,7 +75,7 @@ const Others = () => {
             </button>
           </div>
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 max-md:col-span-3">
           <div className="text-2xl mb-3 font-bold text-center">Footer</div>
           <SocialLinks
             socials={socials}
@@ -94,7 +94,7 @@ const Others = () => {
             </button>
           </div>
         </div>
-        <div className="col-span-1">
+        <div className="col-span-1 max-md:col-span-3">
           <div className="text-2xl mb-3 font-bold text-center">
             Anwesenheits Kategorien
           </div>

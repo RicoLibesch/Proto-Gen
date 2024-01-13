@@ -32,39 +32,53 @@ const Roles = () => {
   };
 
   const addAdmin = (value: string) => {
-    if (!users.find((x) => x.id === value)) {
-      toast.error("User not found!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return false;
-    }
-    setRole(value, "Administrator");
-    return true;
+    const asyncAdmin = async () => {
+      const users = await getUsers(value);
+      if (!users.find((x) => x.id === value)) {
+        toast.error("User not found!", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return false;
+      }
+      setRole(value, "Administrator");
+      if (admins.includes(value)) return;
+      setAdmins([...admins, value]);
+    };
+
+    asyncAdmin();
+    return false;
   };
 
   const addRecorder = (value: string) => {
-    if (!users.find((x) => x.id === value)) {
-      toast.error("User not found!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      return false;
-    }
-    setRole(value, "Recorder");
-    return true;
+    const asyncRecorder = async () => {
+      const users = await getUsers(value);
+      if (!users.find((x) => x.id === value)) {
+        toast.error("User not found!", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        return false;
+      }
+      setRole(value, "Recorder");
+      if (recorder.includes(value)) return;
+      setRecorder([...recorder, value]);
+    };
+
+    asyncRecorder();
+    return false;
   };
 
   const save = () => {
@@ -89,14 +103,6 @@ const Roles = () => {
             height={450}
             list={admins}
           />
-          <div className="text-center pt-4">
-            <button
-              className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
-              onClick={save}
-            >
-              Speichern
-            </button>
-          </div>
         </div>
         <div className="col-span-1">
           <div className="text-2xl mb-3 font-bold text-center">
@@ -113,14 +119,6 @@ const Roles = () => {
             height={450}
             list={recorder}
           />
-          <div className="text-center pt-4">
-            <button
-              className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
-              onClick={save}
-            >
-              Speichern
-            </button>
-          </div>
         </div>
       </div>
     </div>

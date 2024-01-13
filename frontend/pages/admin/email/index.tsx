@@ -84,7 +84,7 @@ const Email = () => {
     <>
       <AdminHeader path="admin/email" />
       <div className="grid grid-cols-4 gap-10 justify-around p-10">
-        <div className="col-span-1">
+        <div className="col-span-1 max-lg:col-span-4">
           <div className="text-2xl mb-3 font-bold text-center">
             E-Mail Empfänger
           </div>
@@ -107,7 +107,7 @@ const Email = () => {
             />
           </div>
         </div>
-        <div className="col-span-3">
+        <div className="col-span-3 max-lg:col-span-4">
           <div className="text-xl mb-3 font-bold text-left">Betreff</div>
           <input
             type="text"

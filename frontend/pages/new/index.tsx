@@ -6,10 +6,14 @@ import { useEffect, useState } from "react";
 import Protocol, { ProtocolType } from "@/components/Protocol";
 import AttendanceList, { Attendance } from "@/components/Attendance";
 import { useRouter } from "next/router";
+import qrcode from "/qrcode.png";
+import Image from "next/image";
+
 import {
   createProtocol,
   deleteSession,
   getAttendanceCategories,
+  getLogo,
   getProtocolTypes,
   sessionRunning,
   startSession,
@@ -31,6 +35,15 @@ const ProtocolCreate = () => {
   const [attendanceList, setAttendanceList] = useState<Attendance>({});
 
   useEffect(() => {
+    window.onbeforeunload = (e) => {
+      e.preventDefault();
+    };
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, []);
+
+  useEffect(() => {
     (async () => {
       const running = await sessionRunning();
       if (!running) {
@@ -49,9 +62,8 @@ const ProtocolCreate = () => {
     })();
     return () => {
       deleteSession();
-    }
+    };
   }, []);
-
 
   async function uploadProtocol() {
     if (protocolTypes[index].template === content) {
@@ -100,11 +112,19 @@ const ProtocolCreate = () => {
           data-color-mode="light"
           className="flex justify-center pt-5 max-lg:flex-wrap-reverse flex-wrap"
         >
-          <AttendanceList
-            className="p-5 max-lg:w-full w-1/4"
-            list={attendanceList}
-            update={setAttendanceList}
-          />
+          <div className="max-lg:w-full w-1/4">
+            <img
+              src="/qrcode.png"
+              alt="QR Code"
+              className="mx-auto"
+              style={{ width: "150px", height: "150px" }}
+            />
+            <AttendanceList
+              className="p-5 w-full"
+              list={attendanceList}
+              update={setAttendanceList}
+            />
+          </div>
           <MDEditor
             className="max-lg:w-full w-3/4"
             height={"75vh"}

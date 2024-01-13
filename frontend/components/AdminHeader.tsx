@@ -34,7 +34,7 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
 
   return (
     <div {...props}>
-      <div className="flex flex-nowrap p-2 ml-6">
+      <div className="flex flex-wrap p-2 ml-6">
         {links.map((x, index) => {
           return (
             <a
