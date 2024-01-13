@@ -106,7 +106,7 @@ const ProtocolView = () => {
       // Define options for PDF generation.
       const options = {
         //[top, right, bottom, left]
-        margin: [20, 72, 72, -100],
+        margin: [0, 0, 0, 40],
         html2canvas: {
           //Allows images from other domains
           allowTaint: true,
@@ -115,7 +115,7 @@ const ProtocolView = () => {
           letterRendering: true,
           //console log
           logging: false,
-          scale: 0.5,
+          scale: 1.0,
           imageTimeout: 15000,
         },
       };
@@ -232,21 +232,22 @@ const ProtocolView = () => {
 
   return (
     <div className="min-h-screen">
-      <div ref={md} className="mx-5">
-        <div className="flex flex-col items-center text-center">
-          <h2 className=" text-4xl font-bold leading-10 text-primary">
-            {protocol?.protocol_type}
-          </h2>
-          <h4 className="pt-3 pb-3 text-1xl leading-5 text-secondary sm:text-2xl sm:truncate">
-            {"vom " + formatProtocolDate(protocol)}
-          </h4>
-        </div>
-        <hr />
-        <div
-          data-color-mode="light"
-          className="flex justify-center"
-        >
-          <div className="pt-5 md:w-1/2 sm:w-full">
+      <div className="mx-5">
+        <div className="flex justify-center">
+          <div
+            ref={md}
+            className="pt-5 md:w-1/2 sm:w-full"
+            data-color-mode="light"
+          >
+            <div className="text-center">
+              <h2 className=" text-4xl font-bold leading-10 text-primary">
+                {protocol?.protocol_type}
+              </h2>
+              <h4 className="pt-3 pb-3 text-1xl leading-5 text-secondary sm:text-2xl sm:truncate">
+                {"vom " + formatProtocolDate(protocol)}
+              </h4>
+            </div>
+            <hr className="mb-2" />
             <Markdown skipHtml className="wmde-markdown">
               {protocol.content}
             </Markdown>

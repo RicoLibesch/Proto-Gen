@@ -312,8 +312,8 @@ export async function getProtocols(page = 0, limit = 20) {
   return protocols;
 }
 
-export async function getUsers() {
-  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users`;
+export async function getUsers(filter="") {
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users?id=${filter}&pageSize=100`;
   return ((await get(url)) as User[]) ?? [];
 }
 
@@ -365,11 +365,24 @@ export async function deleteSession() {
 
 export async function getAttendees() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/session/attendees`;
-  const result = (await get(url)) ?? [];
-  if (result.message || !result.attendees) {
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: "Bearer " + getToken(),
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    const result = await response.json();
+    if (result.message || !result.attendees) {
+      return [] as string[];
+    }
+    return result.attendees as string[];
+  } catch (e) {
     return [] as string[];
   }
-  return result.attendees as string[];
 }
 
 export async function addAttendees(name: string) {
@@ -400,7 +413,7 @@ export async function setSendingMails(value: boolean) {
 
 export async function getLegals() {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/legals`;
-  const data = await get(url) ?? {};
+  const data = (await get(url)) ?? {};
   return data;
 }
 
