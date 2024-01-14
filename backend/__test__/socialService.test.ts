@@ -58,6 +58,40 @@ describe('Testing of the functions of the socialService', () => {
         expect(error.message).toEqual("SQL Error");
     });
 
+    it('updateSocial - should throw Error updating Socials bot found rowcount 0', async () => {
+        const testval = 'https://instagram2.com/';
+        const testid = 1;
+
+        mockPoolQuery.mockResolvedValue({rowCount: 0});
+
+        let error;
+        try {
+            await updateSocial(testid, testval)
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).toBeDefined();
+        expect(error.message).toEqual("Not found");
+    });
+
+    it('updateSocial - should throw Error Not found"', async () => {
+        const testval = 'https://instagram2.com/';
+        const testid = 1;
+
+        mockPoolQuery.mockRejectedValue(new Error("Not found"));
+
+        let error;
+        try {
+            await updateSocial(testid, testval)
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).toBeDefined();
+        expect(error.message).toEqual("Not found");
+    });
+
     it('selectSocials - should correctly return the socials (empty)', async () => {
         mockPoolQuery.mockResolvedValueOnce({rows: []});
         const res = await selectSocials();

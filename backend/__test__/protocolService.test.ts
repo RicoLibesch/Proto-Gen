@@ -1,6 +1,6 @@
 //Importing the Controller
 import {pool} from '../src/config/postgresConfig';
-import {insertProtocol, selectProtocolById, selectProtocols} from "../src/services/protocolService";
+import {insertProtocol, selectAllProtocols, selectProtocolById, selectProtocols} from "../src/services/protocolService";
 import {Protocol} from "../src/models/protocolModel";
 import {AttendanceList} from "../src/models/attendanceListModel";
 
@@ -174,6 +174,43 @@ describe('Testing of the functions of the protocolService', () => {
         const protocol = await selectProtocolById(protocolId);
 
         expect(protocol).toBeNull();
+    });
+
+    it('selectAllProtocols - should not return a specific Protocol and throw an error', async () => {
+
+        const testprot = {
+            rows: [
+                {
+                    id: 1,
+                    protocol_type: 'test',
+                    start_timestamp: '2000-01-01',
+                    end_timestamp: '2000-01-01',
+                    content: 'test'
+                }
+            ]
+        };
+        mockPoolQuery.mockResolvedValue(testprot);
+
+        await selectAllProtocols();
+
+        expect(mockPoolQuery).toHaveBeenCalledWith('SELECT * FROM protocols ORDER BY id DESC');
+    });
+
+    it('selectAllProtocols - should throw SQL Error while selecting protocls', async () => {
+
+        mockPoolQuery.mockImplementation((protocolId) => {
+            throw new Error(`Protocol with ID '${protocolId}' not found`);
+        });
+
+        let error;
+        try {
+            await selectAllProtocols();
+        } catch (e) {
+            error = e;
+        }
+
+        expect(error).toBeDefined();
+        expect(error.message).toEqual("SQL Error");
     });
 
 });

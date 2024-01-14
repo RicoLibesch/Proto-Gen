@@ -21,12 +21,6 @@ describe('Testing of the functions of the protocolAttendanceService', () => {
     });
 
     it('insertProtocolAttendance - should insert attendance data correctly', async () => {
-        const mockedAttendanceList = {
-            roles: {
-                'role1': ['user1', 'user2'],
-                'role2': ['user3']
-            }
-        };
 
         mockPoolQuery.mockResolvedValue({});
 
@@ -123,7 +117,7 @@ describe('Testing of the functions of the protocolAttendanceService', () => {
         expect(mockPoolQuery).toHaveBeenNthCalledWith(1, "SELECT * FROM protocol_attendances WHERE protocol_id = $1", [2]);
     });
 
-    it('selectProtocolAttendance - should handle errors correctly', async () => {
+    it('selectProtocolAttendance - should handle errors correctly SQL Error', async () => {
 
         mockPoolQuery.mockImplementation(() => {
             throw new Error("SQL Error");
@@ -135,6 +129,21 @@ describe('Testing of the functions of the protocolAttendanceService', () => {
             expect(error).toBeDefined();
             expect(error.message).toEqual("SQL Error");
         }
+    });
+
+    it('selectProtocolAttendance - should handle errors correctly SQL Error long', async () => {
+        mockPoolQuery.mockImplementation(() => {
+            throw new Error("SQL Error");
+        });
+
+        let error;
+        try {
+            await selectProtocolAttendance(1);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeDefined();
+        expect(error.message).toEqual("SQL Error");
     });
 
 });

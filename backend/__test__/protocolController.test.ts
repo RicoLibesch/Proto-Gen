@@ -2,11 +2,14 @@
 import {Protocol} from '../src/models/protocolModel';
 import {AttendanceList} from '../src/models/attendanceListModel'
 import {Request, Response} from "express";
-import {insertProtocol, selectProtocolById, selectProtocols} from '../src/services/protocolService';
-import {createProtocol, getProtocol, getProtocols} from '../src/controllers/protocolController';
+import {insertProtocol, selectAllProtocols, selectProtocolById, selectProtocols} from '../src/services/protocolService';
+import {createProtocol, getAllProtocols, getProtocol, getProtocols} from '../src/controllers/protocolController';
 
 //mocking the  Services
 jest.mock("../src/services/protocolService");
+jest.mock("../src/services/sendMailService", () => ({
+    isMailDispatchEnabled: jest.fn(),
+}));
 
 describe('Testing of the functions of the protocolController', () => {
 
@@ -38,6 +41,37 @@ describe('Testing of the functions of the protocolController', () => {
         } as unknown as Response;
 
         await getProtocols({query: {}} as unknown as Request, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({message: "Internal Server Error"});
+    });
+
+    it('getAllProtocols - should return all protocols', async () => {
+        const req = [{id: 1, name: "Protocol 1"}, {id: 2, name: "Protocol 2"}];
+
+        const res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+        } as unknown as Response;
+
+        await getAllProtocols(req as unknown as Request, res);
+
+        expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    it('getAllProtocols - should send status 500 if a Error occurred', async () => {
+        const mockSelectAllProtocols = selectAllProtocols as jest.Mock;
+
+        mockSelectAllProtocols.mockImplementation(() => {
+            throw new Error("Internal Server Error");
+        });
+
+        const res = {
+            status: jest.fn(() => res),
+            json: jest.fn(),
+        } as unknown as Response;
+
+        await getAllProtocols({query: {}} as unknown as Request, res);
 
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({message: "Internal Server Error"});
