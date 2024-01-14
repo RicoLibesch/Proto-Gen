@@ -14,10 +14,12 @@ export const userExists = async (id: string): Promise<boolean> => {
 
 export const insertUser = async (user: User): Promise<void> => {
     try {
+        const firstUserCheck: boolean = await isFirstUser();
+
         await pool.query('INSERT INTO users(id, first_name, last_name, display_name, mail) VALUES ($1, $2, $3, $4, $5)', 
             [user.id, user.firstName, user.lastName, user.displayName, user.mail]);
 
-        if(await isFirstUser()) {
+        if(firstUserCheck) {
             await insertPermission(user.id, 1);
             console.log(`${user.id} was the first user and received the Administrator role.`);
         }
@@ -65,7 +67,7 @@ export const selectAllUsers = async (page: number, pageSize: number, userId: str
 const isFirstUser = async (): Promise<boolean> => {
     try {
         const result = await pool.query('SELECT * FROM users LIMIT 1');
-        return result.rows.length === 1 ? true : false;
+        return result.rows.length === 0 ? true : false;
     } catch(err) {
         console.log(`Error selecting users: ${err}`);
         throw new Error("SQL Error");

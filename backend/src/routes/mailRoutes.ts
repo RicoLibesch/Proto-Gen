@@ -6,8 +6,8 @@ import { verifyAccessToken, isAdmin } from '../middleware/authMiddleware';
 router.route("/receiver").get(verifyAccessToken, isAdmin, getReceiver);
 router.route("/receiver").put(verifyAccessToken, isAdmin, editReceiver);
 
-router.route("/dispatch").get(getDispatchStatus, isAdmin, getReceiver);
-router.route("/dispatch").put(setDispatchStatus, isAdmin, editReceiver);
+router.route("/dispatch").get(verifyAccessToken, isAdmin, getDispatchStatus);
+router.route("/dispatch").put(verifyAccessToken, isAdmin, setDispatchStatus);
 
-router.route("/templates").get(getTemplates);
-router.route("/templates").put(setTemplate);
+router.route("/templates").get(verifyAccessToken, isAdmin, getTemplates);
+router.route("/templates").put(verifyAccessToken, isAdmin, setTemplate);

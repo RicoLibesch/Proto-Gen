@@ -62,7 +62,7 @@ const buildTemplate = async (template: string, protocol: Protocol): Promise<stri
             type: protocol.protocol_type,
             content: new Handlebars.SafeString(parsedContent),
             topics: protocol.topics.join(', '),
-            link: process.env.EMAIL_BASE_LINK + protocol.id,
+            link: new Handlebars.SafeString(`<a href="${process.env.EMAIL_BASE_LINK}${protocol.id}" target="_blank">${process.env.EMAIL_BASE_LINK}${protocol.id}</a>`),
             attendees: new Handlebars.SafeString(attendanceListHtml)
         }
 

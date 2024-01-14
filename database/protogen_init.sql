@@ -6,6 +6,7 @@
 CREATE SEQUENCE "protocol_templates_protocol_id_seq";
 CREATE SEQUENCE "protocol_types_id_seq";
 CREATE SEQUENCE "protocols_id_seq";
+CREATE SEQUENCE "protocol_attendances_protocol_id_seq";
 
 -- ----------------------------
 -- Table structure for attendance_categories
@@ -132,6 +133,7 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS "protocol_attendances";
 CREATE TABLE "protocol_attendances" (
+  "id" int4 NOT NULL DEFAULT nextval('protocol_attendances_protocol_id_seq'::regclass),
   "protocol_id" int4 NOT NULL,
   "user_name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "role_name" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
@@ -387,7 +389,7 @@ ALTER TABLE "mail_templates" ADD CONSTRAINT "mail_templates_pkey" PRIMARY KEY ("
 -- ----------------------------
 -- Primary Key structure for table protocol_attendances
 -- ----------------------------
-ALTER TABLE "protocol_attendances" ADD CONSTRAINT "protocol_attendances_pkey" PRIMARY KEY ("protocol_id", "user_name", "role_name");
+ALTER TABLE "protocol_attendances" ADD CONSTRAINT "protocol_attendances_pkey" PRIMARY KEY ("id");
 
 -- ----------------------------
 -- Primary Key structure for table protocol_topics
