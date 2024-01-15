@@ -9,10 +9,17 @@ function Impressum() {
   useEffect(() => {
     const loadData = async () => {
       const data = await API.getLegals();
-      setLegalContent(data[0].value);
+      try {
+        setLegalContent(data[0].value);
+      } catch (e) {
+        console.log(e);
+      }
     };
     loadData();
   }, []);
+
+  const INGRAVING =
+    "### Das Projekt\nDieses Projekt ist im Rahmen des Moduls **Softwaretechnik-Projekt** an der **[Technischen Hochschule Mittelhessen](https://www.thm.de/mni/)** entstanden.\n#### Mitwirkende:\nAziz Ali Meral, Jamin Yeates, Jonas Nickel, Konrad Eckhardt, Mert Ali Özmeral, Rico Libesch\n\n---";
 
   return (
     <div className="m-5">
@@ -22,6 +29,9 @@ function Impressum() {
         className="flex flex-wrap m-2 justify-center"
         data-color-mode="light"
       >
+        <Markdown skipHtml className="wmde-markdown">
+          {INGRAVING}
+        </Markdown>
         <Markdown skipHtml className="wmde-markdown">
           {legalContent}
         </Markdown>
