@@ -104,7 +104,7 @@ function createToast(response: Promise<Response>) {
     .then(async (x) => {
       if (x.ok)
         toast.update(id, {
-          render: "Erfolgreich",
+          render: "Erfolgreich!",
           type: "success",
           position: "bottom-right",
           autoClose: 5000,
@@ -250,7 +250,7 @@ export async function setSocials(socials: Social[]) {
 
   toast.promise(uploadSocials(), {
     pending: "Sending ...",
-    success: "Success!",
+    success: "Erfolgreich!",
     error: "Something went wrong!",
   });
 }

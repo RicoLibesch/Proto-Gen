@@ -17,7 +17,7 @@ test-app-node:
   stage: test
   image: node:alpine
   tags:
-    - protogen-runner-v2
+    - protogen-runner
   script:
     - cd backend
     - npm install
@@ -27,50 +27,62 @@ doc-app-node:
   stage: test
   image: node:alpine
   tags:
-    - protogen-runner-v2
+    - protogen-runner
   script:
     - cd backend
     - npm install
     - npm run doc
 
-lint-app-node:
-  stage: test
-  image: node:alpine
-  tags:
-    - protogen-runner-v2
-  script:
-    - echo "lint"
+#----
+#lint-app-node:
+#  stage: test
+#  image: node:alpine
+#  tags:
+#    - protogen-runner
+#  script:
+  #  - echo "lint"
   #  - cd backend
   #  - npm install
   #  - npm run lint
+#----
 
-test-app-next:
-  stage: test
-  image: node:alpine
-  tags:
-    - protogen-runner-v2
-  script:
-    - echo "test next"
-    #- echo ${TEST_AUTHCONTROLLER} > authController.ts
-    #- mv -f authController.ts proto-gen/backend/src/controllers/authController.ts
-    #- npm install
-    #- npm run test/ci //Muss noch im Frontend installiert werden die packages etc.
 
-doc-app-next:
-  stage: test
-  image: node:alpine
-  tags:
-    - protogen-runner-v2
-  script: 
-    - echo "doc"
+#test-app-next:
+#  stage: test
+#  image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
+#  tags:
+#    - protogen-runner
+#  script:
+#    - mv -f $TEST_AUTHCONTROLLER backend/src/controllers/authController.ts
+#    - cd backend
+#    - mv $ENV_FILE ./.env
+#    - cp ./.env ../frontend/.env
+#    - npm install
+#    - npm run dev &
+#    - cd .. && cd frontend
+#    - npm install
+#    - npm run build 
+#    - npm run start &
+#    - npm run test
+
+
+#----
+#doc-app-next:
+#  stage: test
+#  image: node:alpine
+#  tags:
+#    - protogen-runner
+#  script: 
+#    - echo "doc"
     #- npm install
     #- npm run doc
+#-----
 
 lint-app-next:
   stage: test
   image: node:alpine
   tags:
-    - protogen-runner-v2
+    - protogen-runner
   script:
     - cd frontend
     - npm install
@@ -84,9 +96,9 @@ build-image-backend:
   needs:
     - job: test-app-node
     - job: doc-app-node
-    - job: lint-app-node
+#    - job: lint-app-node
   tags:
-    - protogen-runner-v2
+    - protogen-runner
   image:
     name: gcr.io/kaniko-project/executor:v1.14.0-debug
     entrypoint: [""]
@@ -101,7 +113,7 @@ build-image-backend:
 build-image-db:
   stage: build
   tags:
-    - protogen-runner-v2
+    - protogen-runner
   image:
     name: gcr.io/kaniko-project/executor:v1.14.0-debug
     entrypoint: [""]
@@ -116,11 +128,11 @@ build-image-db:
 build-image-frontend:
   stage: build
   needs:
-    - job: test-app-next
-    - job: doc-app-next
+#    - job: test-app-next
+#    - job: doc-app-next
     - job: lint-app-next
   tags:
-    - protogen-runner-v2
+    - protogen-runner
   image:
     name: gcr.io/kaniko-project/executor:v1.14.0-debug
     entrypoint: [""]
@@ -132,32 +144,36 @@ build-image-frontend:
   allow_failure: True
 
 
-# deploy-stack-dev:
-#   stage: deploy
-#   needs: 
+deploy-stack-dev:
+  stage: deploy
+  needs: 
 #     - job: build-image-backend
 #     - job: build-image-db
 #     - job: build-image-frontend
-#   tags: 
-#     - protogen-runner-v2
-#   image:
-#     name: alpine:latest
-#   before_script:
-#     - 'command -v ssh-agent >/dev/null || ( apk update && apk add openssh-client )'
-#     - eval $(ssh-agent -s)
-#     - mkdir -p ~/.ssh
-#     - chmod 400 ~/.ssh
-#     - echo "$SSH_PRIVATE_KEY_DEV" | ssh-add - 
-#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-#     - cd ..
-#   script:
-#     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'whoami && echo success'
-    #- ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'rm -rf /home/fsmni/proto-gen'
-    #- scp -r proto-gen ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/
-    #- ssh-add <(echo "$SSH_PRIVATE_KEY_DEV")
-    #- ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'cd /home/fsmni/prot-gen && sudo docker compose up -d'
-  #only:
-    #- develop
+  tags: 
+     - protogen-runner
+  image:
+     name: alpine:latest
+  before_script:
+     - 'command -v ssh-agent >/dev/null || ( apk update && apk add openssh-client )'
+     - eval $(ssh-agent -s)
+     - mkdir -p ~/.ssh
+     - chmod 400 ~/.ssh
+     - echo "$SSH_PRIVATE_KEY_DEV" | ssh-add - 
+     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+     - cd ..
+  script:
+     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'whoami && echo success'
+     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'rm -rf /home/fsmni/proto-gen'
+     - scp -r proto-gen ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/
+     - scp $ENV_FILE ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/proto-gen/frontend/.env
+     - scp $ENV_FILE ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/proto-gen/.env
+     - scp $ENV_FILE ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/proto-gen/backend/.env
+     - ssh-add <(echo "$SSH_PRIVATE_KEY_DEV")
+     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'cd /home/fsmni/proto-gen && sudo docker compose down && sudo docker compose up --build -d'
+  only:
+     - dev
+     - main
 
 
 

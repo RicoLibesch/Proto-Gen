@@ -10,12 +10,13 @@ export const loginUser = async (req: Request, res: Response) => {
         if(!req.body.username || !req.body.password)
             return res.status(400).json({message: "Payload must contain username and password"});
 
-        const user: User = await authenticateUser(req.body.username, req.body.password);
-        
+       const user: User = await authenticateUser(req.body.username, req.body.password);
+
+
         if(!(await userExists(user.id)))
             await insertUser(user);    
         
-        //Update the current User Object
+        //update the current User Object
         await selectPermissions(user);
 
         const userObject = {
