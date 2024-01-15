@@ -104,7 +104,7 @@ export const insertProtocol = async (protocol: Protocol): Promise<void> => {
 const insertProtocolData = async (protocol: Protocol): Promise<number> => {
     try {
         const result = await pool.query(
-            'INSERT INTO protocols(protocol_type, start_timestamp, end_timestamp, content) VALUES ($1, $2, $3, $4) RETURNING id', 
+            'INSERT INTO protocols(protocol_type, start_timestamp, end_timestamp, content) VALUES ($1, $2, $3, $4) RETURNING id',
             [protocol.protocol_type, protocol.start_timestamp, protocol.end_timestamp, protocol.content]);
         return result.rows[0].id;
     } catch (err) {

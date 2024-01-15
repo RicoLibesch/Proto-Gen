@@ -17,6 +17,11 @@ const Footer = () => {
       name: "Impressum",
       link: "/impressum",
     },
+    {
+      name: "Alte Protokolle",
+      //Old protocol website
+      link: "https://fsmni.thm.de/protokolle/protokolle.php",
+    },
   ]);
 
   const [socials, setSociales] = useState<Social[]>([]);
