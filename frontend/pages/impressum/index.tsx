@@ -18,7 +18,7 @@ function Impressum() {
     loadData();
   }, []);
 
-  const INGRAVING =
+  const engraving =
     "### Das Projekt\nDieses Projekt ist im Rahmen des Moduls **Softwaretechnik-Projekt** an der **[Technischen Hochschule Mittelhessen](https://www.thm.de/mni/)** entstanden.\n#### Mitwirkende:\nAziz Ali Meral, Jamin Yeates, Jonas Nickel, Konrad Eckhardt, Mert Ali Özmeral, Rico Libesch\n\n---";
 
   return (
@@ -30,7 +30,7 @@ function Impressum() {
         data-color-mode="light"
       >
         <Markdown skipHtml className="wmde-markdown">
-          {INGRAVING}
+          {engraving}
         </Markdown>
         <Markdown skipHtml className="wmde-markdown">
           {legalContent}
