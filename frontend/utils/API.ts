@@ -307,7 +307,7 @@ export async function getProtocols(page = 0, limit = 20) {
   let json = (await get(url)) ?? [];
 
   let protocols = json as Protocol[];
-  // sort the protocols after time
+  // sort the protocols.md after time
   protocols.sort((a, b) => b.end_timestamp - a.start_timestamp);
   return protocols;
 }

@@ -39,7 +39,7 @@ const ProtocolView = () => {
   const [isDownloading, setDownloading] = useState(false);
 
   /**
-   * Redirects to the next page in the protocols sequence.
+   * Redirects to the next page in the protocols.md sequence.
    */
   const redirectNextPage = () => {
     if (loading) return;
@@ -47,7 +47,7 @@ const ProtocolView = () => {
   };
 
   /**
-   * Redirects to the previous page in the protocols sequence.
+   * Redirects to the previous page in the protocols.md sequence.
    */
   const redirectPreviousPage = () => {
     if (loading) return;
