@@ -26,7 +26,7 @@ function Impressum() {
       <h1 className="text-primary">Impressum</h1>
       <hr />
       <div
-        className="flex flex-wrap m-2 justify-center"
+        className="flex flex-wrap m-2 justify-center flex-col"
         data-color-mode="light"
       >
         <Markdown skipHtml className="wmde-markdown">
