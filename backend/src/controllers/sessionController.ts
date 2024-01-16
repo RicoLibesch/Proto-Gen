@@ -2,9 +2,27 @@ import { Request, Response } from "express";
 import { isSessionActive, startSession, stopSession } from '../services/sessionService';
 import { addAttendee, selectAttendees } from '../services/sessionAttendanceService';
 
+
+/**
+ * Controller function to handle the retrieval of session status.
+ * @async
+ * @function
+ * @name getSessionStatus
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const getSessionStatus = async (req: Request, res: Response) => {
     try {
+            /**
+     * Boolean indicating whether the session is currently active.
+     * @type {boolean}
+     */
         const isActive: boolean = await isSessionActive();
+            /**
+     * The status string based on the session's active status.
+     * @type {string}
+     */
         const status = isActive ? "active" : "inactive";
         res.status(200).json({status: status});
     } catch(err) {
@@ -12,6 +30,16 @@ export const getSessionStatus = async (req: Request, res: Response) => {
     }
 };
 
+
+/**
+ * Controller function to handle the starting of a new session.
+ * @async
+ * @function
+ * @name postSession
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const postSession = async (req: Request, res: Response) => {
     try {
         if(await isSessionActive())
@@ -24,6 +52,19 @@ export const postSession = async (req: Request, res: Response) => {
     }
 };
 
+
+
+
+
+/**
+ * Controller function to handle the stopping of the current session.
+ * @async
+ * @function
+ * @name deleteSession
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const deleteSession = async (req: Request, res: Response) => {
     try {
         await stopSession();
@@ -33,6 +74,18 @@ export const deleteSession = async (req: Request, res: Response) => {
     }    
 };
 
+
+
+
+/**
+ * Controller function to handle the retrieval of attendees during an active session.
+ * @async
+ * @function
+ * @name getAttendees
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const getAttendees = async (req: Request, res: Response) => {
     try {
         if(!await isSessionActive())
@@ -45,6 +98,17 @@ export const getAttendees = async (req: Request, res: Response) => {
     }
 };
 
+
+
+/**
+ * Controller function to handle the addition of an attendee to the active session.
+ * @async
+ * @function
+ * @name postAttendee
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const postAttendee = async (req: Request, res: Response) => {
     if(!req.body.name)
         return res.status(400).json({message: "Request body must contain a name to add to the session"});

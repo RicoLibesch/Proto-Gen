@@ -4,8 +4,28 @@ import { isMailDispatchEnabled, updateMailDispatch } from '../services/mailDispa
 import { selectTemplate, updateTemplate } from '../services/mailTemplateService';
 import { isBoolean } from "util";
 
+
+
+
+
+
+
+/**
+ * Controller function to handle the retrieval of receiver email addresses.
+ * @async
+ * @function
+ * @name getReceiver
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const getReceiver = async (req: Request, res: Response) => {
+    
     try {
+            /**
+     * Array of email addresses representing receivers.
+     * @type {string[]}
+     */
         const mails: string[] = await selectReceiver();
         res.status(200).json(mails);
     } catch(err) {
@@ -13,7 +33,25 @@ export const getReceiver = async (req: Request, res: Response) => {
     }
 };
 
+
+
+
+
+
+/**
+ * Controller function to handle the editing of receiver email addresses.
+ * @async
+ * @function
+ * @name editReceiver
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const editReceiver = async (req: Request, res: Response) => {
+      /**
+   * Array of email addresses provided in the request body.
+   * @type {string[]}
+   */
     const mails: string[] = req.body;
 
     //Check if mails are valid
@@ -33,16 +71,45 @@ export const editReceiver = async (req: Request, res: Response) => {
     }
 };
 
+
+
+/**
+ * Controller function to handle the retrieval of the mail dispatch status.
+ * @async
+ * @function
+ * @name getDispatchStatus
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const getDispatchStatus = async (req: Request, res: Response) => {
     try {
+            /**
+     * Object indicating whether mail dispatch is enabled or not.
+     * @type {{ isEnabled: boolean }}
+     */
         res.status(200).json({isEnabled: await isMailDispatchEnabled()});
     } catch(err) {
         return res.status(500).json({message: "Internal Server Error"});
     }    
 };
 
+
+/**
+ * Controller function to handle the setting of mail dispatch status.
+ * @async
+ * @function
+ * @name setDispatchStatus
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const setDispatchStatus = async (req: Request, res: Response) => {
     try {
+            /**
+     * Boolean indicating whether mail dispatch should be enabled or disabled.
+     * @type {boolean}
+     */
         const setEnabled: boolean = req.body.setEnabled;
         if(!isBoolean(setEnabled))
             return res.status(400).json({message: 'Status must be a Boolean.'});
@@ -57,9 +124,28 @@ export const setDispatchStatus = async (req: Request, res: Response) => {
     }
 };
 
+
+
+/**
+ * Controller function to handle the retrieval of email templates.
+ * @async
+ * @function
+ * @name getTemplates
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const getTemplates = async (req: Request, res: Response) => {
     try {
+            /**
+     * The email subject template retrieved from the database.
+     * @type {string}
+     */
         const subject = await selectTemplate("subject");
+            /**
+     * The email body template retrieved from the database.
+     * @type {string}
+     */
         const body = await selectTemplate("body");
         res.status(200).json({subject: subject, body: body});
     } catch(err) {
@@ -67,8 +153,26 @@ export const getTemplates = async (req: Request, res: Response) => {
     }
 };
 
+
+/**
+ * Controller function to handle the setting of email templates.
+ * @async
+ * @function
+ * @name setTemplate
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const setTemplate = async (req: Request, res: Response) => {
+      /**
+   * The type of email template (subject or body) provided in the request body.
+   * @type {string}
+   */
     const type: string = req.body.type;
+      /**
+   * The updated value for the email template provided in the request body.
+   * @type {string}
+   */
     const value: string = req.body.value;
 
     //Check for required fields
