@@ -1,0 +1,65 @@
+version: "3"
+services:
+  frontend:
+    container_name: protogen_frontend
+    build: 
+      context: ./frontend
+      args: 
+        NODE_ENV: development
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+    command: npm run start
+    env_file:
+      - ./.env
+  backend: 
+    container_name: protogen_backend
+    build: 
+      context: ./backend
+      args: 
+        NODE_ENV: development
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - PORT=8080
+      - NODE_ENV=development
+    command: npm run dev
+    depends_on: 
+      - postgres
+    env_file:
+      - ./.env
+
+  postgres:
+    container_name: protogen_postgres
+    build: ./database
+    env_file: ./.env
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes: 
+      - protogen-postgres:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: protogen_pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    env_file: ./.env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_USER}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_PASSWORD}
+    ports:
+      - "5050:80"
+    volumes:
+      - protogen-pgAdmin:/var/lib/pgadmin
+
+volumes:
+  protogen-postgres:
+  protogen-pgAdmin:

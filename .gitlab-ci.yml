@@ -1,0 +1,181 @@
+
+# Stages der pipeline (Build zum bauen der Anwendung)
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+
+  BACKEND_IMAGE_NAME: "protogen_backend_node"
+  DB_IMAGE_NAME: "protogen_backend_db"
+  FRONTEND_IMAGE_NAME: "protogen_frontend_next"
+
+
+
+test-app-node:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner
+  script:
+    - cd backend
+    - npm install
+    - npm run test/ci
+
+doc-app-node:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner
+  script:
+    - cd backend
+    - npm install
+    - npm run doc
+
+
+lint-app-node:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner
+  script:
+    - cd backend
+    - npm install
+    - npm run lint
+#----
+
+
+#test-app-next:
+#  stage: test
+#  image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
+#  tags:
+#    - protogen-runner
+#  script:
+#    - mv -f $TEST_AUTHCONTROLLER backend/src/controllers/authController.ts
+#    - cd backend
+#    - mv $ENV_FILE ./.env
+#    - cp ./.env ../frontend/.env
+#    - npm install
+#    - npm run dev &
+#    - cd .. && cd frontend
+#    - npm install
+#    - npm run build 
+#    - npm run start &
+#    - npm run test
+
+
+#----
+#doc-app-next:
+#  stage: test
+#  image: node:alpine
+#  tags:
+#    - protogen-runner
+#  script: 
+#    - echo "doc"
+    #- npm install
+    #- npm run doc
+#-----
+
+lint-app-next:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner
+  script:
+    - cd frontend
+    - npm install
+    - npm run lint
+
+#---------------------- BUILD
+
+
+build-image-backend:
+  stage: build
+  needs:
+    - job: test-app-node
+    - job: doc-app-node
+    - job: lint-app-node
+  tags:
+    - protogen-runner
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+     --context $CI_PROJECT_DIR/backend
+     --dockerfile $CI_PROJECT_DIR/backend/Dockerfile
+     --destination "${CI_REGISTRY_IMAGE}/${BACKEND_IMAGE_NAME}:${CI_COMMIT_TAG}"
+  allow_failure: True
+
+
+build-image-db:
+  stage: build
+  tags:
+    - protogen-runner
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+     --context $CI_PROJECT_DIR/database
+     --dockerfile $CI_PROJECT_DIR/database/Dockerfile
+     --destination "${CI_REGISTRY_IMAGE}/${DB_IMAGE_NAME}:${CI_COMMIT_TAG}"
+  allow_failure: True
+
+
+build-image-frontend:
+  stage: build
+  needs:
+#    - job: test-app-next
+#    - job: doc-app-next
+    - job: lint-app-next
+  tags:
+    - protogen-runner
+  image:
+    name: gcr.io/kaniko-project/executor:v1.14.0-debug
+    entrypoint: [""]
+  script:
+    - /kaniko/executor
+     --context $CI_PROJECT_DIR/frontend
+     --dockerfile $CI_PROJECT_DIR/frontend/Dockerfile
+     --destination "${CI_REGISTRY_IMAGE}/${FRONTEND_IMAGE_NAME}:${CI_COMMIT_TAG}"
+  allow_failure: True
+
+
+deploy-stack-dev:
+  stage: deploy
+  needs: 
+#     - job: build-image-backend
+#     - job: build-image-db
+#     - job: build-image-frontend
+  tags: 
+     - protogen-runner
+  image:
+     name: alpine:latest
+  before_script:
+     - 'command -v ssh-agent >/dev/null || ( apk update && apk add openssh-client )'
+     - eval $(ssh-agent -s)
+     - mkdir -p ~/.ssh
+     - chmod 400 ~/.ssh
+     - echo "$SSH_PRIVATE_KEY_DEV" | ssh-add - 
+     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+     - cd ..
+  script:
+     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'whoami && echo success'
+     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'rm -rf /home/fsmni/proto-gen'
+     - scp -r proto-gen ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/
+     - scp $ENV_FILE ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/proto-gen/frontend/.env
+     - scp $ENV_FILE ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/proto-gen/.env
+     - scp $ENV_FILE ${SSH_USER}@${SSH_HOSTNAME_DEV}:/home/fsmni/proto-gen/backend/.env
+     - ssh-add <(echo "$SSH_PRIVATE_KEY_DEV")
+     - ssh -p22 ${SSH_USER}@${SSH_HOSTNAME_DEV} 'cd /home/fsmni/proto-gen && sudo docker compose down && sudo docker compose up --build -d'
+  only:
+     - dev
+     - main
+
+
+
+
+
+
