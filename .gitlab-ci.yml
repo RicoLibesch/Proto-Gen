@@ -33,17 +33,16 @@ doc-app-node:
     - npm install
     - npm run doc
 
-#----
-#lint-app-node:
-#  stage: test
-#  image: node:alpine
-#  tags:
-#    - protogen-runner
-#  script:
-  #  - echo "lint"
-  #  - cd backend
-  #  - npm install
-  #  - npm run lint
+
+lint-app-node:
+  stage: test
+  image: node:alpine
+  tags:
+    - protogen-runner
+  script:
+    - cd backend
+    - npm install
+    - npm run lint
 #----
 
 
@@ -96,7 +95,7 @@ build-image-backend:
   needs:
     - job: test-app-node
     - job: doc-app-node
-#    - job: lint-app-node
+    - job: lint-app-node
   tags:
     - protogen-runner
   image:

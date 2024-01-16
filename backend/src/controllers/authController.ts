@@ -5,6 +5,17 @@ import { userExists, insertUser } from '../services/userService';
 import { selectPermissions } from '../services/userRoleService';
 import { User } from '../models/userModel';
 
+
+
+/**
+ * Controller function to handle user login.
+ * @async
+ * @function
+ * @name loginUser
+ * @param {Request} req - Express request object.
+ * @param {Response} res - Express response object.
+ * @returns {Promise<void>} A Promise that resolves when the operation is complete.
+ */
 export const loginUser = async (req: Request, res: Response) => {
     try {
         if(!req.body.username || !req.body.password)
