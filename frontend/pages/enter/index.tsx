@@ -64,13 +64,13 @@ const Enter = () => {
           <hr></hr>
           <div className="flex flex-nowrap p-2 items-center justify-center">
             <Button
-              className="rounded-full bg-white text-mni border border-solid border-mni py-1 px-5 m-2 transition-all hover:bg-secondary_hover"
+              className="!rounded-full !bg-white !text-mni !border !border-solid !border-mni !py-1 !px-5 !m-2 !transition-all hover:!bg-secondary_hover"
               onClick={() => router.back()}
             >
               Zurück
             </Button>
             <Button
-              className="rounded-full bg-mni text-white border-solid border-mni border py-1 px-5 m-2 transition-all hover:bg-mni_hover"
+              className="!rounded-full !bg-mni !text-white !border-solid !border-mni !border !py-1 !px-5 m-2 !transition-all hover:!bg-mni_hover"
               onClick={register}
             >
               Beitreten

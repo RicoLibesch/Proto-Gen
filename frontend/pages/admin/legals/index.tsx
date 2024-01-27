@@ -76,7 +76,7 @@ const Legals = () => {
       </div>
       <div className="text-center">
         <Button
-          className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
+          className="!font-medium !bg-mni hover:!bg-mni_hover !rounded-full !px-6 !py-2 !text-seperation !transition-all"
           onClick={save}
         >
           Speichern

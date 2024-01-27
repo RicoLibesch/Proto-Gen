@@ -113,7 +113,7 @@ const ProtocolCreate = () => {
         <Select
           variant="standard"
           className="w-full text-3xl pt-6"
-          defaultValue={protocolTypes.length > 0 ? protocolTypes[0].title : ""}
+          value={protocolTypes.length > 0 ? protocolTypes[index].title : ""}
           onChange={(x) => {
             setProtocolType(x.target.value);
             console.log(x.target.value);
@@ -157,7 +157,7 @@ const ProtocolCreate = () => {
         </div>
         <div className="flex mt-3">
           <Button
-            className="ml-auto bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation"
+            className="!ml-auto !bg-mni hover:!bg-mni_hover !rounded-full !px-6 !py-2 !text-seperation"
             onClick={uploadProtocol}
           >
             <div className="font-medium">Fertigstellen</div>

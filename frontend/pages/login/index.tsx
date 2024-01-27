@@ -112,13 +112,13 @@ const Login = () => {
         <hr></hr>
         <div className="flex flex-nowrap p-2 items-center justify-center">
           <Button
-            className="rounded-full bg-white text-mni border border-solid border-mni py-1 px-5 m-2 transition-all hover:bg-secondary_hover h-9 w-24"
+            className="!rounded-full !bg-white !text-mni !border !border-solid !border-mni !py-1 !px-5 !m-2 !transition-all hover:!bg-secondary_hover !h-9 !w-24"
             onClick={() => router.back()}
           >
             Zurück
           </Button>
           <Button
-            className="rounded-full border-solid border-mni border bg-mni text-white py-1 px-5 m-2 transition-all hover:bg-mni_hover h-9 w-24"
+            className="!rounded-full !border-solid !border-mni !border !bg-mni !text-white !py-1 !px-5 !m-2 !transition-all hover:!bg-mni_hover !h-9 !w-24"
             onClick={login}
           >
             {loading ? (

@@ -86,17 +86,3 @@ ul {
     background-position-x: -20%;
   }
 }
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.fadein {
-  opacity: 0;
-  animation: 1s fadeIn ease-in-out forwards;
-}

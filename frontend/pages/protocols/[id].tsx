@@ -266,20 +266,20 @@ const ProtocolView = () => {
 
       <div className="fixed font-medium bottom-10 w-full flex justify-center md:justify-end flex-wrap mb-4 md:pr-20">
         <Button
-          className="bg-white hover:bg-secondary_hover border-solid rounded-full border border-secondary px-6 py-2 text-mni m-2 transition-all"
+          className="!bg-white hover:!bg-secondary_hover !border-solid !rounded-full !border !border-secondary !px-6 !py-2 !text-mni !m-2 !transition-all"
           onClick={generatePdf}
         >
           {isDownloading ? "Loading..." : "Download as PDF"}
         </Button>
         <Button
-          className="bg-white hover:bg-secondary_hover border-solid rounded-full border border-secondary px-6 py-2 text-mni m-2 disabled:cursor-default disabled:bg-secondary_hover disabled:text-secondary transition-all"
+          className="!bg-white hover:!bg-secondary_hover !border-solid !rounded-full !border !border-secondary !px-6 !py-2 !text-mni !m-2 disabled:!cursor-default disabled:!bg-secondary_hover disabled:!text-secondary !transition-all"
           onClick={redirectPreviousPage}
           disabled={!prev}
         >
           Vorheriges
         </Button>
         <Button
-          className="bg-mni hover:bg-mni_hover border-solid rounded-full px-6 py-2 m-2 text-white disabled:cursor-default disabled:bg-secondary transition-all"
+          className="!bg-mni hover:!bg-mni_hover !border-solid !rounded-full !px-6 !py-2 !m-2 !text-white disabled:!cursor-default disabled:!bg-secondary !transition-all"
           onClick={redirectNextPage}
           disabled={!next}
         >
