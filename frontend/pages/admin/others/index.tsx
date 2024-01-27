@@ -18,6 +18,9 @@ const Others = () => {
 
   useNotifyUnsavedChanges(saved);
 
+  /**
+   * inital load
+   */
   useEffect(() => {
     const load = async () => {
       const socials = await getSocials();
@@ -41,8 +44,11 @@ const Others = () => {
 
   const downloadJson = async () => {
     try {
+      // first fetch all the protocols and store them, then create a blob off data based on that json
+      // and finally create a href with a link to that blob data to download the data
       const link = document.createElement("a");
       const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/export`;
+      // include the bearer token in fetch 
       const json = await fetch(url, {
         headers: {
           Authorization: "Bearer " + API.getToken(),

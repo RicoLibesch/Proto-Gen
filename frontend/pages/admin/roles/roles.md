@@ -1,62 +1,64 @@
 # Roles Component Documentation
 
-The `Roles` component is a React functional component designed for managing user roles in an admin interface. It provides functionalities for assigning and removing roles such as "Administrator" and "Recorder" to users. The component utilizes functions from the `@/utils/API` module to handle backend API calls.
-
-## Table of Contents
-
-- [Dependencies](#dependencies)
-- [Usage](#usage)
-- [State](#state)
-- [Methods](#methods)
-- [UI Structure](#ui-structure)
-- [Styling](#styling)
+The `Roles` component is a React component used for managing user roles within an administration interface. It includes functionality for searching and displaying a list of users, as well as toggling admin and recorder roles for selected users. Below is the documentation for this component:
 
 ## Dependencies
+- **React**: A JavaScript library for building user interfaces.
+- **@/components/AdminHeader**: Custom React component for rendering an admin header.
+- **@/components/Skeleton**: A loading skeleton component.
+- **@/utils/API**: Utility functions for interacting with an API.
+- **@mui/icons-material**: Material-UI icons for React.
+- **@mui/material**: Material-UI components for React.
+- **react**: React library for building user interfaces.
 
-- `useEffect` and `useState` from React for managing component lifecycle and state.
-- `AdminHeader` from "@/components/AdminHeader" for rendering the admin header.
-- `StringList` from "@/components/StringList" for managing lists of users with roles.
-- `getUsers`, `removeRole`, `setRole` functions from `@/utils/API` for handling backend API calls.
-- `react-toastify` for displaying toast messages.
+## Component Structure
+
+- **Dependencies Import:**
+  - Import required libraries, styles, and dynamic components.
+
+- **Component Definition:**
+  - Define the `Roles` functional component.
+
+- **State Initialization:**
+  - Initialize state variables using the `useState` hook.
+  - States include `users`, `query`, `selectedUser`, `loading`, and `initialLoading`.
+
+- **Search Function:**
+  - Define a `search` function to search for users based on the query and update the `users` state.
+  - Display loading indicators during search.
+
+- **Toggle Role Function:**
+  - Define the `toggleRole` function to add/remove admin and recorder roles for the selected user.
+  - Update user roles and trigger a search to update labels.
+
+- **Render Users Function:**
+  - Define a `renderUsers` function to render a list of users.
+  - Display skeletons during initial loading and loading states.
+
+- **Render Details Function:**
+  - Define a `renderDetails` function to render user details and role toggles.
+  - Display skeletons during initial loading.
+
+- **Component Lifecycle:**
+  - Use the `useEffect` hook to trigger a search every time the query changes.
+
+- **Render JSX:**
+  - Render the component UI using JSX.
+  - Include a search bar, user list, and user details section.
+  - Use Material-UI components for styling.
 
 ## Usage
 
-The `Roles` component can be used within an admin interface of a Next.js application for managing user roles.
-
 ```jsx
-import Roles from '@/components/Roles';
+import Roles from "@/components/Roles";
 
-const RolesAdminPage = () => {
-  return <Roles />;
-};
+function YourAdminPage() {
+  return (
+    <div>
+      <Roles />
+    </div>
+  );
+}
 
-export default RolesAdminPage;
+export default YourAdminPage;
 ```
-
-## State
-
-- **admins**: Holds an array of user IDs with the "Administrator" role.
-- **recorder**: Holds an array of user IDs with the "Recorder" role.
-- **users**: Holds an array of all users.
-
-## Methods
-
-- **deleteAdmin(index: number)**: Removes the "Administrator" role from the user at the specified index in the `admins` array.
-- **deleteRecorder(index: number)**: Removes the "Recorder" role from the user at the specified index in the `recorder` array.
-- **addAdmin(value: string)**: Adds the "Administrator" role to the user with the specified ID.
-- **addRecorder(value: string)**: Adds the "Recorder" role to the user with the specified ID.
-- **save()**: Placeholder for a method that would save changes made to roles.
-
-## UI Structure
-
-The UI structure of the `Roles` component consists of a grid layout with two columns. Each column represents a role:
-1. **Administrators**: Allows users to manage the list of users with the "Administrator" role.
-2. **Recorders**: Allows users to manage the list of users with the "Recorder" role.
-
-Each role section utilizes the `StringList` component for listing users, allowing additions and deletions.
-
-## Styling
-
-The component uses Tailwind CSS for styling, providing a clean and responsive design. Additional styling can be applied based on project requirements.
-
-This documentation provides an overview of the `Roles` component, its dependencies, usage, state management, methods, UI structure, and styling considerations. Adjustments can be made based on specific project requirements and additional functionality.

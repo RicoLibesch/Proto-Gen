@@ -46,10 +46,16 @@ const AttendanceList = ({
     };
   }, [list, editable, refresh]);
 
-  const colors = ["#007BFF", "#28A745", "#DC3545", "#FFC107", "#343A40"];
   /**
-   * @param members need array because we want to delete out of it
-   * @param index
+   * selection of colors for the user icons
+   */
+  const colors = ["#007BFF", "#28A745", "#DC3545", "#FFC107", "#343A40"];
+
+  /**
+   * renders the the member 'index' of the category 'category'
+   * @param category the category that is rendered
+   * @param index the index of the member
+   * @param onRemove callback when the user gets removed
    * @returns
    */
   function renderMember(category: string, index: number, onRemove: () => void) {
@@ -95,6 +101,12 @@ const AttendanceList = ({
     );
   }
 
+  /**
+   * renders the a category with the members
+   * @param category to be rendered
+   * @param members the members of that specific category
+   * @returns
+   */
   function renderCategory(category: string, members: string[]) {
     return (
       <div
@@ -119,6 +131,10 @@ const AttendanceList = ({
     );
   }
 
+  /**
+   * renders the pending members in the bottom, also displays a + button to add new members
+   * @returns
+   */
   function renderPending() {
     return (
       <div className="p-1">
@@ -196,26 +212,48 @@ const AttendanceList = ({
     );
   }
 
+  /**
+   * event that gets called whenever the a pending memeber is dragged
+   * @param e
+   * @param name
+   * @param index
+   * @returns
+   */
   function onDragPending(e: React.DragEvent, name: string, index: number) {
     if (!editable) return;
+    // have to clear the transfer data first
     e.dataTransfer.clearData();
     e.dataTransfer.setData("name", name);
     e.dataTransfer.setData("index", index.toString());
   }
 
+  /**
+   * event that gets called whenever a member of a category is dragged
+   * @param category we need the category to correctly remove the user from the correct category
+   * @returns
+   */
   function onDrag(e: React.DragEvent, category: string, index: number) {
     if (!editable) return;
+    // have to clear the transfer data first
     e.dataTransfer.clearData();
     e.dataTransfer.setData("category", category);
     e.dataTransfer.setData("index", index.toString());
     e.dataTransfer.setData("name", list[category][index]);
   }
 
+  /**
+   * gets called whenever a object is dropped on a category
+   * @param category category that the member will be added to
+   * @returns
+   */
   function onDrop(e: React.DragEvent, category: string) {
     if (!editable) return;
     const name = e.dataTransfer.getData("name");
     const index = +e.dataTransfer.getData("index");
     const fromCategory = e.dataTransfer.getData("category") as string;
+    // if there is no fromCategory we remove from pending, if there is one, we remove from that category
+    // we need to remove from the origin category only here and not on the drag event,
+    // because we might drop the member not on another category and therefor would delete the user too early
     if (fromCategory) {
       list[fromCategory].splice(index, 1);
     } else {

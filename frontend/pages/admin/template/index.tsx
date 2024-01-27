@@ -40,17 +40,26 @@ const Template = () => {
     loadTemplates();
   }, []);
 
+  /**
+   * update callback for the protocolTemplates list
+   * @param newList 
+   */
   const update = (newList: string[]) => {
     setProtocolNames(newList);
     protocolTemplates.push("");
     setSaved(false);
   };
 
+  /**
+   * select callback
+   * @param index index that is selected
+   */
   const selected = (index: number) => {
     setIndex(index);
   };
 
   const deleteCallback = (index: number) => {
+    // prevent the deletion of the last protocol template
     if (protocolTemplates.length == 1) {
       return false;
     }

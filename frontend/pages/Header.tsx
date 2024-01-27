@@ -19,6 +19,9 @@ const Header = () => {
   const [logo, setLogo] = useState("/fsmniLogo.png");
   const [loading, setLoading] = useState(true);
 
+  /**
+   * inital load to fetch the logo & check if the user is logged in 
+   */
   useEffect(() => {
     const fetchLogo = async () => {
       setLogo(await getLogo());

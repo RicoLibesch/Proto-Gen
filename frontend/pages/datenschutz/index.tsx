@@ -9,7 +9,11 @@ function Datenschutz() {
   useEffect(() => {
     const loadData = async () => {
       const data = await API.getLegals();
-      setLegalContent(data[1].value);
+      try {
+        setLegalContent(data[1].value);
+      } catch (e) {
+        console.log(e);
+      }
     };
     loadData();
   }, []);

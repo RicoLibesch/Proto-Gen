@@ -13,6 +13,9 @@ export default function Home() {
   const { page } = router.query;
   const pageSize = 20;
 
+  /**
+   * load the correct protocols based on the route params
+   */
   useEffect(() => {
     if (!router.isReady) return;
     async function loadProtocols() {
@@ -35,9 +38,11 @@ export default function Home() {
     router.push(router);
   };
 
+  /**
+   * return an array of empty protocol containers until the actual protocols have been loaded
+   */
   const loadingProtocols = () => {
     return [...Array(20)].map((_, i) => (
-      // <Skeleton key={i} style={{ height: 124 }} className="border-2 rounded-xl border-outline shadow"/>
       <ProtocolContainer key={i} />
     ));
   };

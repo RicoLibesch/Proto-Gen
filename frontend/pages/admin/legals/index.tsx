@@ -25,6 +25,9 @@ const Legals = () => {
 
   useNotifyUnsavedChanges(saved);
 
+  /**
+   * inital load
+   */
   useEffect(() => {
     const loadData = async () => {
       const data = await API.getLegals();
@@ -35,14 +38,20 @@ const Legals = () => {
   }, []);
 
   const save = async () => {
-    await API.setLegals({
-      id: 1,
-      value: impressum,
-    });
-    await API.setLegals({
-      id: 2,
-      value: datenschutz,
-    });
+    /**
+     * combine all the promises into one and only display one toast for all the interactions
+     */
+    const promises = Promise.all([
+      await API.setLegals({
+        id: 1,
+        value: impressum,
+      }),
+      await API.setLegals({
+        id: 2,
+        value: datenschutz,
+      }),
+    ]);
+    API.createToastForResponses(promises);
   };
 
   return (

@@ -5,6 +5,10 @@ export interface AdminHeaderProps extends HTMLAttributes<HTMLDivElement> {
   path: string;
 }
 
+/**
+ * simple header component used to display the header for the admin pages
+ * @returns 
+ */
 const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
   const links = [
     {
@@ -40,6 +44,7 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
           return (
             <Link
               key={index}
+              
               className={
                 "text-xl px-2 hover:text-primary transition-all " +
                 (x.path.endsWith(path) ? "text-mni" : "text-secondary")

@@ -17,6 +17,9 @@ const Email = () => {
 
   useNotifyUnsavedChanges(saved);
 
+  /**
+   * list of all variables that are avaiable
+   */
   const variables = [
     {
       variable: "type",
@@ -48,6 +51,9 @@ const Email = () => {
     },
   ];
 
+  /**
+   * inital load
+   */
   useEffect(() => {
     const load = async () => {
       const emails = await API.getEmails();
@@ -63,6 +69,9 @@ const Email = () => {
   }, []);
 
   const save = async () => {
+    /**
+     * combine all the promises into one and only display one toast for all the interactions
+     */
     const promises = Promise.all([
       API.setEmails(emails),
       API.setTemplate({
@@ -76,65 +85,8 @@ const Email = () => {
       API.setSendingMails(sendingMails),
     ]);
 
-    const id = toast.loading("Senden ...", {
-      position: "bottom-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-
-    promises
-      .then(async (x) => {
-        if (!x.some((x) => !x.ok))
-          toast.update(id, {
-            render: "Erfolgreich!",
-            type: "success",
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            isLoading: false,
-            theme: "light",
-          });
-        else {
-          const text = await x.find((x) => !x.ok)!.text();
-          toast.update(id, {
-            render: "Fehlgeschlagen: " + text,
-            type: "error",
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            isLoading: false,
-            theme: "light",
-          });
-        }
-      })
-      .catch((e) => {
-        toast.update(id, {
-          render: "Fehlgeschlagen: " + e.toString(),
-          type: "error",
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          isLoading: false,
-          theme: "light",
-        });
-      });
+    API.createToastForResponses(promises);
+   
     setSaved(true);
   };
 

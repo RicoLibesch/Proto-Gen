@@ -11,6 +11,9 @@ const Logo = () => {
 
   useNotifyUnsavedChanges(data == null);
 
+  /**
+   * select file and store its data in 'data'
+   */
   const openFile = () => {
     const fileExplorer = document.createElement("input");
     fileExplorer.type = "file";
@@ -42,12 +45,6 @@ const Logo = () => {
     await setLogo(data);
     setData(null);
   };
-
-  useEffect(() => {
-    window.onbeforeunload = (e) => {
-      if (data) e.preventDefault();
-    };
-  }, [data]);
 
   return (
     <div>

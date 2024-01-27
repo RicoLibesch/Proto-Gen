@@ -150,6 +150,70 @@ function createToast(response: Promise<Response>) {
     });
 }
 
+export function createToastForResponses(promises: Promise<Response[]>) {
+  const id = toast.loading("Senden ...", {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  promises
+    .then(async (x) => {
+      // only display erfolgreich if none of the responses failed
+      if (!x.some((x) => !x.ok))
+        toast.update(id, {
+          render: "Erfolgreich!",
+          type: "success",
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          isLoading: false,
+          theme: "light",
+        });
+      else {
+        // find the first response that faild and display the error message
+        const text = await x.find((x) => !x.ok)!.text();
+        toast.update(id, {
+          render: "Fehlgeschlagen: " + text,
+          type: "error",
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          isLoading: false,
+          theme: "light",
+        });
+      }
+    })
+    .catch((e) => {
+      toast.update(id, {
+        render: "Fehlgeschlagen: " + e.toString(),
+        type: "error",
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        isLoading: false,
+        theme: "light",
+      });
+    });
+}
+
 export async function del(url: string) {
   const response = fetch(url, {
     method: "DELETE",
@@ -399,5 +463,5 @@ export async function getLegals() {
 
 export async function setLegals(legal: any) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/legals/${legal.id}`;
-  return put(url, legal);
+  return put(url, legal, false);
 }
