@@ -36,7 +36,7 @@ export const store = create<State>((set) => ({
   },
 }));
 
-function getToken() {
+export function getToken() {
   const user = store.getState().user;
   if (user) return user.token;
   return undefined;
@@ -46,9 +46,9 @@ export function loadToken() {
   if (typeof localStorage === "undefined") return;
   try {
     const savedUser = JSON.parse(
-      localStorage.getItem("fsmni-user") ?? ""
+      localStorage.getItem("fsmni-user") ?? "{}"
     ) as User;
-    const tokenLifetime = 60 * 60 * 3 * 1000;
+    const tokenLifetime = 3 * 60 * 60 * 1000;
     if (savedUser) {
       if (savedUser.creation_date + tokenLifetime > new Date().getTime()) {
         store.getState().setUser(savedUser);
@@ -163,7 +163,7 @@ export async function del(url: string) {
   return response;
 }
 
-export async function put(url: string, json: any) {
+export async function put(url: string, json: any, toast = true) {
   const response = fetch(url, {
     method: "PUT",
     headers: {
@@ -172,7 +172,7 @@ export async function put(url: string, json: any) {
     },
     body: JSON.stringify(json),
   });
-  createToast(response);
+  if (toast) createToast(response);
   return response;
 }
 
@@ -221,7 +221,7 @@ export async function getEmails() {
 
 export async function setEmails(emails: string[]) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/receiver`;
-  return await put(url, emails);
+  return await put(url, emails, false);
 }
 
 export async function getSocials() {
@@ -312,37 +312,17 @@ export async function getProtocols(page = 0, limit = 20) {
   return protocols;
 }
 
-export async function getUsers(filter="") {
-  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users?id=${filter}&pageSize=100`;
+export async function getUsers(pattern = "") {
+  let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users?pattern=${pattern}&pageSize=50`;
   return ((await get(url)) as User[]) ?? [];
 }
 
-export async function setRole(userId: string, role: Role) {
-  let roleId = 0;
-  switch (role) {
-    case "Administrator":
-      roleId = 1;
-      break;
-    case "Recorder":
-      roleId = 2;
-      break;
-  }
-
+export async function setRole(userId: string, roleId: number) {
   let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
   return await post(url, {});
 }
 
-export async function removeRole(userId: string, role: Role) {
-  let roleId = 0;
-  switch (role) {
-    case "Administrator":
-      roleId = 1;
-      break;
-    case "Recorder":
-      roleId = 2;
-      break;
-  }
-
+export async function removeRole(userId: string, roleId: number) {
   let url = `${process.env.NEXT_PUBLIC_BACKEND}/api/users/${userId}/roles/${roleId}`;
   return await del(url);
 }
@@ -397,7 +377,7 @@ export async function getTemplates() {
 
 export async function setTemplate(template: any) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/templates`;
-  return await put(url, template);
+  return await put(url, template, false);
 }
 
 export async function isSendingMails() {
@@ -408,7 +388,7 @@ export async function isSendingMails() {
 
 export async function setSendingMails(value: boolean) {
   const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/mails/dispatch`;
-  return put(url, { setEnabled: value });
+  return put(url, { setEnabled: value }, false);
 }
 
 export async function getLegals() {

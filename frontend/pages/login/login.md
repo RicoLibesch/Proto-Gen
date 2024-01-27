@@ -66,12 +66,12 @@ The UI structure of the `Login` component consists of a form with input fields f
       }}
     ></input>
     {/* ... */}
-    <button
+    <Button
       className="rounded-full bg-mni text-white py-1 px-5 m-2 transition-all hover:bg-mni_hover"
       onClick={login}
     >
       Login
-    </button>
+    </Button>
     {/* ... */}
   </div>
 </div>

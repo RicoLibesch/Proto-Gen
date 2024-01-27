@@ -81,12 +81,12 @@ The UI structure of the `Enter` component consists of a form with an input field
       }}
     ></input>
     {/* ... */}
-    <button
+    <Button
       className="rounded-full bg-mni text-white py-1 px-5 m-2 transition-all hover:bg-mni_hover"
       onClick={register}
     >
       Beitreten
-    </button>
+    </Button>
     {/* ... */}
   </div>
 </div>

@@ -37,17 +37,17 @@ export const getUsers = async (req: Request, res: Response) => {
      */
         const pageSize: number = Number(req.query.pageSize) || 20;
             /**
-     * The user ID to filter the results, defaults to an empty string if not provided.
+     * The query to filter the results, defaults to an empty string if not provided.
      * @type {string}
      */
-        const userId: string = (req.query.id as string) || '';
+        const query: string = (req.query.pattern as string) || '';
             /**
      * The role ID to filter the results, if provided.
      * @type {number}
      */
         const roleId: number = Number(req.query.roleId);
 
-        const users: User[] = await selectAllUsers(page, pageSize, userId.toLowerCase(), roleId);
+        const users: User[] = await selectAllUsers(page, pageSize, query.toLowerCase(), roleId);
         res.status(200).json(users);
     } catch(err) {
         return res.status(500).json({message: "Internal Server Error"});

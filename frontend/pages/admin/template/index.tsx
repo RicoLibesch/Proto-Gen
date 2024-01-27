@@ -5,10 +5,21 @@ import AdminHeader from "@/components/AdminHeader";
 import StringList from "@/components/StringList";
 import { useEffect, useState } from "react";
 import { getProtocolTypes, setProtoclTypes } from "@/utils/API";
+import Skeleton from "@/components/Skeleton";
+import { useNotifyUnsavedChanges } from "@/hooks";
+import { Button } from "@mui/material";
 
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor").then((mod) => mod.default),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <Skeleton
+        className="max-lg:w-full w-3/4"
+        style={{ height: "auto", minHeight: "500px" }}
+      ></Skeleton>
+    ),
+  }
 );
 
 const Template = () => {
@@ -16,6 +27,8 @@ const Template = () => {
   const [index, setIndex] = useState(0);
   const [protocolTemplates, setProtocolTemplates] = useState<string[]>([]);
   const [saved, setSaved] = useState(true);
+
+  useNotifyUnsavedChanges(saved);
 
   useEffect(() => {
     const loadTemplates = async () => {
@@ -26,12 +39,6 @@ const Template = () => {
 
     loadTemplates();
   }, []);
-
-  useEffect(() => {
-    window.onbeforeunload = (e) => {
-      if (!saved) e.preventDefault();
-    };
-  }, [saved]);
 
   const update = (newList: string[]) => {
     setProtocolNames(newList);
@@ -85,7 +92,8 @@ const Template = () => {
             />
             <MDEditor
               className="max-lg:w-full w-3/4"
-              height={"500px"}
+              height="auto"
+              style={{ minHeight: 500 }}
               value={protocolTemplates[index]}
               onChange={(x) => {
                 if (index >= protocolTemplates.length) return;
@@ -97,12 +105,12 @@ const Template = () => {
             />
           </div>
           <div className="text-center">
-            <button
+            <Button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
               onClick={save}
             >
               Speichern
-            </button>
+            </Button>
           </div>
         </div>
       </div>

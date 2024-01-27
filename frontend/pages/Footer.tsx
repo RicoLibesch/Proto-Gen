@@ -1,6 +1,7 @@
 import { Social } from "@/components/SocialLinks";
 import { getSocials } from "@/utils/API";
 import { Facebook, Instagram, Twitter, GitHub } from "@mui/icons-material";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Footer = () => {
@@ -70,12 +71,12 @@ const Footer = () => {
         <div>
           {footerLinks.map((value, index) => (
             <span key={index + value.link}>
-              <a
+              <Link
                 className="transition-all hover:text-primary"
                 href={value.link}
               >
                 {value.name}
-              </a>
+              </Link>
               {index !== footerLinks.length - 1 ? (
                 <span className="border-l border-secondary mx-2 " />
               ) : (

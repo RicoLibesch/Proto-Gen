@@ -4,15 +4,26 @@ import * as API from "@/utils/API";
 import AdminHeader from "@/components/AdminHeader";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Skeleton from "@/components/Skeleton";
+import { useNotifyUnsavedChanges } from "@/hooks";
+import { Button } from "@mui/material";
 
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor").then((mod) => mod.default),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <Skeleton className="w-full" style={{ height: "500px" }}></Skeleton>
+    ),
+  }
 );
 
 const Legals = () => {
   const [impressum, setImpressum] = useState("");
   const [datenschutz, setDatenschutz] = useState("");
+  const [saved, setSaved] = useState(true);
+
+  useNotifyUnsavedChanges(saved);
 
   useEffect(() => {
     const loadData = async () => {
@@ -46,6 +57,7 @@ const Legals = () => {
             value={impressum}
             onChange={(x) => {
               setImpressum(x ?? "");
+              setSaved(false);
             }}
           />
         </div>
@@ -57,17 +69,18 @@ const Legals = () => {
             value={datenschutz}
             onChange={(x) => {
               setDatenschutz(x ?? "");
+              setSaved(false);
             }}
           />
         </div>
       </div>
       <div className="text-center">
-        <button
+        <Button
           className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
           onClick={save}
         >
           Speichern
-        </button>
+        </Button>
       </div>
     </>
   );

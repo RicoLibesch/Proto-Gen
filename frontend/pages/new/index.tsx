@@ -2,27 +2,35 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Protocol, { ProtocolType } from "@/components/Protocol";
 import AttendanceList, { Attendance } from "@/components/Attendance";
 import { useRouter } from "next/router";
-import qrcode from "/qrcode.png";
 import Image from "next/image";
 
 import {
   createProtocol,
   deleteSession,
   getAttendanceCategories,
-  getLogo,
   getProtocolTypes,
   sessionRunning,
   startSession,
 } from "@/utils/API";
+import Skeleton from "@/components/Skeleton";
+import { Button, MenuItem, Select } from "@mui/material";
 
 // NOTE: have to do this for next-js support
 const MDEditor = dynamic(
   () => import("@uiw/react-md-editor").then((mod) => mod.default),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <Skeleton
+        className="max-lg:w-full w-3/4"
+        style={{ height: "auto" }}
+      ></Skeleton>
+    ),
+  }
 );
 
 const ProtocolCreate = () => {
@@ -33,15 +41,18 @@ const ProtocolCreate = () => {
   const [protocolTypes, setProtocolTypes] = useState<ProtocolType[]>([]);
   const [index, setIndex] = useState(0);
   const [attendanceList, setAttendanceList] = useState<Attendance>({});
+  const sending = useRef(false);
 
-  useEffect(() => {
-    window.onbeforeunload = (e) => {
-      e.preventDefault();
-    };
-    return () => {
-      window.onbeforeunload = null;
-    };
-  }, []);
+  const cleanUp = () => {
+    if (sending.current) return;
+    const leave = confirm(
+      "Nicht gespeichertes Protokoll, Inhalt geht verloren!"
+    );
+    if (!leave) {
+      router.events.emit("routeChangeError");
+      throw "Abort!";
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -60,10 +71,14 @@ const ProtocolCreate = () => {
       setAttendanceList(attendance);
       setProtocolType(protocolTypes[0].title);
     })();
+
+    router.events.on("routeChangeStart", cleanUp);
+
     return () => {
-      deleteSession();
+      if (!sending.current) deleteSession();
+      router.events.off("routeChangeStart", cleanUp);
     };
-  }, []);
+  }, [router]);
 
   async function uploadProtocol() {
     if (protocolTypes[index].template === content) {
@@ -71,6 +86,8 @@ const ProtocolCreate = () => {
       return;
     }
 
+    sending.current = true;
+    if (!confirm("Protokoll speichern")) return;
     const end = Date.now();
     const regexp = /# .*/g;
     const topics = content
@@ -93,31 +110,37 @@ const ProtocolCreate = () => {
     <div>
       <hr />
       <div className="container mx-auto items-center px-2">
-        <select
-          className="block py-5 px-0 w-full text-3xl text-primary bg-transparent border-b-2 border-outline"
+        <Select
+          variant="standard"
+          className="w-full text-3xl pt-6"
           defaultValue={protocolTypes.length > 0 ? protocolTypes[0].title : ""}
           onChange={(x) => {
             setProtocolType(x.target.value);
-            setContent(protocolTypes[x.target.selectedIndex].template);
-            setIndex(x.target.selectedIndex);
+            console.log(x.target.value);
+            const index = protocolTypes.findIndex(
+              (t) => t.title == x.target.value
+            );
+            setContent(protocolTypes[index].template);
+            setIndex(index);
           }}
         >
           {protocolTypes.map((t, index) => (
-            <option key={index} value={t.title}>
+            <MenuItem key={index} value={t.title}>
               {t.title}
-            </option>
+            </MenuItem>
           ))}
-        </select>
+        </Select>
         <div
           data-color-mode="light"
           className="flex justify-center pt-5 max-lg:flex-wrap-reverse flex-wrap"
         >
           <div className="max-lg:w-full w-1/4">
-            <img
+            <Image
               src="/qrcode.png"
               alt="QR Code"
               className="mx-auto"
-              style={{ width: "150px", height: "150px" }}
+              width={150}
+              height={150}
             />
             <AttendanceList
               className="p-5 w-full"
@@ -127,18 +150,18 @@ const ProtocolCreate = () => {
           </div>
           <MDEditor
             className="max-lg:w-full w-3/4"
-            height={"75vh"}
             value={content}
+            height="auto"
             onChange={(x) => setContent(x ?? "")}
           />
         </div>
         <div className="flex mt-3">
-          <button
-            className="ml-auto font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation"
+          <Button
+            className="ml-auto bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation"
             onClick={uploadProtocol}
           >
-            Fertigstellen
-          </button>
+            <div className="font-medium">Fertigstellen</div>
+          </Button>
         </div>
       </div>
     </div>

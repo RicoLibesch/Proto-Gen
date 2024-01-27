@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { HTMLAttributes } from "react";
 
 export interface AdminHeaderProps extends HTMLAttributes<HTMLDivElement> {
@@ -37,7 +38,7 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
       <div className="flex flex-wrap p-2 ml-6">
         {links.map((x, index) => {
           return (
-            <a
+            <Link
               key={index}
               className={
                 "text-xl px-2 hover:text-primary transition-all " +
@@ -46,7 +47,7 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
               href={x.path}
             >
               {x.name}
-            </a>
+            </Link>
           );
         })}
       </div>

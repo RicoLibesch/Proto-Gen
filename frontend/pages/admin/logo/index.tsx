@@ -1,14 +1,15 @@
 import AdminHeader from "@/components/AdminHeader";
-import Header from "@/pages/Header";
+import { useNotifyUnsavedChanges } from "@/hooks";
 import { setLogo } from "@/utils/API";
 import { UploadFile } from "@mui/icons-material";
-import { useRouter } from "next/router";
+import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 const Logo = () => {
   const [data, setData] = useState<string | null>(null);
-  const router = useRouter();
+
+  useNotifyUnsavedChanges(data == null);
 
   const openFile = () => {
     const fileExplorer = document.createElement("input");
@@ -72,12 +73,12 @@ const Logo = () => {
             />
             <div className="font-bold">Wähle eine Datei</div>
           </div>
-          <button
+          <Button
             className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
             onClick={uploadLogo}
           >
             Hochladen
-          </button>
+          </Button>
         </div>
       </div>
     </div>
