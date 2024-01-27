@@ -60,21 +60,21 @@ export default function Home() {
             </div>
 
             <div className="flex items-center justify-center flex-nowrap mt-6">
-                <button
+                <Button
                     className="bg-seperation hover:bg-secondary_hover rounded-full px-6 py-2 text-secondary transition-all disabled:hover:cursor-not-allowed disabled:hover:bg-seperation"
                     onClick={prevPage}
                     disabled={(page ?? "1") === "1"}
                 >
                     Zurück
-                </button>
+                </Button>
                 <div className="text-secondary mx-4 font-bold">{page ?? 1}</div>
-                <button
+                <Button
                     className="bg-seperation hover:bg-secondary_hover rounded-full px-6 py-2 text-secondary transition-all disabled:hover:cursor-not-allowed disabled:hover:bg-seperation"
                     onClick={nextPage}
                     disabled={protocols.length < pageSize}
                 >
                     Nächste
-                </button>
+                </Button>
             </div>
         </div>
     );

@@ -3,30 +3,23 @@ import SocialLinks, { Social } from "@/components/SocialLinks";
 import StringList from "@/components/StringList";
 import {
   getAttendanceCategories,
-  getEmails,
   getSocials,
   setAttendanceCategories,
 } from "@/utils/API";
 import { useEffect, useState } from "react";
 import * as API from "@/utils/API";
+import { useNotifyUnsavedChanges } from "@/hooks";
+import { Button } from "@mui/material";
 
 const Others = () => {
   const [attendance, setAttendance] = useState<string[]>([]);
   const [saved, setSaved] = useState(true);
   const [socials, setSocials] = useState<Social[]>([]);
 
-  useEffect(() => {
-    window.onbeforeunload = (e) => {
-      if (!saved) e.preventDefault();
-    };
-    return () => {
-      window.onbeforeunload = null;
-    };
-  }, [saved]);
+  useNotifyUnsavedChanges(saved);
 
   useEffect(() => {
     const load = async () => {
-      const emails = await getEmails();
       const socials = await getSocials();
       setSocials(socials);
       const attendance = await getAttendanceCategories();
@@ -50,7 +43,11 @@ const Others = () => {
     try {
       const link = document.createElement("a");
       const url = `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/export`;
-      const json = await fetch(url);
+      const json = await fetch(url, {
+        headers: {
+          Authorization: "Bearer " + API.getToken(),
+        },
+      });
       const blob = await json.blob();
       link.href = URL.createObjectURL(blob);
       link.download = "protokolle.json";
@@ -67,12 +64,12 @@ const Others = () => {
             Herunterladen von allen Protokollen im JSON-Format
           </div>
           <div className="text-center pt-4">
-            <button
+            <Button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
               onClick={downloadJson}
             >
               Download
-            </button>
+            </Button>
           </div>
         </div>
         <div className="col-span-1 max-md:col-span-3">
@@ -86,12 +83,12 @@ const Others = () => {
             height={450}
           />
           <div className="text-center pt-4">
-            <button
+            <Button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
               onClick={uploadSocials}
             >
               Speichern
-            </button>
+            </Button>
           </div>
         </div>
         <div className="col-span-1 max-md:col-span-3">
@@ -110,12 +107,12 @@ const Others = () => {
             deleteCallback={(_) => attendance.length > 1}
           />
           <div className="text-center pt-4">
-            <button
+            <Button
               className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
               onClick={uploadAttendance}
             >
               Speichern
-            </button>
+            </Button>
           </div>
         </div>
       </div>

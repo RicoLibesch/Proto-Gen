@@ -8,6 +8,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import jsPDF from "jspdf";
 import AttendanceList, { Attendance } from "@/components/Attendance";
 import { getProtocol } from "@/utils/API";
+import { Button } from "@mui/material";
 
 /**
  * React component for displaying a specific protocol.
@@ -55,32 +56,32 @@ const ProtocolView = () => {
   };
 
   /**
-   * Checks and updates the accessibility of navigation buttons based on the provided protocol ID.
-   * Communicates with the backend API to determine if the previous and next protocol buttons
+   * Checks and updates the accessibility of navigation Buttons based on the provided protocol ID.
+   * Communicates with the backend API to determine if the previous and next protocol Buttons
    * should be enabled or disabled.
    *
    * @async
    * @function
    * @param {number} id - The ID of the current protocol.
-   * @returns {Promise<void>} Resolves after determining and updating the button states.
+   * @returns {Promise<void>} Resolves after determining and updating the Button states.
    */
 
   const checkButtons = async (id: number) => {
     try {
-      // Determine and update the accessibility of the previous protocol button.
+      // Determine and update the accessibility of the previous protocol Button.
       let response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id - 1}`
       );
-      // Ignore response body, JSON content is not needed for button state.
+      // Ignore response body, JSON content is not needed for Button state.
       let _ = await response.json();
-      // Set the state of the previous button based on the HTTP status code.
+      // Set the state of the previous Button based on the HTTP status code.
       setPrevButton(response.status == 200);
     } catch (error) {
-      // Set the previous button to false in case of an error or if the protocol is not found.
+      // Set the previous Button to false in case of an error or if the protocol is not found.
       setPrevButton(false);
     }
     try {
-      // Determine the accessibility of the next protocol button through an asynchronous API request.
+      // Determine the accessibility of the next protocol Button through an asynchronous API request.
       let response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND}/api/protocols/${id + 1}`
       );
@@ -185,9 +186,9 @@ const ProtocolView = () => {
   }
 
   /**
-   * Fetches and updates the protocol data and button states based on the current router query ID.
+   * Fetches and updates the protocol data and Button states based on the current router query ID.
    * Handles loading states and potential errors during the fetching process.
-   * Uses the checkButtons function to determine the accessibility of navigation buttons.
+   * Uses the checkButtons function to determine the accessibility of navigation Buttons.
    * Redirects to the Error component with a 404 status code if an error occurs.
    *
    * @effect
@@ -223,7 +224,7 @@ const ProtocolView = () => {
   }
 
   /**
-   * Renders the protocol page, displaying protocol details, content, and navigation buttons.
+   * Renders the protocol page, displaying protocol details, content, and navigation Buttons.
    * Allows the user to download the protocol as a PDF, navigate to the previous or next protocol,
    * and view attendance information.
    *
@@ -264,26 +265,26 @@ const ProtocolView = () => {
       />
 
       <div className="fixed font-medium bottom-10 w-full flex justify-center md:justify-end flex-wrap mb-4 md:pr-20">
-        <button
-          className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni m-2 transition-all"
+        <Button
+          className="bg-white hover:bg-secondary_hover border-solid rounded-full border border-secondary px-6 py-2 text-mni m-2 transition-all"
           onClick={generatePdf}
         >
           {isDownloading ? "Loading..." : "Download as PDF"}
-        </button>
-        <button
-          className="bg-white hover:bg-secondary_hover rounded-full border border-secondary px-6 py-2 text-mni m-2 disabled:cursor-default disabled:bg-secondary_hover disabled:text-secondary transition-all"
+        </Button>
+        <Button
+          className="bg-white hover:bg-secondary_hover border-solid rounded-full border border-secondary px-6 py-2 text-mni m-2 disabled:cursor-default disabled:bg-secondary_hover disabled:text-secondary transition-all"
           onClick={redirectPreviousPage}
           disabled={!prev}
         >
           Vorheriges
-        </button>
-        <button
-          className="bg-mni hover:bg-mni_hover rounded-full px-6 py-2 m-2 text-white disabled:cursor-default disabled:bg-secondary transition-all"
+        </Button>
+        <Button
+          className="bg-mni hover:bg-mni_hover border-solid rounded-full px-6 py-2 m-2 text-white disabled:cursor-default disabled:bg-secondary transition-all"
           onClick={redirectNextPage}
           disabled={!next}
         >
           Nächstes
-        </button>
+        </Button>
       </div>
     </div>
   );

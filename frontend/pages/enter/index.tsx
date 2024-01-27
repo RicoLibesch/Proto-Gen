@@ -1,4 +1,5 @@
 import { addAttendees, sessionRunning, store } from "@/utils/API";
+import { Button, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -50,30 +51,30 @@ const Enter = () => {
         <div className="rounded-xl border border-outline p-6 shadow hover:shadow-lg transition-all">
           <div className="text-3xl text-center">Protokoll beitreten</div>
           <div className="my-2 text-center">
-            <input
+            <TextField
               type="text"
-              placeholder="Name"
+              label="Name"
               className="focus:outline-none border border-secondary rounded-md p-2"
               onChange={(x) => setUsername(x.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") register();
               }}
-            ></input>
+            ></TextField>
           </div>
           <hr></hr>
           <div className="flex flex-nowrap p-2 items-center justify-center">
-            <button
-              className="rounded-full bg-white text-mni border border-mni py-1 px-5 m-2 transition-all hover:bg-secondary_hover"
+            <Button
+              className="rounded-full bg-white text-mni border border-solid border-mni py-1 px-5 m-2 transition-all hover:bg-secondary_hover"
               onClick={() => router.back()}
             >
               Zurück
-            </button>
-            <button
-              className="rounded-full bg-mni text-white py-1 px-5 m-2 transition-all hover:bg-mni_hover"
+            </Button>
+            <Button
+              className="rounded-full bg-mni text-white border-solid border-mni border py-1 px-5 m-2 transition-all hover:bg-mni_hover"
               onClick={register}
             >
               Beitreten
-            </button>
+            </Button>
           </div>
         </div>
       </div>

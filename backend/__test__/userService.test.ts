@@ -105,7 +105,7 @@ describe('Testing of the functions of the userRoleService', () => {
 
         const res = await selectAllUsers(1, 10, "1", null);
 
-        expect(pool.query).toHaveBeenCalledWith('SELECT * FROM users WHERE LOWER(id) LIKE $1 ORDER BY id DESC OFFSET $2 LIMIT $3', [`%${'1'}%`, (1 - 1) * 10, 10]);
+        expect(pool.query).toHaveBeenCalledWith('SELECT * FROM users WHERE LOWER(id) LIKE $1 OR LOWER(display_name) LIKE $1 OR LOWER(first_name) LIKE $1 OR LOWER(last_name) LIKE $1 OR LOWER(mail) LIKE $1 ORDER BY id DESC OFFSET $2 LIMIT $3', [`%${'1'}%`, (1 - 1) * 10, 10]);
         expect(res[0].id).toBe('1');
         expect(res[0].firstName).toBe('Jo');
         expect(res[0].lastName).toBe('Han');

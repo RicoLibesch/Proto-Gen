@@ -41,3 +41,62 @@ ul {
   width: 450px;
   opacity: 0.4;
 }
+
+@keyframes skeletonAnimation {
+  0% {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(209, 209, 209, 1) -100%,
+      rgba(255, 255, 255, 1) 100%
+    );
+  }
+  50% {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(209, 209, 209, 1) 200%,
+      rgba(255, 255, 255, 1) 100%
+    );
+  }
+}
+
+.skeleton {
+  background-color: #ededed;
+  background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 60%
+    )
+    #ededed;
+  background-size: 200% 100%;
+  display: inline-flex;
+  line-height: 1;
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+  border-radius: 0.25rem;
+  background-position-x: 180%;
+  animation: 1s loading ease-in-out infinite;
+}
+
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fadein {
+  opacity: 0;
+  animation: 1s fadeIn ease-in-out forwards;
+}
