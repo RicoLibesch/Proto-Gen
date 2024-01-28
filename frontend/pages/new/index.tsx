@@ -43,6 +43,9 @@ const ProtocolCreate = () => {
   const [attendanceList, setAttendanceList] = useState<Attendance>({});
   const sending = useRef(false);
 
+  /**
+   * cleanUp function that is called whenever the user tries to exit the page
+   */
   const cleanUp = () => {
     if (sending.current) return;
     const leave = confirm(
@@ -55,11 +58,14 @@ const ProtocolCreate = () => {
   };
 
   useEffect(() => {
+    // inital load
     (async () => {
       const running = await sessionRunning();
+      // if there is no session running, we will start a new one
       if (!running) {
         await startSession();
       }
+
       const protocolTypes = await getProtocolTypes();
       setProtocolTypes(protocolTypes);
       // there is always at least one type
@@ -75,7 +81,9 @@ const ProtocolCreate = () => {
     router.events.on("routeChangeStart", cleanUp);
 
     return () => {
+      // close the session if the user leaves
       if (!sending.current) deleteSession();
+      // remove the cleanup callback from the router events
       router.events.off("routeChangeStart", cleanUp);
     };
   }, [router]);
@@ -85,10 +93,13 @@ const ProtocolCreate = () => {
       window.alert("Protokoll ist leer!");
       return;
     }
-
+    // need to set that in order to prevent a leaving notification
     sending.current = true;
     if (!confirm("Protokoll speichern")) return;
     const end = Date.now();
+    /**
+     * parse topics usually '# TOPIC 1' into an array
+     */
     const regexp = /# .*/g;
     const topics = content
       .match(regexp)

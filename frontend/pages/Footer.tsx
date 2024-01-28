@@ -31,6 +31,7 @@ const Footer = () => {
     const fetchSocials = async () => {
       const socials = await getSocials();
       setSociales(socials);
+      // set name based on the first social
       if (socials.length > 0) {
         const newFooter = [...footerLinks];
         newFooter[0].name = socials[0].value;

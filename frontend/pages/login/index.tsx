@@ -47,7 +47,7 @@ const Login = () => {
 
         const token = json["token"];
         if (!token) {
-          toast.error("Login failed!", {
+          toast.error("Login fehlgeschlagen!", {
             position: "bottom-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -59,6 +59,7 @@ const Login = () => {
           });
           return;
         }
+        // append the creation date as additional information
         const user = {
           ...json["user"],
           token,
@@ -68,7 +69,7 @@ const Login = () => {
         router.push("/");
       } catch (error) {
         console.log(error);
-        toast.error("Login failed!", {
+        toast.error("Login fehlgeschlagen!", {
           position: "bottom-right",
           autoClose: 5000,
           hideProgressBar: false,

@@ -7,11 +7,18 @@ import { useEffect, useState } from "react";
 
 const Roles = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedUser, setSelected] = useState<User | undefined>();
+  /**
+   * display skeleton only on the inital loading
+   * and display the loading bar every time we are loading a new query
+   */
+  const [loading, setLoading] = useState(false);
   const [initalLoading, setInitalLoading] = useState(true);
 
+  /**
+   * search users based on the query and set 'users'
+   */
   const search = async () => {
     setLoading(true);
     const users = await getUsers(query);
@@ -20,13 +27,24 @@ const Roles = () => {
     setLoading(false);
     setInitalLoading(false);
 
+    /**
+     * if there is no selected user, we select the first user
+     */
     if (!selectedUser && users.length) setSelected(users[0]);
   };
 
+  /**
+   * search every time the query changes
+   */
   useEffect(() => {
     search();
   }, [query]);
 
+  /**
+   * adds/removes the according role
+   * @param roleId 1 - admin, 2 - recorder
+   * @returns
+   */
   const toggleRole = async (roleId: number) => {
     if (!selectedUser) return;
     setLoading(true);
@@ -42,14 +60,14 @@ const Roles = () => {
         else await setRole(selectedUser.id, roleId);
         break;
     }
+    // update the search -> labels for admin & recorder have to be updated
     await search();
   };
 
   const renderUsers = () => {
+    // only display skeleton on the inital render
     if (initalLoading) {
-      const array = users;
-      if (array.length == 0) array.push(...Array(6));
-      return array.map((_, index) => (
+      return Array(6).map((_, index) => (
         <div
           key={index}
           className="flex items-center flex-nowrap my-2 border rounded-xl border-outline p-2 hover:shadow hover:cursor-pointer truncate transition-all"

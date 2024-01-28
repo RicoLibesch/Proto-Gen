@@ -8,6 +8,10 @@ const Enter = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const user = store((x) => x.user);
+  /**
+   * registers a user to the session and forwards them back to the landing page
+   * @returns 
+   */
   const register = async () => {
     if (username.length == 0) {
       toast.error("Keinen Namen eingegeben!", {
@@ -26,6 +30,9 @@ const Enter = () => {
     router.push("/");
   };
 
+  /**
+   * inital load
+   */
   useEffect(() => {
     const load = async () => {
       const session = await sessionRunning();
@@ -33,6 +40,9 @@ const Enter = () => {
         router.back();
         return;
       }
+      /**
+       * if the user is logged in we can direclty enter his displayname
+       */
       if (user) {
         await addAttendees(user.displayName);
         router.push("/");
