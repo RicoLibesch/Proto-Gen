@@ -44,3 +44,6 @@ backend/coverage
 backend/.env
 .env
 backend/.env.2
+
+#local ldap server
+ldap/node_modules
