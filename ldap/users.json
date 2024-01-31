@@ -1,0 +1,57 @@
+[
+  {
+    "uid": "test01",
+    "dn": "uid=test01,ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de",
+    "attributes": {
+      "uid": "test01",
+      "givenName": "Max1",
+      "displayName": "Max1 Mustermann1",
+      "sn": "Mustermann1",
+      "mail": "max1.mustermann1@mni.thm.de"
+    }
+  },
+  {
+    "uid": "test02",
+    "dn": "uid=test02,ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de",
+    "attributes": {
+      "uid": "test02",
+      "givenName": "Max2",
+      "displayName": "Max2 Mustermann2",
+      "sn": "Mustermann2",
+      "mail": "max2.mustermann2@mni.thm.de"
+    }
+  },
+  {
+    "uid": "test03",
+    "dn": "uid=test03,ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de",
+    "attributes": {
+      "uid": "test03",
+      "givenName": "Max3",
+      "displayName": "Max3 Mustermann3",
+      "sn": "Mustermann3",
+      "mail": "max3.mustermann3@mni.thm.de"
+    }
+  },
+  {
+    "uid": "test04",
+    "dn": "uid=test04,ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de",
+    "attributes": {
+      "uid": "test04",
+      "givenName": "Max4",
+      "displayName": "Max4 Mustermann4",
+      "sn": "Mustermann4",
+      "mail": "max4.mustermann4@mni.thm.de"
+    }
+  },
+  {
+    "uid": "test05",
+    "dn": "uid=test05,ou=People,ou=MNI,ou=Giessen,dc=fh-giessen-friedberg,dc=de",
+    "attributes": {
+      "uid": "test05",
+      "givenName": "Max5",
+      "displayName": "Max5 Mustermann5",
+      "sn": "Mustermann5",
+      "mail": "max5.mustermann5@mni.thm.de"
+    }
+  }
+]

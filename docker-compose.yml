@@ -60,6 +60,12 @@ services:
     volumes:
       - protogen-pgAdmin:/var/lib/pgadmin
 
+  ldap:
+    container_name: protogen_ldap
+    build: ./ldap
+    ports:
+      - 1389:1389
+
 volumes:
   protogen-postgres:
   protogen-pgAdmin:
