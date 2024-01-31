@@ -109,7 +109,7 @@ build-image-backend:
   allow_failure: True
 
 build-backend:
- stage: build
+  stage: build
   needs:
     - job: test-app-node
     - job: doc-app-node
