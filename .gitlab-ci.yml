@@ -108,6 +108,22 @@ build-image-backend:
      --destination "${CI_REGISTRY_IMAGE}/${BACKEND_IMAGE_NAME}:${CI_COMMIT_TAG}"
   allow_failure: True
 
+build-backend:
+ stage: build
+  needs:
+    - job: test-app-node
+    - job: doc-app-node
+    - job: lint-app-node
+  tags:
+    - protogen-runner
+  image: node:alpine
+  script:
+    - cd backend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - backend/dist
 
 build-image-db:
   stage: build
