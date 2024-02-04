@@ -90,7 +90,7 @@ const Template = () => {
             className="flex justify-center py-5 max-lg:flex-wrap-reverse flex-wrap"
           >
             <StringList
-              className="w-1/4 px-5"
+              className="max-lg:w-full w-1/4 px-5"
               title="Protokollvorlagen:"
               update={update}
               selected={selected}

@@ -67,7 +67,7 @@ const Roles = () => {
   const renderUsers = () => {
     // only display skeleton on the inital render
     if (initalLoading) {
-      return Array(6).map((_, index) => (
+      return [...Array(6)].map((_, index) => (
         <div
           key={index}
           className="flex items-center flex-nowrap my-2 border rounded-xl border-outline p-2 hover:shadow hover:cursor-pointer truncate transition-all"

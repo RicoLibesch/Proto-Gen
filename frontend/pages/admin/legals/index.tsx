@@ -52,6 +52,7 @@ const Legals = () => {
       }),
     ]);
     API.createToastForResponses(promises);
+    setSaved(true);
   };
 
   return (

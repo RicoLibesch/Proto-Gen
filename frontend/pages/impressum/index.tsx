@@ -4,7 +4,7 @@ import Markdown from "react-markdown";
 import "@uiw/react-markdown-preview/markdown.css";
 
 function Impressum() {
-  const [legalContent, setLegalContent] = useState("");
+  const [legalContent, setLegalContent] = useState("# das ist ein test");
 
   useEffect(() => {
     const loadData = async () => {
@@ -29,10 +29,10 @@ function Impressum() {
         className="flex flex-wrap m-2 justify-center flex-col"
         data-color-mode="light"
       >
-        <Markdown skipHtml className="wmde-markdown">
+        <Markdown skipHtml className="wmde-markdown mt-2.5">
           {engraving}
         </Markdown>
-        <Markdown skipHtml className="wmde-markdown">
+        <Markdown skipHtml className="wmde-markdown mt-5">
           {legalContent}
         </Markdown>
       </div>

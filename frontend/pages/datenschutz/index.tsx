@@ -26,7 +26,7 @@ function Datenschutz() {
         className="flex flex-wrap m-2 justify-center"
         data-color-mode="light"
       >
-        <Markdown skipHtml className="wmde-markdown">
+        <Markdown skipHtml className="wmde-markdown mt-5">
           {legalContent}
         </Markdown>
       </div>
