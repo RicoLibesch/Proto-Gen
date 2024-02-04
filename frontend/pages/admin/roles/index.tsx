@@ -113,7 +113,7 @@ const Roles = () => {
         </div>
         <div className="ml-3">
           <div>
-            {user.displayName} {user.lastName}
+            {user.firstName} {user.lastName}
           </div>
           <div className="text-secondary">{user.id}</div>
         </div>
