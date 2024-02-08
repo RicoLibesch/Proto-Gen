@@ -1,7 +1,7 @@
 describe("Assessing the functionalities of the legals subsection within the Admin Panel.", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/login");
-    cy.get('input[placeholder="Kennung"]').clear().type("test");
+    cy.get('input[placeholder="Kennung"]').clear().type("test01");
     cy.get('input[placeholder="Passwort"]').clear().type("test");
     cy.get('button:contains("Login")').first().click();
 
@@ -25,7 +25,8 @@ describe("Assessing the functionalities of the legals subsection within the Admi
     cy.get("textarea.w-md-editor-text-input").eq(1).clear().type(testText);
     cy.get('button:contains("Speichern")').click();
 
-    cy.reload();
+    cy.wait(500);
+    cy.reload()
 
     cy.get("textarea.w-md-editor-text-input")
       .eq(0)

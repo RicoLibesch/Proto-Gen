@@ -1,7 +1,7 @@
 describe("Assessing the functionalities of the email subsection within the Admin Panel.", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/login");
-    cy.get('input[placeholder="Kennung"]').clear().type("test");
+    cy.get('input[placeholder="Kennung"]').clear().type("test01");
     cy.get('input[placeholder="Passwort"]').clear().type("test");
     cy.get('button:contains("Login")').first().click();
 
@@ -35,6 +35,8 @@ describe("Assessing the functionalities of the email subsection within the Admin
       .click();
 
     cy.get('button:contains("Speichern")').first().click();
+
+    cy.wait(500);
 
     cy.wait("@apiRequest").its("response.statusCode").should("eq", 200);
 

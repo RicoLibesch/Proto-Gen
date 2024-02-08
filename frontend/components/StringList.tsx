@@ -35,11 +35,15 @@ const StringList = ({
     selected ? 0 : null
   );
 
+  /**
+   * on drag even for every element in the list
+   */
   function onDrag(e: React.DragEvent, index: number) {
     e.dataTransfer.clearData();
     e.dataTransfer.setData("index", index.toString());
     const target = e.target as any;
     if (target.tagName.toLowerCase() !== "div") return;
+    // set default border style
     target.style.borderTop = "solid 1px";
   }
 
@@ -52,13 +56,14 @@ const StringList = ({
     refresh();
     const target = e.target as any;
     if (target.tagName.toLowerCase() !== "div") return;
+    // reset to default border style
     target.style.borderTop = "solid 1px";
   }
 
   function onDragOver(e: React.DragEvent, index: number) {
-    // console.log(e.target);
     const target = e.target as any;
     if (target.tagName.toLowerCase() !== "div") return;
+    // when an object is dragged over, we set the top border to be wider, in order to display where the drop will happen
     target.style.borderTop = "solid 2px";
     e.preventDefault();
   }
@@ -66,6 +71,7 @@ const StringList = ({
   function onDragLeave(e: React.DragEvent, index: number) {
     const target = e.target as any;
     if (target.tagName.toLowerCase() !== "div") return;
+    // reset to default border
     target.style.borderTop = "solid 1px";
     e.preventDefault();
   }

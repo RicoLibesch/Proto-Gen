@@ -9,7 +9,11 @@ function Datenschutz() {
   useEffect(() => {
     const loadData = async () => {
       const data = await API.getLegals();
-      setLegalContent(data[1].value);
+      try {
+        setLegalContent(data[1].value);
+      } catch (e) {
+        console.log(e);
+      }
     };
     loadData();
   }, []);
@@ -22,7 +26,7 @@ function Datenschutz() {
         className="flex flex-wrap m-2 justify-center"
         data-color-mode="light"
       >
-        <Markdown skipHtml className="wmde-markdown">
+        <Markdown skipHtml className="wmde-markdown mt-5">
           {legalContent}
         </Markdown>
       </div>

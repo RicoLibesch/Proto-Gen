@@ -4,6 +4,9 @@ import * as API from "@/utils/API";
 import { useEffect, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { html } from "@codemirror/lang-html";
+import { useNotifyUnsavedChanges } from "@/hooks";
+import { Button, Checkbox } from "@mui/material";
+import { toast } from "react-toastify";
 
 const Email = () => {
   const [emails, setEmails] = useState<string[]>([]);
@@ -12,6 +15,11 @@ const Email = () => {
   const [subject, setSubject] = useState<string>("");
   const [sendingMails, setSendingMails] = useState(false);
 
+  useNotifyUnsavedChanges(saved);
+
+  /**
+   * list of all variables that are avaiable
+   */
   const variables = [
     {
       variable: "type",
@@ -43,6 +51,9 @@ const Email = () => {
     },
   ];
 
+  /**
+   * inital load
+   */
   useEffect(() => {
     const load = async () => {
       const emails = await API.getEmails();
@@ -57,26 +68,25 @@ const Email = () => {
     load();
   }, []);
 
-  useEffect(() => {
-    window.onbeforeunload = (e) => {
-      if (!saved) e.preventDefault();
-    };
-    return () => {
-      window.onbeforeunload = null;
-    };
-  }, [saved]);
-
   const save = async () => {
-    await API.setEmails(emails);
-    await API.setTemplate({
-      type: "subject",
-      value: subject,
-    });
-    await API.setTemplate({
-      type: "body",
-      value: body,
-    });
-    await API.setSendingMails(sendingMails);
+    /**
+     * combine all the promises into one and only display one toast for all the interactions
+     */
+    const promises = Promise.all([
+      API.setEmails(emails),
+      API.setTemplate({
+        type: "subject",
+        value: subject,
+      }),
+      API.setTemplate({
+        type: "body",
+        value: body,
+      }),
+      API.setSendingMails(sendingMails),
+    ]);
+
+    API.createToastForResponses(promises);
+   
     setSaved(true);
   };
 
@@ -99,11 +109,12 @@ const Email = () => {
           />
           <div className="flex items-center justify-center pt-4">
             <label className="mr-2 font-bold text-lg">E-Mails versenden</label>
-            <input
-              type="checkbox"
-              className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all w-5 h-5"
+            <Checkbox
               checked={sendingMails}
-              onChange={(x) => setSendingMails(!sendingMails)}
+              onChange={() => {
+                setSendingMails(!sendingMails);
+                setSaved(false);
+              }}
             />
           </div>
         </div>
@@ -112,7 +123,10 @@ const Email = () => {
           <input
             type="text"
             className="w-full focus:outline-none rounded-xl border border-outline p-2 mb-2"
-            onChange={(e) => setSubject(e.target.value)}
+            onChange={(e) => {
+              setSubject(e.target.value);
+              setSaved(false);
+            }}
             value={subject}
           ></input>
           <div className="text-xl mb-3 font-bold text-left">Inhalt</div>
@@ -120,13 +134,20 @@ const Email = () => {
             className="overflow-y-auto rounded-xl border border-outline"
             style={{ height: "500px" }}
           >
-            <CodeMirror extensions={[html()]} onChange={setBody} value={body} />
+            <CodeMirror
+              extensions={[html()]}
+              onChange={(x) => {
+                setBody(x);
+                setSaved(false);
+              }}
+              value={body}
+            />
           </div>
           <div className="text-lg font-bold text-left">
             Liste der verfügbaren Variablen:
           </div>
           <div className="flex flex-wrap">
-          {variables.map((value, index) => (
+            {variables.map((value, index) => (
               <span key={index} className="flex">
                 <b className="px-1 font-mono">{value.variable}</b>-
                 <div className="px-1 text-secondary">{value.desc}</div>
@@ -144,12 +165,12 @@ const Email = () => {
         </div>
       </div>
       <div className="text-center pt-4">
-        <button
-          className="font-medium bg-mni hover:bg-mni_hover rounded-full px-6 py-2 text-seperation transition-all"
+        <Button
+          className="!font-medium !bg-mni hover:!bg-mni_hover !rounded-full !px-6 !py-2 !text-seperation !transition-all"
           onClick={save}
         >
           Speichern
-        </button>
+        </Button>
       </div>
     </>
   );

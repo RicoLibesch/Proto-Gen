@@ -4,6 +4,7 @@ import Header from "./Header";
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Layout({ children }: { children: any }) {
+  // toastify container to display the toast notifications
   return (
     <>
       <Header />

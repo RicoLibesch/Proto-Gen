@@ -1,10 +1,10 @@
 "use client";
-
 import { HTMLAttributes } from "react";
 import Protocol from "./Protocol";
+import Skeleton from "./Skeleton";
 
 export interface ProtocolContainerProps extends HTMLAttributes<HTMLDivElement> {
-  protocol: Protocol;
+  protocol?: Protocol;
 }
 
 /**
@@ -39,9 +39,36 @@ const ProtocolContainer = ({ protocol, ...props }: ProtocolContainerProps) => {
   const getLast3 = (topics: string[]) => {
     return [...topics].reverse().splice(0, 3);
   };
+
+  if (!protocol)
+    return (
+      <div {...props}>
+        <div className="grid grid-rows-2 items-center rounded-xl border border-outline p-2 shadow hover:shadow-lg hover:cursor-pointer truncate transition-all">
+          <div className="flex flex-nowrap items-center">
+            <Skeleton className="rounded-full bg-mni w-10 h-10 mr-4" round />
+            <div className="w-full">
+              <h2 className="text-primary">
+                <Skeleton />
+              </h2>
+              <h4 className="text-secondary">
+                <Skeleton />
+              </h4>
+            </div>
+          </div>
+
+          <div className="flex flex-nowrap whitespace-nowrap overflow-x-auto">
+            <Skeleton />
+          </div>
+        </div>
+      </div>
+    );
+
   return (
     <div {...props}>
-      <div className="grid grid-rows-2 items-center rounded-xl border-2 border-outline p-2 shadow hover:shadow-lg hover:cursor-pointer truncate transition-all">
+      <div
+        className="grid grid-rows-2 items-center rounded-xl border border-outline p-2 shadow hover:shadow-lg hover:cursor-pointer truncate transition-all"
+        style={{ height: 132 }}
+      >
         <div className="row-span-1 grid grid-flow-col items-center justify-start gap-3">
           <div className="col-span-1 rounded-full bg-mni w-10 h-10 flex items-center justify-center text-white">
             FS

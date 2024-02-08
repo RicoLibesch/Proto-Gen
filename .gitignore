@@ -42,5 +42,9 @@ next-env.d.ts
 backend/node_modules
 backend/coverage
 backend/.env
+backend/dist
 .env
 backend/.env.2
+
+#local ldap server
+ldap/node_modules

@@ -1,9 +1,14 @@
+import Link from "next/link";
 import { HTMLAttributes } from "react";
 
 export interface AdminHeaderProps extends HTMLAttributes<HTMLDivElement> {
   path: string;
 }
 
+/**
+ * simple header component used to display the header for the admin pages
+ * @returns 
+ */
 const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
   const links = [
     {
@@ -37,8 +42,9 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
       <div className="flex flex-wrap p-2 ml-6">
         {links.map((x, index) => {
           return (
-            <a
+            <Link
               key={index}
+              
               className={
                 "text-xl px-2 hover:text-primary transition-all " +
                 (x.path.endsWith(path) ? "text-mni" : "text-secondary")
@@ -46,7 +52,7 @@ const AdminHeader = ({ path, ...props }: AdminHeaderProps) => {
               href={x.path}
             >
               {x.name}
-            </a>
+            </Link>
           );
         })}
       </div>
