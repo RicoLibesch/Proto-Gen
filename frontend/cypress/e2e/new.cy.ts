@@ -1,7 +1,7 @@
 describe("Testing the functions of the New section", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/login");
-    cy.get('input[placeholder="Kennung"]').clear().type("test");
+    cy.get('input[placeholder="Kennung"]').clear().type("test01");
     cy.get('input[placeholder="Passwort"]').clear().type("test");
     cy.get('button:contains("Login")').first().click();
 
@@ -62,8 +62,6 @@ describe("Testing the functions of the New section", () => {
     cy.get("a:contains('Neu')", { timeout: 10000 }).should("exist");
 
     cy.contains("Neu").click().url().should("eq", "http://localhost:3000/new");
-
-    cy.get(".block").select("Fachschaftssitzung");
 
     cy.get(".w-md-editor-text-input")
       .clear()

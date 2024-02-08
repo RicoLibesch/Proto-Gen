@@ -96,6 +96,7 @@ const Login = () => {
           <TextField
             type="text"
             label="Kennung"
+            placeholder="Kennung"
             onChange={(x) => setKennung(x.target.value)}
           ></TextField>
         </div>
@@ -104,6 +105,7 @@ const Login = () => {
             variant="outlined"
             type="password"
             label="Passwort"
+            placeholder="Passwort"
             onChange={(x) => setPassword(x.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") login();
