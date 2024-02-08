@@ -1,6 +1,7 @@
 describe("Testing the functions of the Header when not logged in.", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/");
+    cy.wait(500);
   });
 
   it("Should refresh the site by clicking on the logo", () => {
@@ -19,6 +20,7 @@ describe("Testing the functions of the Header when not logged in.", () => {
 describe("Testing the functions of the Header when logged in", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/login");
+    cy.wait(500);
     cy.get('input[placeholder="Kennung"]').clear().type("test");
     cy.get('input[placeholder="Passwort"]').clear().type("test");
     cy.get('button:contains("Login")').first().click();

@@ -1,7 +1,7 @@
 describe("Assessing the functionalities of the others subsection within the Admin Panel.", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/login");
-    cy.get('input[placeholder="Kennung"]').clear().type("test");
+    cy.get('input[placeholder="Kennung"]').clear().type("test01");
     cy.get('input[placeholder="Passwort"]').clear().type("test");
     cy.get('button:contains("Login")').first().click();
 
@@ -52,7 +52,7 @@ describe("Assessing the functionalities of the others subsection within the Admi
 
     cy.get(
       "input.ml-2.bg-transparent.border-none.focus\\:outline-none.w-full"
-    ).type("Alumni");
+    ).first().type("Alumni");
 
     cy.get(".MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.mr-2")
       .should("be.visible")
