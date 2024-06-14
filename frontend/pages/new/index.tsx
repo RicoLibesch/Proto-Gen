@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import Protocol, { ProtocolType } from "@/components/Protocol";
 import AttendanceList, { Attendance } from "@/components/Attendance";
 import { useRouter } from "next/router";
-import Image from "next/image";
 
 import {
   createProtocol,
@@ -42,6 +41,15 @@ const ProtocolCreate = () => {
   const [index, setIndex] = useState(0);
   const [attendanceList, setAttendanceList] = useState<Attendance>({});
   const sending = useRef(false);
+  const [enterLink, setEnterLink] = useState("");
+
+  useEffect(() => {
+    setEnterLink(
+      `https://api.qrserver.com/v1/create-qr-code/?data=${
+        typeof window != "undefined" ? window.location.origin : ""
+      }/enter&size=150x150`
+    );
+  }, []);
 
   /**
    * cleanUp function that is called whenever the user tries to exit the page
@@ -146,8 +154,8 @@ const ProtocolCreate = () => {
           className="flex justify-center pt-5 max-lg:flex-wrap-reverse flex-wrap"
         >
           <div className="max-lg:w-full w-1/4">
-            <Image
-              src="/qrcode.png"
+            <img
+              src={enterLink}
               alt="QR Code"
               className="mx-auto"
               width={150}
