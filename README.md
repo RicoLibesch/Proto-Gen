@@ -9,12 +9,12 @@
 # **proto-gen🚀🚀**
 ## TL:DR;
 * Prerequired: [Docker](https://docs.docker.com/get-docker/) und [Docker Compose](https://docs.docker.com/compose/)
-* [How to start the project](https://git.thm.de/jayt30/proto-gen/-/wikis/Contribution-Guide#starting-the-project)
+* [How to start the project]([https://git.thm.de/jayt30/proto-gen/-/wikis/Contribution-Guide#starting-the-project](https://github.com/RicoLibesch/Proto-Gen/wiki/Contribution-Guide))
 ## What is protogen?
 The Protogen **protocol generator** is a software application that offers a variety of functions to simplify the protocol creation process. This project is intended to replace the current protocol generator.
 
 ## Getting Started
-Visit our [Contribution Guide](https://git.thm.de/jayt30/proto-gen/-/wikis/Contribution-Guide) for more details
+Visit our [Contribution Guide]([https://git.thm.de/jayt30/proto-gen/-/wikis/Contribution-Guide](https://github.com/RicoLibesch/Proto-Gen/wiki/Contribution-Guide)) for more details
 ## Authors
 - [Aziz](https://de.linkedin.com/in/aziz-ali-meral-569521185)
 - [Jamin](https://github.com/GitInVisualStudio)
